@@ -18,3 +18,7 @@
 #define VIAL_UNLOCK_COMBO_ROWS { 0, 0, 5, 5 }
 #define VIAL_UNLOCK_COMBO_COLS { 2, 5, 2, 5 }
 #endif
+
+// Shorten the unlock timeout (needs mod in `quantum/vial.c`; without
+// it the override doesn't work)
+#define VIAL_UNLOCK_COUNTER_MAX 25

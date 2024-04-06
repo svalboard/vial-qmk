@@ -24,7 +24,9 @@
 
 #include "vial_ensure_keycode.h"
 
+#ifndef VIAL_UNLOCK_COUNTER_MAX
 #define VIAL_UNLOCK_COUNTER_MAX 50
+#endif
 
 #ifdef VIAL_INSECURE
 #pragma message "Building Vial-enabled firmware in insecure mode."

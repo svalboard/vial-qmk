@@ -17,7 +17,7 @@
       "midi": false,                                                                      
       "mousekey": true,                                                                   
       "nkro": true,                                                                       
-      "rgblight": false,                                                                  
+      "rgblight": true,                                                                  
       "sleep_led": false,                                                                 
       "unicode": false                                                                    
   },                                                                                      

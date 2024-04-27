@@ -24,14 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MH_AUTO_BUTTONS_TIMEOUT 5000
 #define PS2_MOUSE_SCROLL_BTN_MASK (1<<PS2_MOUSE_BTN_MIDDLE) // this mask disables the key for non-PS2 purposes
 
-void keyboard_post_init_user(void) {
-    // Customise these values if you need to debug the matrix
-    //debug_enable=true;
-    debug_matrix=true;
-    //debug_keyboard=true;
-    //debug_mouse=true;
-}
-
 // in keymap.c:
 #ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
 void pointing_device_init_user(void) {

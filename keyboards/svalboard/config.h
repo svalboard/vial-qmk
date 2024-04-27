@@ -72,3 +72,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // needs to be reset to come to life.
 #define SPLIT_WATCHDOG_ENABLE
 
+// WS2812-fu here:
+//  pretty lights
+//  https://docs.qmk.fm/#/feature_rgblight?id=configuration
+#define WS2812_DI_PIN GP19
+#define RGBLED_SPLIT { 1, 1 }
+#define RGBLIGHT_LAYERS DYNAMIC_KEYMAP_LAYER_COUNT
+#define RGBLIGHT_DEFAULT_SAT 0 // white?
+#define RGBLIGHT_LIMIT_VAL 130
+#define RGBLIGHT_DEFAULT_VAL 20
+#define RGBLIGHT_SLEEP // don't annoy when host asleep
+#define RGBLIGHT_MAX_LAYERS 16 //DYNAMIC_KEYMAP_LAYER_COUNT
+#define RGBLIGHT_VAL_STEP 10
+#define RGBLIGHT_LED_COUNT 2

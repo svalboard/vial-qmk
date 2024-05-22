@@ -77,6 +77,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //  https://docs.qmk.fm/#/feature_rgblight?id=configuration
 #define WS2812_DI_PIN GP19
 #define RGBLED_SPLIT { 1, 1 }
+#define RGBLIGHT_LAYERS_RETAIN_VAL
 #define RGBLIGHT_LAYERS DYNAMIC_KEYMAP_LAYER_COUNT
 #define RGBLIGHT_DEFAULT_SAT 0 // white?
 #define RGBLIGHT_LIMIT_VAL 130

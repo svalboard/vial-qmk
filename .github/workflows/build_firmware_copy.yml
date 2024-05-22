@@ -1,0 +1,72 @@
+name: Build QMK Firmware
+
+on:
+  workflow_call:
+    inputs:
+      keyboard:
+        required: true
+        type: string
+      keymap:
+        required: true
+        type: string
+      side:
+        required: true
+        type: string
+      POINTING_DEVICE_DRIVER:
+        required: false
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: ghcr.io/qmk/qmk_cli
+
+    steps:
+    - name: Checkout code - Non PR
+      uses: actions/checkout@v4
+      if: ${{ startsWith(github.ref, 'refs/tags') }}
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        ref: ${{ github.ref }}
+        fetch-depth: 0
+        submodules: 'recursive'
+
+    - name: Checkout code - PR
+      uses: actions/checkout@v4
+      if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        ref: ${{ github.event.pull_request.head.sha }}
+        fetch-depth: 0
+        submodules: 'recursive'
+
+    - name: Get tag version
+      if: ${{ startsWith(github.ref, 'refs/tags/')}}
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+
+    - name: Build firmware
+      id: build_firmware
+      run: |
+        git config --global --add safe.directory '*'
+        make ${{ inputs.keyboard }}/${{ inputs.side }}:${{ inputs.keymap }}
+      shell: bash
+
+    - name: Move file into position
+      id: move_file
+      if: ${{ startsWith(github.ref, 'refs/tags/') }}
+      run: |
+        KEYBOARD_NAME="${{ inputs.keyboard }}"
+        KEYBOARD_NAME="${KEYBOARD_NAME//\//_}"
+        FILE_NAME="${KEYBOARD_NAME}${DOWNKEY}_${{ inputs.side }}_${{ inputs.keymap }}_${{ steps.get_version.outputs.VERSION }}.uf2"
+        mv ${KEYBOARD_NAME}_${{ inputs.side }}_${{ inputs.keymap }}.uf2 "$FILE_NAME"
+        echo "::set-output name=file_name::$FILE_NAME"
+      shell: bash
+
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      if: ${{ startsWith(github.ref, 'refs/tags/') }}
+      with:
+        files: |
+          ${{ steps.move_file.outputs.file_name }}
+

@@ -22,6 +22,12 @@
 
 #include "achordion.h"
 
+#if !defined(IS_QK_MOD_TAP)
+// Attempt to detect out-of-date QMK installation, which would fail with
+// implicit-function-declaration errors in the code below.
+#error "achordion: QMK version is too old to build. Please update QMK."
+#else
+
 // Copy of the `record` and `keycode` args for the current active tap-hold key.
 static keyrecord_t tap_hold_record;
 static uint16_t tap_hold_keycode = KC_NO;
@@ -29,6 +35,16 @@ static uint16_t tap_hold_keycode = KC_NO;
 static uint16_t hold_timer = 0;
 // Eagerly applied mods, if any.
 static uint8_t eager_mods = 0;
+// Flag to determine whether another key is pressed within the timeout.
+static bool pressed_another_key_before_release = false;
+
+#ifdef ACHORDION_STREAK
+// Timer for typing streak
+static uint16_t streak_timer = 0;
+#else
+// When disabled, is_streak is never true
+#define is_streak false
+#endif
 
 // Achordion's current state.
 enum {
@@ -73,6 +89,14 @@ bool process_achordion(uint16_t keycode, keyrecord_t* record) {
     return true;
   }
 
+  // If this is a keypress and if the key is different than the tap-hold key,
+  // this information is saved to a flag to be processed later when the tap-hold
+  // key is released.
+  if (!pressed_another_key_before_release && record->event.pressed &&
+      tap_hold_keycode != KC_NO && tap_hold_keycode != keycode) {
+    pressed_another_key_before_release = true;
+  }
+
   // Determine whether the current event is for a mod-tap or layer-tap key.
   const bool is_mt = IS_QK_MOD_TAP(keycode);
   const bool is_tap_hold = is_mt || IS_QK_LAYER_TAP(keycode);
@@ -80,8 +104,8 @@ bool process_achordion(uint16_t keycode, keyrecord_t* record) {
 #ifdef IS_KEYEVENT
   const bool is_key_event = IS_KEYEVENT(record->event);
 #else
-  const bool is_key_event = (record->event.key.row < 254 &&
-                             record->event.key.col < 254);
+  const bool is_key_event =
+      (record->event.key.row < 254 && record->event.key.col < 254);
 #endif
 
   if (achordion_state == STATE_RELEASED) {
@@ -110,6 +134,9 @@ bool process_achordion(uint16_t keycode, keyrecord_t* record) {
       }
     }
 
+#ifdef ACHORDION_STREAK
+    streak_timer = (timer_read() + achordion_streak_timeout(keycode)) | 1;
+#endif
     return true;  // Otherwise, continue with default handling.
   }
 
@@ -117,6 +144,15 @@ bool process_achordion(uint16_t keycode, keyrecord_t* record) {
     // The active tap-hold key is being released.
     if (achordion_state == STATE_HOLDING) {
       dprintln("Achordion: Key released. Plumbing hold release.");
+      tap_hold_record.event.pressed = false;
+      // Plumb hold release event.
+      recursively_process_record(&tap_hold_record, STATE_RELEASED);
+    } else if (!pressed_another_key_before_release) {
+      // No other key was pressed between the press and release of the tap-hold
+      // key, simulate a hold and then a release without waiting for Achordion
+      // timeout to end.
+      dprintln("Achordion: Key released. Simulating hold and release.");
+      settle_as_hold();
       tap_hold_record.event.pressed = false;
       // Plumb hold release event.
       recursively_process_record(&tap_hold_record, STATE_RELEASED);
@@ -129,10 +165,18 @@ bool process_achordion(uint16_t keycode, keyrecord_t* record) {
     }
 
     achordion_state = STATE_RELEASED;
+    // The tap-hold key is released, clear the related keycode and the flag.
+    tap_hold_keycode = KC_NO;
+    pressed_another_key_before_release = false;
     return false;
   }
 
   if (achordion_state == STATE_UNSETTLED && record->event.pressed) {
+#ifdef ACHORDION_STREAK
+    const bool is_streak = (streak_timer != 0);
+    streak_timer = (timer_read() + achordion_streak_timeout(keycode)) | 1;
+#endif
+
     // Press event occurred on a key other than the active tap-hold key.
 
     // If the other key is *also* a tap-hold key and considered by QMK to be
@@ -145,10 +189,21 @@ bool process_achordion(uint16_t keycode, keyrecord_t* record) {
     // events back into the handling pipeline so that QMK features and other
     // user code can see them. This is done by calling `process_record()`, which
     // in turn calls most handlers including `process_record_user()`.
-    if (!is_key_event || (is_tap_hold && record->tap.count == 0) ||
-        achordion_chord(tap_hold_keycode, &tap_hold_record, keycode, record)) {
+    if (!is_streak && (!is_key_event || (is_tap_hold && record->tap.count == 0) ||
+        achordion_chord(tap_hold_keycode, &tap_hold_record, keycode, record))) {
       dprintln("Achordion: Plumbing hold press.");
       settle_as_hold();
+
+#ifdef REPEAT_KEY_ENABLE
+      // Edge case involving LT + Repeat Key: in a sequence of "LT down, other
+      // down" where "other" is on the other layer in the same position as
+      // Repeat or Alternate Repeat, the repeated keycode is set instead of the
+      // the one on the switched-to layer. Here we correct that.
+      if (get_repeat_key_count() != 0 && IS_QK_LAYER_TAP(tap_hold_keycode)) {
+        record->keycode = KC_NO;  // Forget the repeated keycode.
+        clear_weak_mods();
+      }
+#endif  // REPEAT_KEY_ENABLE
     } else {
       clear_eager_mods();  // Clear in case eager mods were set.
 
@@ -173,6 +228,10 @@ bool process_achordion(uint16_t keycode, keyrecord_t* record) {
     return false;  // Block the original event.
   }
 
+#ifdef ACHORDION_STREAK
+  // update idle timer on regular keys event
+  streak_timer = (timer_read() + achordion_streak_timeout(keycode)) | 1;
+#endif
   return true;
 }
 
@@ -182,6 +241,12 @@ void achordion_task(void) {
     dprintln("Achordion: Timeout. Plumbing hold press.");
     settle_as_hold();  // Timeout expired, settle the key as held.
   }
+
+#ifdef ACHORDION_STREAK
+  if (streak_timer && timer_expired(timer_read(), streak_timer)) {
+    streak_timer = 0;  // Expired.
+  }
+#endif
 }
 
 // Returns true if `pos` on the left hand of the keyboard, false if right.
@@ -218,3 +283,11 @@ __attribute__((weak)) uint16_t achordion_timeout(uint16_t tap_hold_keycode) {
 __attribute__((weak)) bool achordion_eager_mod(uint8_t mod) {
   return (mod & (MOD_LALT | MOD_LGUI)) == 0;
 }
+
+#ifdef ACHORDION_STREAK
+__attribute__((weak)) uint16_t achordion_streak_timeout(uint16_t tap_hold_keycode) {
+  return 100;  // Default of 100 ms.
+}
+#endif
+
+#endif  // version check

@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdbool.h>
 #include <stdint.h>
 #include "svalboard.h"
+#include "features/achordion.h"
 
 #define MH_AUTO_BUTTONS_LAYER (DYNAMIC_KEYMAP_LAYER_COUNT - 1)
 
@@ -43,6 +44,11 @@ enum my_keycodes {
     SV_RIGHT_SCROLL_TOGGLE,
     SV_RECALIBRATE_POINTER,
     SV_MH_CHANGE_TIMEOUTS,
+    SV_CAPS_WORD,
+    SV_TOGGLE_ACHORDION,
+    SV_TOGGLE_23_67,
+    SV_TOGGLE_45_67,
+
     KC_NORMAL_HOLD = SAFE_RANGE,
     KC_FUNC_HOLD,
     SV_SAFE_RANGE, // Keycodes over this are safe on Svalboard.
@@ -151,8 +157,48 @@ void mh_change_timeouts(void) {
     write_eeprom_kb();
 }
 
-bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
+void toggle_achordion(void) {
+    global_saved_values.disable_achordion = !global_saved_values.disable_achordion;
+    write_eeprom_kb();
+}
 
+#define LAYER_2345_MASK (0x3C)
+void check_layer_67(void) {
+    if ((layer_state & LAYER_2345_MASK) == LAYER_2345_MASK) {
+        layer_on(6);
+        layer_on(7);
+    } else {
+        layer_off(6);
+        layer_off(7);
+    }
+}
+
+bool in_mod_tap = false;
+int8_t in_mod_tap_layer = -1;
+bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
+    if (!global_saved_values.disable_achordion && !process_achordion(keycode, record)) { return false; }
+
+    // We are in a mod tap, with a KC_TRANSPARENT, lets make it transparent...
+    if (IS_QK_MOD_TAP(keycode) && ((keycode & 0xFF) == KC_TRANSPARENT) &&
+        record->tap.count > 0 && !in_mod_tap &&
+        in_mod_tap_layer == -1 && record->event.pressed) {
+
+        in_mod_tap_layer = get_highest_layer(layer_state);
+        layer_state = layer_state & ~(1 << in_mod_tap_layer);
+
+        action_exec(record->event);
+
+        in_mod_tap = true;
+
+        return false;
+    }
+
+    // Fix things up on the release for the mod_tap case.
+    if (!record->event.pressed && in_mod_tap) {
+        in_mod_tap = false;
+        layer_state = layer_state | (1 << in_mod_tap_layer);
+        in_mod_tap_layer = -1;
+    }
     // If console is enabled, it will print the matrix position and status of each key pressed
 #ifdef CONSOLE_ENABLE
     uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
@@ -187,6 +233,20 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 mouse_mode(false);
         }
     }
+    if (record->event.pressed) {
+        switch (keycode) {
+            case SV_TOGGLE_23_67:
+                layer_on(2);
+                layer_on(3);
+                check_layer_67();
+                break;
+            case SV_TOGGLE_45_67:
+                layer_on(4);
+                layer_on(5);
+                check_layer_67();
+                break;
+        }
+    }
     if (!record->event.pressed) {
         switch (keycode) {
             case SV_LEFT_DPI_INC:
@@ -214,6 +274,23 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 break;
             case SV_MH_CHANGE_TIMEOUTS:
                 mh_change_timeouts();
+                break;
+            case SV_CAPS_WORD:
+                caps_word_toggle();
+                break;
+            case SV_TOGGLE_ACHORDION:
+                toggle_achordion();
+                break;
+            case SV_TOGGLE_23_67:
+                layer_off(2);
+                layer_off(3);
+                check_layer_67();
+                break;
+            case SV_TOGGLE_45_67:
+                layer_off(4);
+                layer_off(5);
+                check_layer_67();
+                break;
             default:
                 break;
         }
@@ -242,6 +319,10 @@ void ps2_mouse_moved_user(report_mouse_t *mouse_report) {
 
 #if (defined MH_AUTO_BUTTONS && defined PS2_MOUSE_ENABLE && defined MOUSEKEY_ENABLE) || defined(POINTING_DEVICE_AUTO_MOUSE_MH_ENABLE)
 void matrix_scan_kb(void) {
+    if (!global_saved_values.disable_achordion) {
+        achordion_task();
+    }
+
     if (mh_timer_choices[global_saved_values.mh_timer_index] < 0) {
         return;
     }

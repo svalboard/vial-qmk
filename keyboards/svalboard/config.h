@@ -86,3 +86,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLIGHT_MAX_LAYERS 16 //DYNAMIC_KEYMAP_LAYER_COUNT
 #define RGBLIGHT_VAL_STEP 10
 #define RGBLIGHT_LED_COUNT 2
+
+
+#define PERMISSIVE_HOLD
+#define ACHORDION_STREAK

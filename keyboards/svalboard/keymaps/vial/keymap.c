@@ -32,7 +32,7 @@ LAYER_COLOR(layer3_colors, HSV_ORANGE); // FUNC_HOLD
 LAYER_COLOR(layer4_colors, HSV_AZURE); // NAS
 LAYER_COLOR(layer5_colors, HSV_AZURE); // would be NAS hold
 LAYER_COLOR(layer6_colors, HSV_RED); // maybe 10kp
-LAYER_COLOR(layer7_colors, HSV_GOLDENROD);
+LAYER_COLOR(layer7_colors, HSV_RED);
 LAYER_COLOR(layer8_colors, HSV_PINK);
 LAYER_COLOR(layer9_colors, HSV_PURPLE);
 LAYER_COLOR(layer10_colors, HSV_CORAL);
@@ -67,7 +67,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 void keyboard_post_init_user(void) {
   // Customise these values if you need to debug the matrix
   //debug_enable=true;
-  debug_matrix=true;
+  //debug_matrix=true;
   //debug_keyboard=true;
   //debug_mouse=true;
   rgblight_layers = sval_rgb_layers;
@@ -184,3 +184,14 @@ const uint16_t PROGMEM keymaps[DYNAMIC_KEYMAP_LAYER_COUNT][MATRIX_ROWS][MATRIX_C
         )
 
 };
+
+bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
+                     uint16_t other_keycode, keyrecord_t* other_record) {
+    if (tap_hold_record->event.key.row == 0 || tap_hold_record->event.key.row == 5 ||
+        other_record->event.key.row    == 0 || other_record->event.key.row    == 5) {
+        return true;
+    }
+
+    return achordion_opposite_hands(tap_hold_record, other_record);
+}
+

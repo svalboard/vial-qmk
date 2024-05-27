@@ -45,6 +45,26 @@
         "shortName": "Mouse\nKey\nTimer",
         "title": "Toggle between various settings of the mouse keys timer.",
         "name": "SV_MH_CHANGE_TIMEOUTS"
+      },
+      {
+        "shortName": "Caps\nWord\nToggle",
+        "title": "Toggle Caps Word.",
+        "name": "SV_CAPS_WORD"
+      },
+      {
+        "shortName": "Toggle\nACH",
+        "title": "Toggle Achordion",
+        "name": "SV_TOGGLE_ACHORDION"
+      },
+      {
+        "shortName": "MO 23\n(45=67)",
+        "title": "Toggle layer 2 and 3, if 4 and 5 also active toggle 6 and 7",
+        "name": "SV_TOGGLE_23_67"
+      },
+      {
+        "shortName": "MO 45\n(23=67)",
+        "title": "Toggle layer 4 and 5, if 2 and 3 also active toggle 6 and 7",
+        "name": "SV_TOGGLE_45_67"
       }
     ],
     "layouts": {

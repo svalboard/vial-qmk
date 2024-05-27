@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define FORCE_NKRO
 #define EE_HANDS
 //#define DEBUG_MATRIX_SCAN_RATE
-#define EECONFIG_KB_DATA_SIZE 4
+#define EECONFIG_KB_DATA_SIZE 5
 
 // wiring of each half
 //Layout for svalboard v0 (different from lalboard_v2)

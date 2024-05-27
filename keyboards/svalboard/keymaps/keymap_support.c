@@ -21,7 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "svalboard.h"
 
 #define MH_AUTO_BUTTONS_LAYER (DYNAMIC_KEYMAP_LAYER_COUNT - 1)
-#define MH_AUTO_BUTTONS_TIMEOUT 5000
+
+const uint16_t mh_timer_choices[] = { 300, 500, -1}; // -1 is infinite.
+
 #define PS2_MOUSE_SCROLL_BTN_MASK (1<<PS2_MOUSE_BTN_MIDDLE) // this mask disables the key for non-PS2 purposes
 
 // in keymap.c:
@@ -40,6 +42,7 @@ enum my_keycodes {
     SV_LEFT_SCROLL_TOGGLE,
     SV_RIGHT_SCROLL_TOGGLE,
     SV_RECALIBRATE_POINTER,
+    SV_MH_CHANGE_TIMEOUTS,
     KC_NORMAL_HOLD = SAFE_RANGE,
     KC_FUNC_HOLD,
     SV_SAFE_RANGE, // Keycodes over this are safe on Svalboard.
@@ -138,6 +141,15 @@ report_mouse_t pointing_device_task_user(report_mouse_t reportMouse) {
 }
 #endif
 
+void mh_change_timeouts(void) {
+    if (sizeof(mh_timer_choices)/sizeof(int16_t) - 1 <= global_saved_values.mh_timer_index) {
+        global_saved_values.mh_timer_index = 0;
+    } else {
+        global_saved_values.mh_timer_index++;
+    }
+    uprintf("mh_timer:%d\n",mh_timer_choices[global_saved_values.mh_timer_index]);
+    write_eeprom_kb();
+}
 
 bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 
@@ -199,6 +211,9 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 break;
             case SV_RECALIBRATE_POINTER:
                 recalibrate_pointer();
+                break;
+            case SV_MH_CHANGE_TIMEOUTS:
+                mh_change_timeouts();
             default:
                 break;
         }
@@ -227,7 +242,10 @@ void ps2_mouse_moved_user(report_mouse_t *mouse_report) {
 
 #if (defined MH_AUTO_BUTTONS && defined PS2_MOUSE_ENABLE && defined MOUSEKEY_ENABLE) || defined(POINTING_DEVICE_AUTO_MOUSE_MH_ENABLE)
 void matrix_scan_kb(void) {
-    if (mh_auto_buttons_timer && (timer_elapsed(mh_auto_buttons_timer) > MH_AUTO_BUTTONS_TIMEOUT)) {
+    if (mh_timer_choices[global_saved_values.mh_timer_index] < 0) {
+        return;
+    }
+    if (mh_auto_buttons_timer && (timer_elapsed(mh_auto_buttons_timer) > mh_timer_choices[global_saved_values.mh_timer_index])) {
         if (!tp_buttons) {
             mouse_mode(false);
 #if defined CONSOLE_ENABLE

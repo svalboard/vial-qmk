@@ -25,6 +25,7 @@ struct saved_values {
     unsigned int unused0 :6;
     uint8_t left_dpi_index;
     uint8_t right_dpi_index;
+    uint8_t mh_timer_index;
 };
 
 typedef struct saved_values saved_values_t;

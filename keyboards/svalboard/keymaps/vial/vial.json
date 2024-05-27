@@ -40,6 +40,11 @@
         "shortName": "Fix\nDrift",
         "title": "Reset the calibration of the pointing device",
         "name": "SV_RECALIBRATE_POINTER"
+      },
+      {
+        "shortName": "Mouse\nKey\nTimer",
+        "title": "Toggle between various settings of the mouse keys timer.",
+        "name": "SV_MH_CHANGE_TIMEOUTS"
       }
     ],
     "layouts": {

@@ -65,6 +65,21 @@
         "shortName": "MO 45\n(23=67)",
         "title": "Toggle layer 4 and 5, if 2 and 3 also active toggle 6 and 7",
         "name": "SV_TOGGLE_45_67"
+      },
+      {
+        "shortName": "Sniper\n2x",
+        "title": "Slow the cursor 2x more.",
+        "name": "SV_SNIPER_2"
+      },
+      {
+        "shortName": "Sniper\n3x",
+        "title": "Slow the cursor 3x more.",
+        "name": "SV_SNIPER_3"
+      },
+      {
+        "shortName": "Sniper\n5x",
+        "title": "Slow the cursor 5x more.",
+        "name": "SV_SNIPER_5"
       }
     ],
     "layouts": {

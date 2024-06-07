@@ -48,7 +48,9 @@ enum my_keycodes {
     SV_TOGGLE_ACHORDION,
     SV_TOGGLE_23_67,
     SV_TOGGLE_45_67,
-
+    SV_SNIPER_2,
+    SV_SNIPER_3,
+    SV_SNIPER_5,
     KC_NORMAL_HOLD = SAFE_RANGE,
     KC_FUNC_HOLD,
     SV_SAFE_RANGE, // Keycodes over this are safe on Svalboard.
@@ -73,6 +75,7 @@ static int _ds_r_x = 0;
 static int _ds_r_y = 0;
 
 report_mouse_t pointing_device_task_combined_user(report_mouse_t reportMouse1, report_mouse_t reportMouse2) {
+    report_mouse_t ret_mouse;
     if (reportMouse1.x == 0 && reportMouse1.y == 0 && reportMouse2.x == 0 && reportMouse2.y == 0)
         return pointing_device_combine_reports(reportMouse1, reportMouse2);
 
@@ -80,8 +83,10 @@ report_mouse_t pointing_device_task_combined_user(report_mouse_t reportMouse1, r
         int div_x;
         int div_y;
 
+        reportMouse1.y = -reportMouse1.y;
+
         _ds_l_x += reportMouse1.x;
-        _ds_l_y -= reportMouse1.y;
+        _ds_l_y += reportMouse1.y;
 
         div_x = _ds_l_x / SCROLL_DIVISOR;
         div_y = _ds_l_y / SCROLL_DIVISOR;
@@ -102,8 +107,10 @@ report_mouse_t pointing_device_task_combined_user(report_mouse_t reportMouse1, r
         int div_x;
         int div_y;
 
+        reportMouse2.y = -reportMouse2.y;
+
         _ds_r_x += reportMouse2.x;
-        _ds_r_y -= reportMouse2.y;
+        _ds_r_y += reportMouse2.y;
 
         div_x = _ds_r_x / SCROLL_DIVISOR;
         div_y = _ds_r_y / SCROLL_DIVISOR;
@@ -128,9 +135,15 @@ report_mouse_t pointing_device_task_combined_user(report_mouse_t reportMouse1, r
         print("task - combined mh_auto_buttons: on\n");
 #endif
     }
-    return pointing_device_combine_reports(reportMouse1, reportMouse2);
+    ret_mouse = pointing_device_combine_reports(reportMouse1, reportMouse2);
+
+    return pointing_device_task_user(ret_mouse);
 }
 
+static int snipe_x = 0;
+static int snipe_y = 0;
+
+static int snipe_div = 1;
 report_mouse_t pointing_device_task_user(report_mouse_t reportMouse) {
     if (reportMouse.x == 0 && reportMouse.y == 0)
         return reportMouse;
@@ -142,6 +155,28 @@ report_mouse_t pointing_device_task_user(report_mouse_t reportMouse) {
 #if defined CONSOLE_ENABLE
         print("user - mh_auto_buttons: on\n");
 #endif
+    }
+
+    if (snipe_div != 1) {
+        int div_x;
+        int div_y;
+        snipe_x += reportMouse.x;
+        snipe_y += reportMouse.y;
+
+        reportMouse.x = 0;
+        reportMouse.y = 0;
+
+        div_x = snipe_x / snipe_div;
+        div_y = snipe_y / snipe_div;
+        if (div_x != 0) {
+            reportMouse.x = div_x;
+            snipe_x -= div_x * snipe_div;
+        }
+
+        if  (div_y != 0) {
+            reportMouse.y = div_y;
+            snipe_y -= div_y * snipe_div;
+        }
     }
     return reportMouse;
 }
@@ -224,6 +259,9 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
             case KC_RALT:
             case KC_LGUI:
             case KC_RGUI:
+            case SV_SNIPER_2:
+            case SV_SNIPER_3:
+            case SV_SNIPER_5:
             case SV_RECALIBRATE_POINTER:
                 break;
             default:
@@ -244,6 +282,21 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 layer_on(4);
                 layer_on(5);
                 check_layer_67();
+                break;
+            case SV_SNIPER_2:
+                snipe_x *= 2;
+                snipe_y *= 2;
+                snipe_div *= 2;
+                break;
+            case SV_SNIPER_3:
+                snipe_div *= 3;
+                snipe_x *= 3;
+                snipe_y *= 3;
+                break;
+            case SV_SNIPER_5:
+                snipe_div *= 5;
+                snipe_x *= 5;
+                snipe_y *= 5;
                 break;
         }
     }
@@ -290,6 +343,21 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 layer_off(4);
                 layer_off(5);
                 check_layer_67();
+                break;
+            case SV_SNIPER_2:
+                snipe_div /= 2;
+                snipe_x /= 2;
+                snipe_y /= 2;
+                break;
+            case SV_SNIPER_3:
+                snipe_div /= 3;
+                snipe_x /= 3;
+                snipe_y /= 3;
+                break;
+            case SV_SNIPER_5:
+                snipe_div /= 5;
+                snipe_x /= 5;
+                snipe_y /= 5;
                 break;
             default:
                 break;

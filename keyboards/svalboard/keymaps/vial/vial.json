@@ -43,7 +43,7 @@
       },
       {
         "shortName": "Mouse\nKey\nTimer",
-        "title": "Toggle between various settings of the mouse keys timer.",
+        "title": "Cycle between various settings of the mouse keys timer.",
         "name": "SV_MH_CHANGE_TIMEOUTS"
       },
       {

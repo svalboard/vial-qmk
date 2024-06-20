@@ -20,8 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdint.h>
 #include "svalboard.h"
 #include "features/achordion.h"
-
-#define MH_AUTO_BUTTONS_LAYER (DYNAMIC_KEYMAP_LAYER_COUNT - 1)
+#include "keymap_support.h"
 
 const uint16_t mh_timer_choices[] = { 300, 500, -1}; // -1 is infinite.
 
@@ -34,27 +33,6 @@ void pointing_device_init_user(void) {
     set_auto_mouse_enable(true);         // always required before the auto mouse feature will work
 }
 #endif
-
-enum my_keycodes {
-    SV_LEFT_DPI_INC = QK_KB_0,
-    SV_LEFT_DPI_DEC,
-    SV_RIGHT_DPI_INC,
-    SV_RIGHT_DPI_DEC,
-    SV_LEFT_SCROLL_TOGGLE,
-    SV_RIGHT_SCROLL_TOGGLE,
-    SV_RECALIBRATE_POINTER,
-    SV_MH_CHANGE_TIMEOUTS,
-    SV_CAPS_WORD,
-    SV_TOGGLE_ACHORDION,
-    SV_TOGGLE_23_67,
-    SV_TOGGLE_45_67,
-    SV_SNIPER_2,
-    SV_SNIPER_3,
-    SV_SNIPER_5,
-    KC_NORMAL_HOLD = SAFE_RANGE,
-    KC_FUNC_HOLD,
-    SV_SAFE_RANGE, // Keycodes over this are safe on Svalboard.
-};
 
 #if (defined MH_AUTO_BUTTONS && defined PS2_MOUSE_ENABLE && defined MOUSEKEY_ENABLE)  || defined(POINTING_DEVICE_AUTO_MOUSE_MH_ENABLE)
 

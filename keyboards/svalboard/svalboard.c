@@ -1,7 +1,9 @@
 #include "svalboard.h"
 #include "eeconfig.h"
+#include "version.h"
 
 saved_values_t global_saved_values;
+const int16_t mh_timer_choices[3] = { 300, 500, -1 }; // -1 is infinite.
 
 void write_eeprom_kb(void) {
     eeconfig_update_kb_datablock(&global_saved_values);
@@ -27,8 +29,34 @@ void read_eeprom_kb(void) {
     }
 }
 
+static const char YES[] = "yes";
+static const char NO[] = "no";
+
+const char *yes_or_no(int flag) {
+    if (flag) {
+	return YES;
+    } else {
+	return NO;
+    }
+}
+
 const uint16_t dpi_choices[] = { 200, 400, 800, 1200, 1600, 2400 }; // If we need more, add them.
 #define DPI_CHOICES_LENGTH (sizeof(dpi_choices)/sizeof(dpi_choices[0]))
+
+void output_keyboard_info(void) {
+    char output_buffer[256];
+
+    sprintf(output_buffer, "%s:%s @ %s\n", QMK_KEYBOARD, QMK_KEYMAP, QMK_VERSION);
+    send_string(output_buffer);
+    sprintf(output_buffer, "Left Ptr: Scroll %s, cpi: %d, Right Ptr: Scroll %s, cpi: %d\n",
+	    yes_or_no(global_saved_values.left_scroll), dpi_choices[global_saved_values.left_dpi_index],
+	    yes_or_no(global_saved_values.right_scroll), dpi_choices[global_saved_values.right_dpi_index]);
+    send_string(output_buffer);
+    sprintf(output_buffer, "Achordion: %s, MH Keys Timer: %d\n",
+	    yes_or_no(!global_saved_values.disable_achordion),
+	    mh_timer_choices[global_saved_values.mh_timer_index]);
+    send_string(output_buffer);
+}
 
 void increase_left_dpi(void) {
     if (global_saved_values.left_dpi_index + 1 < DPI_CHOICES_LENGTH) {

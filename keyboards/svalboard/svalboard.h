@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "quantum.h"
 
+extern const int16_t mh_timer_choices[3];
+
 struct saved_values {
     uint8_t version;  // Currently at 1,  We assume all new data will be zeroed.
     bool left_scroll :1;
@@ -32,7 +34,7 @@ struct saved_values {
 typedef struct saved_values saved_values_t;
 
 extern saved_values_t global_saved_values;
-
+void output_keyboard_info(void);
 void increase_left_dpi(void);
 void increase_right_dpi(void);
 void decrease_left_dpi(void);

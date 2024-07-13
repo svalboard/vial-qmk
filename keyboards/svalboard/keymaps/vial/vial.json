@@ -90,7 +90,12 @@
         "shortName": "Scroll\nRight\nHold",
         "title": "Hold to make the right pointing device scroll",
         "name": "SV_RIGHT_SCROLL_HOLD"
-      }
+      },
+      {
+	"shortName": "Output\nStatus",
+	"title": "Output the current internal state of the keyboard.",
+	"name": "SV_OUTPUT_STATUS"
+      }    
     ],
     "layouts": {
       "keymap": [

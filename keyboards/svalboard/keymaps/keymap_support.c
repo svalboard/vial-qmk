@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define MH_AUTO_BUTTONS_LAYER (DYNAMIC_KEYMAP_LAYER_COUNT - 1)
 
-const uint16_t mh_timer_choices[] = { 300, 500, -1}; // -1 is infinite.
+const uint16_t mh_timer_choices[] = { 300, 500, 1000, -1}; // -1 is infinite.
 
 #define PS2_MOUSE_SCROLL_BTN_MASK (1<<PS2_MOUSE_BTN_MIDDLE) // this mask disables the key for non-PS2 purposes
 

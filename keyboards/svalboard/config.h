@@ -53,7 +53,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define VIAL_TAP_DANCE_ENTRIES 50
 #define VIAL_TAP_COMBO_ENTRIES 50
 #define VIAL_COMBO_ENTRIES 50
-#define VIAL_KEY_OVERRIDE_ENTRIES 10
+#define VIAL_KEY_OVERRIDE_ENTRIES 30
 #define DYNAMIC_KEYMAP_MACRO_COUNT 50
 
 #define USB_MAX_POWER_CONSUMPTION 500

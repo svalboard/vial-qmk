@@ -5,7 +5,7 @@
 Svalboard - Datahand Forever!
 
 Keyboard Maintainer: [morganvenable](https://github.com/svalboard/vial-qmk) [@_claussen] on discord
-Hardware Supported: RP2040, Svalboard Alpha 
+Hardware Supported: RP2040, Svalboard Alpha, Svalboard Lightly
 Hardware Availability: [Store](https://www.svalboard.com)
 
 Build example for this keyboard (after setting up your build environment):
@@ -45,3 +45,6 @@ See the [build environment setup](https://docs.qmk.fm/#/getting_started_build_to
 
 ## Bootloader
 To enter bootloader mode, simply double tap reset in 500ms or less.  The device will come up as a mass storage device titled RPI-RP2.  Drag the desired UF2 file to the drive and it will immediately reboot and enumerate as Svalboard.
+
+## Svalboard-specific firmware features
+See [Svalboard firmware features](docs/firmware_features.md) pages for information.

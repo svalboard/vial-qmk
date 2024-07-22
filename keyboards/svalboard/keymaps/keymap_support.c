@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdint.h>
 #include "svalboard.h"
 #include "features/achordion.h"
+#include "keymap_support.h"
 
 #define MH_AUTO_BUTTONS_LAYER (DYNAMIC_KEYMAP_LAYER_COUNT - 1)
 
@@ -35,26 +36,6 @@ void pointing_device_init_user(void) {
 }
 #endif
 
-enum my_keycodes {
-    SV_LEFT_DPI_INC = QK_KB_0,
-    SV_LEFT_DPI_DEC,
-    SV_RIGHT_DPI_INC,
-    SV_RIGHT_DPI_DEC,
-    SV_LEFT_SCROLL_TOGGLE,
-    SV_RIGHT_SCROLL_TOGGLE,
-    SV_RECALIBRATE_POINTER,
-    SV_MH_CHANGE_TIMEOUTS,
-    SV_CAPS_WORD,
-    SV_TOGGLE_ACHORDION,
-    SV_TOGGLE_23_67,
-    SV_TOGGLE_45_67,
-    SV_SNIPER_2,
-    SV_SNIPER_3,
-    SV_SNIPER_5,
-    KC_NORMAL_HOLD = SAFE_RANGE,
-    KC_FUNC_HOLD,
-    SV_SAFE_RANGE, // Keycodes over this are safe on Svalboard.
-};
 
 #if (defined MH_AUTO_BUTTONS && defined PS2_MOUSE_ENABLE && defined MOUSEKEY_ENABLE)  || defined(POINTING_DEVICE_AUTO_MOUSE_MH_ENABLE)
 
@@ -74,12 +55,14 @@ static int _ds_l_y = 0;
 static int _ds_r_x = 0;
 static int _ds_r_y = 0;
 
+static bool left_scroll_hold = false, right_scroll_hold = false;
+
 report_mouse_t pointing_device_task_combined_user(report_mouse_t reportMouse1, report_mouse_t reportMouse2) {
     report_mouse_t ret_mouse;
     if (reportMouse1.x == 0 && reportMouse1.y == 0 && reportMouse2.x == 0 && reportMouse2.y == 0)
         return pointing_device_combine_reports(reportMouse1, reportMouse2);
 
-    if (global_saved_values.left_scroll) {
+    if (global_saved_values.left_scroll || left_scroll_hold) {
         int div_x;
         int div_y;
 
@@ -103,7 +86,7 @@ report_mouse_t pointing_device_task_combined_user(report_mouse_t reportMouse1, r
         reportMouse1.y = 0;
     }
 
-    if (global_saved_values.right_scroll) {
+    if (global_saved_values.right_scroll || right_scroll_hold) {
         int div_x;
         int div_y;
 
@@ -259,6 +242,10 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
             case KC_RALT:
             case KC_LGUI:
             case KC_RGUI:
+            case SV_LEFT_SCROLL_TOGGLE:
+            case SV_RIGHT_SCROLL_TOGGLE:
+            case SV_LEFT_SCROLL_HOLD:
+            case SV_RIGHT_SCROLL_HOLD:
             case SV_SNIPER_2:
             case SV_SNIPER_3:
             case SV_SNIPER_5:
@@ -271,8 +258,14 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 mouse_mode(false);
         }
     }
-    if (record->event.pressed) {
+    if (record->event.pressed) { // key pressed
         switch (keycode) {
+            case SV_LEFT_SCROLL_HOLD:
+		left_scroll_hold = true;
+                break;
+            case SV_RIGHT_SCROLL_HOLD:
+		right_scroll_hold = true;
+                break;
             case SV_TOGGLE_23_67:
                 layer_on(2);
                 layer_on(3);
@@ -299,8 +292,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 snipe_y *= 5;
                 break;
         }
-    }
-    if (!record->event.pressed) {
+    } else { // key released
         switch (keycode) {
             case SV_LEFT_DPI_INC:
                 increase_left_dpi();
@@ -321,6 +313,12 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
             case SV_RIGHT_SCROLL_TOGGLE:
                 global_saved_values.right_scroll = !global_saved_values.right_scroll;
                 write_eeprom_kb();
+                break;
+	    case SV_LEFT_SCROLL_HOLD:
+		left_scroll_hold = false;
+                break;
+	    case SV_RIGHT_SCROLL_HOLD:
+		right_scroll_hold = false;
                 break;
             case SV_RECALIBRATE_POINTER:
                 recalibrate_pointer();
@@ -359,7 +357,9 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 snipe_x /= 5;
                 snipe_y /= 5;
                 break;
-            default:
+	    case SV_OUTPUT_STATUS:
+	        output_keyboard_info();
+	    default:
                 break;
         }
     }

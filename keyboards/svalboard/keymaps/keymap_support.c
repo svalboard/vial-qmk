@@ -254,107 +254,107 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
     }
     if (record->event.pressed) { // key pressed
         switch (keycode) {
-            case SV_LEFT_SCROLL_HOLD:
-                left_scroll_hold = true;
-                break;
-            case SV_RIGHT_SCROLL_HOLD:
-                right_scroll_hold = true;
-                break;
+            case SV_LEFT_DPI_INC:
+                increase_left_dpi();
+                return false;
+            case SV_LEFT_DPI_DEC:
+                decrease_left_dpi();
+                return false;
+            case SV_RIGHT_DPI_INC:
+                increase_right_dpi();
+                return false;
+            case SV_RIGHT_DPI_DEC:
+                decrease_right_dpi();
+                return false;
+            case SV_LEFT_SCROLL_TOGGLE:
+                global_saved_values.left_scroll = !global_saved_values.left_scroll;
+                write_eeprom_kb();
+                return false;
+            case SV_RIGHT_SCROLL_TOGGLE:
+                global_saved_values.right_scroll = !global_saved_values.right_scroll;
+                write_eeprom_kb();
+                return false;
+            case SV_RECALIBRATE_POINTER:
+                recalibrate_pointer();
+                return false;
+            case SV_MH_CHANGE_TIMEOUTS:
+                mh_change_timeouts();
+                return false;
+            case SV_CAPS_WORD:
+                caps_word_toggle();
+                return false;
+            case SV_TOGGLE_ACHORDION:
+                toggle_achordion();
+                return false;
             case SV_TOGGLE_23_67:
                 layer_on(2);
                 layer_on(3);
                 check_layer_67();
-                break;
+                return false;
             case SV_TOGGLE_45_67:
                 layer_on(4);
                 layer_on(5);
                 check_layer_67();
-                break;
+                return false;
             case SV_SNIPER_2:
                 snipe_x *= 2;
                 snipe_y *= 2;
                 snipe_div *= 2;
-                break;
+                return false;
             case SV_SNIPER_3:
                 snipe_div *= 3;
                 snipe_x *= 3;
                 snipe_y *= 3;
-                break;
+                return false;
             case SV_SNIPER_5:
                 snipe_div *= 5;
                 snipe_x *= 5;
                 snipe_y *= 5;
-                break;
+                return false;
+            case SV_LEFT_SCROLL_HOLD:
+                left_scroll_hold = true;
+                return false;
+            case SV_RIGHT_SCROLL_HOLD:
+                right_scroll_hold = true;
+                return false;
+            case SV_OUTPUT_STATUS:
+                output_keyboard_info();
+                return false;
         }
     } else { // key released
         switch (keycode) {
-            case SV_LEFT_DPI_INC:
-                increase_left_dpi();
-                break;
-            case SV_LEFT_DPI_DEC:
-                decrease_left_dpi();
-                break;
-            case SV_RIGHT_DPI_INC:
-                increase_right_dpi();
-                break;
-            case SV_RIGHT_DPI_DEC:
-                decrease_right_dpi();
-                break;
-            case SV_LEFT_SCROLL_TOGGLE:
-                global_saved_values.left_scroll = !global_saved_values.left_scroll;
-                write_eeprom_kb();
-                break;
-            case SV_RIGHT_SCROLL_TOGGLE:
-                global_saved_values.right_scroll = !global_saved_values.right_scroll;
-                write_eeprom_kb();
-                break;
-            case SV_LEFT_SCROLL_HOLD:
-                left_scroll_hold = false;
-                break;
-            case SV_RIGHT_SCROLL_HOLD:
-                right_scroll_hold = false;
-                break;
-            case SV_RECALIBRATE_POINTER:
-                recalibrate_pointer();
-                break;
-            case SV_MH_CHANGE_TIMEOUTS:
-                mh_change_timeouts();
-                break;
-            case SV_CAPS_WORD:
-                caps_word_toggle();
-                break;
-            case SV_TOGGLE_ACHORDION:
-                toggle_achordion();
-                break;
+            // These keys are all holds and require un-setting upon release.
             case SV_TOGGLE_23_67:
                 layer_off(2);
                 layer_off(3);
                 check_layer_67();
-                break;
+                return false;
             case SV_TOGGLE_45_67:
                 layer_off(4);
                 layer_off(5);
                 check_layer_67();
-                break;
+                return false;
             case SV_SNIPER_2:
                 snipe_div /= 2;
                 snipe_x /= 2;
                 snipe_y /= 2;
-                break;
+                return false;
             case SV_SNIPER_3:
                 snipe_div /= 3;
                 snipe_x /= 3;
                 snipe_y /= 3;
-                break;
+                return false;
             case SV_SNIPER_5:
                 snipe_div /= 5;
                 snipe_x /= 5;
                 snipe_y /= 5;
-                break;
-            case SV_OUTPUT_STATUS:
-                output_keyboard_info();
-            default:
-                break;
+                return false;
+            case SV_LEFT_SCROLL_HOLD:
+                left_scroll_hold = false;
+                return false;
+            case SV_RIGHT_SCROLL_HOLD:
+                right_scroll_hold = false;
+                return false;
         }
     }
 

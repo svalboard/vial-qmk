@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "features/achordion.h"
 #include "keymap_support.h"
 
-#define PS2_MOUSE_SCROLL_BTN_MASK (1<<PS2_MOUSE_BTN_MIDDLE) // this mask disables the key for non-PS2 purposes
+#define PS2_MOUSE_SCROLL_BTN_MASK (1 << PS2_MOUSE_BTN_MIDDLE) // this mask disables the key for non-PS2 purposes
 
 // in keymap.c:
 #ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
@@ -32,8 +32,7 @@ void pointing_device_init_user(void) {
 }
 #endif
 
-
-#if (defined MH_AUTO_BUTTONS && defined PS2_MOUSE_ENABLE && defined MOUSEKEY_ENABLE)  || defined(POINTING_DEVICE_AUTO_MOUSE_MH_ENABLE)
+#if (defined MH_AUTO_BUTTONS && defined PS2_MOUSE_ENABLE && defined MOUSEKEY_ENABLE) || defined(POINTING_DEVICE_AUTO_MOUSE_MH_ENABLE)
 
 static uint16_t mh_auto_buttons_timer;
 extern int tp_buttons; // mousekey button state set in action.c and used in ps2_mouse.c
@@ -74,7 +73,7 @@ report_mouse_t pointing_device_task_combined_user(report_mouse_t reportMouse1, r
             _ds_l_x -= div_x * SCROLL_DIVISOR;
         }
 
-        if  (div_y != 0) {
+        if (div_y != 0) {
             reportMouse1.v += div_y;
             _ds_l_y -= div_y * SCROLL_DIVISOR;
         }
@@ -98,7 +97,7 @@ report_mouse_t pointing_device_task_combined_user(report_mouse_t reportMouse1, r
             _ds_r_x -= div_x * SCROLL_DIVISOR;
         }
 
-        if  (div_y != 0) {
+        if (div_y != 0) {
             reportMouse2.v += div_y;
             _ds_r_y -= div_y * SCROLL_DIVISOR;
         }
@@ -152,7 +151,7 @@ report_mouse_t pointing_device_task_user(report_mouse_t reportMouse) {
             snipe_x -= div_x * snipe_div;
         }
 
-        if  (div_y != 0) {
+        if (div_y != 0) {
             reportMouse.y = div_y;
             snipe_y -= div_y * snipe_div;
         }
@@ -162,12 +161,12 @@ report_mouse_t pointing_device_task_user(report_mouse_t reportMouse) {
 #endif
 
 void mh_change_timeouts(void) {
-    if (sizeof(mh_timer_choices)/sizeof(int16_t) - 1 <= global_saved_values.mh_timer_index) {
+    if (sizeof(mh_timer_choices) / sizeof(int16_t) - 1 <= global_saved_values.mh_timer_index) {
         global_saved_values.mh_timer_index = 0;
     } else {
         global_saved_values.mh_timer_index++;
     }
-    uprintf("mh_timer:%d\n",mh_timer_choices[global_saved_values.mh_timer_index]);
+    uprintf("mh_timer:%d\n", mh_timer_choices[global_saved_values.mh_timer_index]);
     write_eeprom_kb();
 }
 
@@ -256,10 +255,10 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) { // key pressed
         switch (keycode) {
             case SV_LEFT_SCROLL_HOLD:
-		left_scroll_hold = true;
+                left_scroll_hold = true;
                 break;
             case SV_RIGHT_SCROLL_HOLD:
-		right_scroll_hold = true;
+                right_scroll_hold = true;
                 break;
             case SV_TOGGLE_23_67:
                 layer_on(2);
@@ -309,11 +308,11 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 global_saved_values.right_scroll = !global_saved_values.right_scroll;
                 write_eeprom_kb();
                 break;
-	    case SV_LEFT_SCROLL_HOLD:
-		left_scroll_hold = false;
+            case SV_LEFT_SCROLL_HOLD:
+                left_scroll_hold = false;
                 break;
-	    case SV_RIGHT_SCROLL_HOLD:
-		right_scroll_hold = false;
+            case SV_RIGHT_SCROLL_HOLD:
+                right_scroll_hold = false;
                 break;
             case SV_RECALIBRATE_POINTER:
                 recalibrate_pointer();
@@ -352,9 +351,9 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 snipe_x /= 5;
                 snipe_y /= 5;
                 break;
-	    case SV_OUTPUT_STATUS:
-	        output_keyboard_info();
-	    default:
+            case SV_OUTPUT_STATUS:
+                output_keyboard_info();
+            default:
                 break;
         }
     }
@@ -376,8 +375,6 @@ void ps2_mouse_moved_user(report_mouse_t *mouse_report) {
     }
 }
 #endif
-
-
 
 void matrix_scan_kb(void) {
     if (!global_saved_values.disable_achordion) {

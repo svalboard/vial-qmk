@@ -44,6 +44,10 @@
   "tapping": {
       "term": 200
   },
+  "caps_word": {
+    "enabled": true,
+    "invert_on_shift": true
+  },
   "usb": {
       "device_version": "0.0.2",
       "pid": "0x4044",

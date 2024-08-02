@@ -245,7 +245,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 break;
             default:
 #ifdef CONSOLE_ENABLE
-                uprintf("process_record: off\n");
+                uprintf("process_record - mh_auto_buttons: off\n");
 #endif
                 mouse_mode(false);
         }

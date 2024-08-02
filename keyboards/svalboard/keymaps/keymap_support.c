@@ -379,10 +379,7 @@ void matrix_scan_kb(void) {
         achordion_task();
     }
 
-    if (mh_timer_choices[global_saved_values.mh_timer_index] < 0) {
-        return;
-    }
-    if (mh_auto_buttons_timer && (timer_elapsed(mh_auto_buttons_timer) > mh_timer_choices[global_saved_values.mh_timer_index])) {
+    if ((mh_timer_choices[global_saved_values.mh_timer_index] >= 0) && mh_auto_buttons_timer && (timer_elapsed(mh_auto_buttons_timer) > mh_timer_choices[global_saved_values.mh_timer_index])) {
         if (!tp_buttons) {
             mouse_mode(false);
 #if defined CONSOLE_ENABLE
@@ -390,6 +387,7 @@ void matrix_scan_kb(void) {
 #endif
         }
     }
+
     matrix_scan_user();
 }
 

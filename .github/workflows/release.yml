@@ -34,6 +34,6 @@ jobs:
     strategy:
       matrix:
         keyboard: [ svalboard ]
-        keymap: [ vial ]
+        keymap: [ blank ]
         side: [ left, right ]
 

@@ -30,7 +30,7 @@ const pin_t col_pins[MATRIX_COLS] = MATRIX_COL_PINS;
 const pin_t row_pins[ROWS_PER_HAND] = MATRIX_ROW_PINS;
 //static const uint8_t col_pushed_states[MATRIX_COLS] = MATRIX_COL_PUSHED_STATES;
 static const uint8_t col_pushed_states_fingers[MATRIX_COLS] = MATRIX_COL_PUSHED_STATES;
-static uint8_t col_pushed_states_thumbs[MATRIX_COLS] = { 0 };
+static const uint8_t col_pushed_states_thumbs[MATRIX_COLS] = MATRIX_COL_PUSHED_STATES_THUMBS;
 
 static inline void setPinOutput_writeLow(pin_t pin) {
     ATOMIC_BLOCK_FORCEON {
@@ -96,7 +96,6 @@ static void unselect_rows(void) {
 extern matrix_row_t raw_matrix[ROWS_PER_HAND]; // raw values
 extern matrix_row_t matrix[ROWS_PER_HAND];     // debounced values
 
-static bool first_matrix_scan = true;
 void matrix_read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row) {
     // Start with a clear matrix row
     matrix_row_t current_row_value = 0;
@@ -110,12 +109,7 @@ void matrix_read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row)
     for (uint8_t col_index = 0; col_index < MATRIX_COLS; col_index++) {
         uint8_t pin_state;
         if (current_row == 0) {
-            if (first_matrix_scan) {
-                col_pushed_states_thumbs[col_index] = readPin(col_pins[col_index]) ? 0 : 1; // This is inverted for reasons, not understood.
-                pin_state = 0;
-            } else {
-                pin_state = (readPin(col_pins[col_index]) == col_pushed_states_thumbs[col_index]) ? 1 : 0; // read pin and match pushed_states define
-            }
+            pin_state = (readPin(col_pins[col_index]) == col_pushed_states_thumbs[col_index]) ? 1 : 0;  // read pin and match pushed_states define
         } else {
             pin_state = (readPin(col_pins[col_index]) == col_pushed_states_fingers[col_index]) ? 1 : 0;  // read pin and match pushed_states define
         }
@@ -127,7 +121,6 @@ void matrix_read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row)
     unselect_row(current_row);
     wait_us(POSTWAIT_US);
 
-    first_matrix_scan = false;
     // Update the matrix
     current_matrix[current_row] = current_row_value;
 }

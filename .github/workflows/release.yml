@@ -11,7 +11,7 @@ on:
 permissions: write-all
 
 jobs:
-  build:
+  build_vial:
     uses: ./.github/workflows/build-firmware.yml
     with:
       keyboard: ${{ matrix.keyboard }}
@@ -23,4 +23,17 @@ jobs:
         keyboard: [ svalboard/trackpoint, svalboard, svalboard/trackball/pmw3360, svalboard/trackball/pmw3389 ]
         keymap: [ vial ]
         side: [ left, right ]
-        
+
+  build_blank:
+    uses: ./.github/workflows/build-firmware.yml
+    with:
+      keyboard: ${{ matrix.keyboard }}
+      keymap: ${{ matrix.keymap }}
+      side: ${{ matrix.side }}
+
+    strategy:
+      matrix:
+        keyboard: [ svalboard ]
+        keymap: [ vial ]
+        side: [ left, right ]
+

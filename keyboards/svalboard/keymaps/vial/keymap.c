@@ -144,8 +144,8 @@ const uint16_t PROGMEM keymaps[DYNAMIC_KEYMAP_LAYER_COUNT][MATRIX_ROWS][MATRIX_C
         /*L3*/ KC_BTN2,        KC_TRNS,       KC_TRNS,       SV_SNIPER_3,        KC_TRNS, XXXXXXX,
         /*L4*/ SV_RECALIBRATE_POINTER,        KC_TRNS,       SV_SNIPER_5,       KC_TRNS,       KC_TRNS, XXXXXXX,
         /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
-        /*RT*/ KC_TRNS,        KC_BTN1,       KC_TRNS,       KC_BTN2,       KC_TRNS,   KC_TRNS,
-        /*LT*/ KC_TRNS,        KC_BTN1,       KC_TRNS,       KC_BTN2,       KC_TRNS,   KC_TRNS
+        /*RT*/ KC_TRNS,        KC_BTN1,       KC_TRNS,       KC_BTN2,       KC_BTN3,   KC_TRNS,
+        /*LT*/ KC_TRNS,        KC_BTN1,       KC_TRNS,       KC_BTN2,       KC_BTN3,   KC_TRNS
         )
 
 };

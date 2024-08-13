@@ -75,9 +75,7 @@ void keyboard_post_init_user(void) {
 
 enum layer {
     NORMAL,
-    NORMAL_HOLD,
     FUNC,
-    FUNC_HOLD,
     NAS,
     MBO = MH_AUTO_BUTTONS_LAYER,
 };
@@ -96,26 +94,9 @@ const uint16_t PROGMEM keymaps[DYNAMIC_KEYMAP_LAYER_COUNT][MATRIX_ROWS][MATRIX_C
         /*L3*/ KC_S,            KC_W,           KC_B,           KC_X,           KC_ESC, XXXXXXX,
         /*L4*/ KC_A,            KC_Q,           KC_LBRC,        KC_Z,           KC_DEL, XXXXXXX,
 
-        /*Down                  Inner (pad)     Upper (Mode)    O.Upper (nail)  OL (knuckle) Pushthrough*/
-        /*RT*/ MO(NAS),         KC_SPACE,       TO(FUNC),       KC_BSPC,        KC_LALT,     TG(NAS),
+        /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
+        /*RT*/ MO(NAS),         KC_SPACE,       TO(FUNC),       KC_BSPC,        KC_LALT,     XXXXXXX,
         /*LT*/ KC_LSFT,         KC_ENTER,       TO(NORMAL),          KC_TAB,         KC_LCTL,     KC_CAPS
-        ),
-
-    [NORMAL_HOLD] = LAYOUT(
-        /*Center           North           East            South           West*/
-        /*R1*/ KC_LEFT,         KC_WH_L,        XXXXXXX,        KC_MS_L,        LCTL(KC_LEFT), XXXXXXX,
-        /*R2*/ KC_DOWN,         KC_WH_D,        XXXXXXX,        KC_MS_D,        LCTL(KC_DOWN), XXXXXXX,
-        /*R3*/ KC_UP,           KC_WH_U,        XXXXXXX,        KC_MS_U,        LCTL(KC_UP), XXXXXXX,
-        /*R4*/ KC_RIGHT,        KC_WH_R,        XXXXXXX,        KC_MS_R,        LCTL(KC_RIGHT), XXXXXXX,
-
-        /*L1*/ XXXXXXX,         XXXXXXX,        XXXXXXX,        KC_BTN1,        XXXXXXX, XXXXXXX,
-        /*L2*/ XXXXXXX,         XXXXXXX,        XXXXXXX,        KC_BTN3,        XXXXXXX, XXXXXXX,
-        /*L3*/ XXXXXXX,         XXXXXXX,        XXXXXXX,        KC_BTN2,        XXXXXXX, XXXXXXX,
-        /*L4*/ DF(NORMAL),      _______,        _______,        XXXXXXX,       _______, XXXXXXX,
-
-        /*Down                  Inner           Upper           Outer Upper     Outer Lower  Pushthrough*/
-        /*RT*/ _______,         _______,        _______,        _______,        _______, _______,
-        /*LT*/ _______,         _______,        _______,        _______,        _______, _______
         ),
 
     [FUNC] = LAYOUT(
@@ -130,27 +111,9 @@ const uint16_t PROGMEM keymaps[DYNAMIC_KEYMAP_LAYER_COUNT][MATRIX_ROWS][MATRIX_C
         /*L3*/ XXXXXXX,         KC_F4,          XXXXXXX,        KC_F3,          KC_ESC, XXXXXXX,
         /*L4*/ XXXXXXX,         KC_F2,          XXXXXXX,        KC_F1,          KC_DEL, XXXXXXX,
 
-        /*Down                  Inner           Upper           Outer Upper     Outer Lower  Pushthrough*/
+        /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
         /*RT*/ MO(NAS),         KC_SPACE,       _______,       KC_BSPC,      KC_LALT, _______,
         /*LT*/ KC_LSFT,       KC_ENTER,         _______, KC_TAB,         KC_LCTL, _______
-        ),
-
-    [FUNC_HOLD] = LAYOUT(
-        /*Center           North           East            South           West*/
-        /*R1*/ KC_LEFT,         LCTL(KC_UP),    LCTL(KC_RIGHT), LCTL(KC_DOWN),  LCTL(KC_LEFT), XXXXXXX,
-        /*R2*/ KC_UP,           KC_MS_U,        KC_MS_R,        KC_MS_D,        KC_MS_L, XXXXXXX,
-        /*R3*/ KC_DOWN,         KC_WH_U,        KC_WH_R,        KC_WH_D,        KC_WH_L, XXXXXXX,
-        /*R4*/ KC_RIGHT,        XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
-
-
-        /*L1*/ XXXXXXX,         XXXXXXX,        XXXXXXX,        XXXXXXX,     XXXXXXX, XXXXXXX,
-        /*L2*/ XXXXXXX,         XXXXXXX,        XXXXXXX,        XXXXXXX,     XXXXXXX, XXXXXXX,
-        /*L3*/ XXXXXXX,         XXXXXXX,        XXXXXXX,        XXXXXXX,     XXXXXXX, XXXXXXX,
-        /*L4*/ _______,      _______,        _______,        _______,       _______, XXXXXXX,
-
-        /*Down                  Inner           Upper           Outer Upper     Outer Lower  Pushthrough*/
-        /*RT*/ _______,         _______,        _______,        _______,        _______, _______,
-        /*LT*/ _______,         _______,        _______,        _______,        _______, _______
         ),
 
     [NAS] = LAYOUT(
@@ -165,23 +128,24 @@ const uint16_t PROGMEM keymaps[DYNAMIC_KEYMAP_LAYER_COUNT][MATRIX_ROWS][MATRIX_C
         /*L3*/ KC_2,            KC_AT,          XXXXXXX,        KC_X,           KC_ESC, XXXXXXX,
         /*L4*/ KC_1,            KC_EXCLAIM,     KC_TILDE,       KC_EQUAL,       KC_DEL, XXXXXXX,
 
-        /*Down                  Inner           Upper           Outer Upper     Outer Lower  Pushthrough*/
+        /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
         /*RT*/ MO(NAS),         KC_SPACE,       _______,       KC_BSPC,        KC_LALT, _______,
         /*LT*/ KC_LSFT,         KC_ENTER,       _______,        KC_TAB,         KC_LCTL, _______
         ),
 
     [MBO] = LAYOUT(
         /*Center           North           East            South           West*/
-        /*R1*/ KC_TRNS,        KC_TRNS,       KC_TRNS,       KC_BTN1,       KC_TRNS, XXXXXXX,
-        /*R2*/ KC_TRNS,        KC_TRNS,       KC_TRNS,       KC_BTN3,       KC_TRNS, XXXXXXX,
-        /*R3*/ KC_TRNS,        KC_TRNS,       KC_TRNS,       KC_BTN2,       KC_TRNS, XXXXXXX,
+        /*R1*/ KC_BTN1,        KC_TRNS,       KC_TRNS,       KC_TRNS,       KC_TRNS, XXXXXXX,
+        /*R2*/ KC_BTN3,        KC_TRNS,       KC_TRNS,       KC_TRNS,       KC_TRNS, XXXXXXX,
+        /*R3*/ KC_BTN2,        KC_TRNS,       KC_TRNS,       KC_TRNS,       KC_TRNS, XXXXXXX,
         /*R4*/ SV_RECALIBRATE_POINTER,        KC_TRNS,       KC_TRNS,       KC_TRNS,       KC_TRNS, XXXXXXX,
-        /*L1*/ KC_TRNS,        KC_TRNS,       KC_TRNS,       KC_BTN1,        KC_TRNS, XXXXXXX,
-        /*L2*/ KC_TRNS,        KC_TRNS,       KC_TRNS,       KC_BTN3,        KC_TRNS, XXXXXXX,
-        /*L3*/ KC_TRNS,        KC_TRNS,       KC_TRNS,       KC_BTN2,        KC_TRNS, XXXXXXX,
-        /*L4*/ SV_RECALIBRATE_POINTER,        KC_TRNS,       KC_TRNS,       KC_TRNS,       KC_TRNS, XXXXXXX,
-        /*RT*/ KC_TRNS,        KC_TRNS,       KC_TRNS,       KC_TRNS,       KC_TRNS,   KC_TRNS,
-        /*LT*/ KC_TRNS,        KC_TRNS,       KC_TRNS,       KC_TRNS,       KC_TRNS,   KC_TRNS
+        /*L1*/ KC_BTN1,        KC_TRNS,       KC_TRNS,       KC_TRNS,        KC_TRNS, XXXXXXX,
+        /*L2*/ KC_BTN3,        KC_TRNS,       KC_TRNS,       SV_SNIPER_2,        KC_TRNS, XXXXXXX,
+        /*L3*/ KC_BTN2,        KC_TRNS,       KC_TRNS,       SV_SNIPER_3,        KC_TRNS, XXXXXXX,
+        /*L4*/ SV_RECALIBRATE_POINTER,        KC_TRNS,       SV_SNIPER_5,       KC_TRNS,       KC_TRNS, XXXXXXX,
+        /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
+        /*RT*/ KC_TRNS,        KC_BTN1,       KC_TRNS,       KC_BTN2,       KC_TRNS,   KC_TRNS,
+        /*LT*/ KC_TRNS,        KC_BTN1,       KC_TRNS,       KC_BTN2,       KC_TRNS,   KC_TRNS
         )
 
 };

@@ -139,7 +139,7 @@ void matrix_init_custom(void) {
         }
     }
 }
-
+bool first_scan = true;
 bool matrix_scan_custom(matrix_row_t current_matrix[]) {
     
     matrix_row_t curr_matrix[ROWS_PER_HAND] = {0};
@@ -148,8 +148,16 @@ bool matrix_scan_custom(matrix_row_t current_matrix[]) {
         matrix_read_cols_on_row(curr_matrix, current_row);
     }
 
-    bool changed = memcmp(raw_matrix, curr_matrix, sizeof(curr_matrix)) != 0;
-    if (changed) memcpy(raw_matrix, curr_matrix, sizeof(curr_matrix));
-
-    return changed;
+    // The first scan comes out backwards for reasons we don't understand.
+    // Skipping it, stops the lockup experienced with thumbs out on
+    // board boot.
+    if (first_scan) {
+        memset(raw_matrix, 0, sizeof(raw_matrix));
+        first_scan = false;
+	return true;
+    } else {
+        bool changed = memcmp(raw_matrix, curr_matrix, sizeof(curr_matrix)) != 0;
+        if (changed) memcpy(raw_matrix, curr_matrix, sizeof(curr_matrix));
+	return changed;
+    }
 }

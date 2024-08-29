@@ -96,6 +96,8 @@ static void unselect_rows(void) {
 extern matrix_row_t raw_matrix[ROWS_PER_HAND]; // raw values
 extern matrix_row_t matrix[ROWS_PER_HAND];     // debounced values
 
+int16_t scans_before_dd_detect = 3;  // Has to be one higher than the actual number of scans.
+uint8_t dd_detected = 0;
 void matrix_read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row) {
     // Start with a clear matrix row
     matrix_row_t current_row_value = 0;
@@ -110,10 +112,21 @@ void matrix_read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row)
         uint8_t pin_state;
         if (current_row == 0) {
             pin_state = (readPin(col_pins[col_index]) == col_pushed_states_thumbs[col_index]) ? 1 : 0;  // read pin and match pushed_states define
+	    if (col_index == 5) { // DD
+		if (scans_before_dd_detect >= 0) {
+                   scans_before_dd_detect--;
+		}
+		if (!scans_before_dd_detect && scans_before_dd_detect == 0) {
+		    dd_detected = pin_state;
+		    scans_before_dd_detect--;
+		}
+		pin_state ^= dd_detected;
+		pin_state &= 1;
+	    }
         } else {
-            pin_state = (readPin(col_pins[col_index]) == col_pushed_states_fingers[col_index]) ? 1 : 0;  // read pin and match pushed_states define
+               pin_state = (readPin(col_pins[col_index]) == col_pushed_states_fingers[col_index]) ? 1 : 0; // read pin and match pushed_states define
         }
-        // Populate the matrix row with the state of the col pin
+	// Populate the matrix row with the state of the col pin
         current_row_value |= (pin_state << col_index);
     }
 

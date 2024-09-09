@@ -26,6 +26,9 @@
       "cols": ["GP14", "GP13", "GP12", "GP11", "GP10", "GP9"],
       "rows": ["GP8", "GP7", "GP6", "GP5", "GP4"]
   },
+  "dynamic_keymap": {
+      "layer_count": 16
+  },
   "mousekey": {
       "delay": 30,
       "move_delta": 1,

@@ -31,6 +31,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define DEBUG_MATRIX_SCAN_RATE
 #define EECONFIG_KB_DATA_SIZE 5
 
+
+#define FLASH_LEN (16 * 1024 * 1024)
+#define WEAR_LEVELING_BACKING_SIZE (128 * 1024)
 // wiring of each half
 //Layout for svalboard v0 (different from lalboard_v2)
 //1 2 3 4 5 6
@@ -54,7 +57,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RP2040_BOOTLOADER_DOUBLE_TAP_RESET
 #define RP2040_BOOTLOADER_DOUBLE_TAP_RESET_TIMEOUT 500 // Timeout window in ms in which the double tap can occur.
 
-#define DYNAMIC_KEYMAP_LAYER_COUNT 16
 #define VIAL_TAP_DANCE_ENTRIES 50
 #define VIAL_TAP_COMBO_ENTRIES 50
 #define VIAL_COMBO_ENTRIES 50

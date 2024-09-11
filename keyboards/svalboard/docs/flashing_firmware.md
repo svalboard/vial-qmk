@@ -1,10 +1,18 @@
 # Flashing Firmware
 
 * [Flashing Firmware](#flashing-firmware)
+  * [Before You Begin](#before-you-begin)
   * [Introduction](#introduction)
   * [Finding And Downloading The Right Firmware](#finding-and-downloading-the-right-firmware)
   * [Flashing Your Downloaded Firmware](#flashing-your-downloaded-firmware)
   * [Troubleshooting](#troubleshooting)
+
+## Before You Begin
+
+If you've done any customization of your layout, make sure you **save your
+layout** in Vial! Flashing firmware will cause the loss of your current layout.
+
+![The "Save current layout" entry in the "File" menu of Vial, along with the Ctrl+S shortcut.](images/save_vil.png)
 
 ## Introduction
 
@@ -43,6 +51,8 @@ above image).
 Once you've located and downloaded both files you'll need, you will need to
 flash each Svalboard half independently. To flash a half:
 
+**Make certain you have saved your layout in Vial!**
+
 * Ensure that that side (right or left) is plugged into your computer as the
   primary/master. The USB cable connected to your computer should be plugged
   into the port labeled `U`, **not** the one labeled `S`.
@@ -60,6 +70,11 @@ flash each Svalboard half independently. To flash a half:
 
 **Don't forget to do the other half, which will require changing which side the
 USB cable is plugged into!**
+
+Once you're finished, reload your saved Vial layout.
+
+![The "Load saved layout" entry in the "File" menu of Vial, along with the
+Ctrl+O shortcut.](images/load_vil.png)
 
 ## Troubleshooting
 

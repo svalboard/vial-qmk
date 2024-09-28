@@ -187,11 +187,10 @@ void check_layer_67(void) {
 bool in_mod_tap = false;
 int8_t in_mod_tap_layer = -1;
 bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
-    
+
     // Abort additional processing if userspace code did
     if (!process_record_user(keycode, record)) { return false;}
-    
-    if (!global_saved_values.disable_achordion && !process_achordion(keycode, record)) { return false; }
+    if (!in_mod_tap && !global_saved_values.disable_achordion && !process_achordion(keycode, record)) { return false; }
 
     // We are in a mod tap, with a KC_TRANSPARENT, lets make it transparent...
     if (IS_QK_MOD_TAP(keycode) && ((keycode & 0xFF) == KC_TRANSPARENT) &&
@@ -201,11 +200,9 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
         in_mod_tap_layer = get_highest_layer(layer_state);
         layer_state = layer_state & ~(1 << in_mod_tap_layer);
 
-        action_exec(record->event);
-
         in_mod_tap = true;
 
-        return false;
+        return true;
     }
 
     // Fix things up on the release for the mod_tap case.
@@ -213,7 +210,9 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
         in_mod_tap = false;
         layer_state = layer_state | (1 << in_mod_tap_layer);
         in_mod_tap_layer = -1;
+        return true;
     }
+
     // If console is enabled, it will print the matrix position and status of each key pressed
 #ifdef CONSOLE_ENABLE
     uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);

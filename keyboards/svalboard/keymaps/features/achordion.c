@@ -40,6 +40,7 @@ static bool pressed_another_key_before_release = false;
 
 #ifdef ACHORDION_STREAK
 // Timer for typing streak
+static bool streaking = false;
 static uint16_t streak_timer = 0;
 #else
 // When disabled, is_streak is never true
@@ -66,9 +67,10 @@ static uint8_t achordion_state = STATE_RELEASED;
 #ifdef ACHORDION_STREAK
 static void update_streak_timer(uint16_t keycode, keyrecord_t* record) {
   if (achordion_streak_continue(keycode)) {
-    // We use 0 to represent an unset timer, so `| 1` to force a nonzero value.
-    streak_timer = record->event.time | 1;
+    streaking = true;
+    streak_timer = record->event.time;
   } else {
+    streaking = false;
     streak_timer = 0;
   }
 }
@@ -235,7 +237,7 @@ bool process_achordion(uint16_t keycode, keyrecord_t* record) {
     const uint16_t s_timeout =
         achordion_streak_chord_timeout(tap_hold_keycode, keycode);
     const bool is_streak =
-        streak_timer && s_timeout &&
+        streaking && s_timeout &&
         !timer_expired(record->event.time, (streak_timer + s_timeout));
 #endif
 
@@ -306,9 +308,9 @@ void achordion_task(void) {
 
 #ifdef ACHORDION_STREAK
 #define MAX_STREAK_TIMEOUT 800
-  if (streak_timer &&
+  if (streaking &&
       timer_expired(timer_read(), (streak_timer + MAX_STREAK_TIMEOUT))) {
-    streak_timer = 0;  // Expired.
+    streaking = false;  // Expired.
   }
 #endif
 }

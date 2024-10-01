@@ -26,12 +26,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define LAYER_COLOR(name, color) rgblight_segment_t const (name)[] = RGBLIGHT_LAYER_SEGMENTS({0, 2, color})
 
 LAYER_COLOR(layer0_colors, HSV_GREEN); // NORMAL
-LAYER_COLOR(layer1_colors, HSV_GREEN); // NORMAL_HOLD
-LAYER_COLOR(layer2_colors, HSV_ORANGE); // FUNC
-LAYER_COLOR(layer3_colors, HSV_ORANGE); // FUNC_HOLD
-LAYER_COLOR(layer4_colors, HSV_AZURE); // NAS
-LAYER_COLOR(layer5_colors, HSV_AZURE); // would be NAS hold
-LAYER_COLOR(layer6_colors, HSV_RED); // maybe 10kp
+LAYER_COLOR(layer1_colors, HSV_ORANGE); // FUNC
+LAYER_COLOR(layer2_colors, HSV_AZURE); // NAS
+LAYER_COLOR(layer3_colors, HSV_CORAL); // FKEYS
+LAYER_COLOR(layer4_colors, HSV_YELLOW); // use for NORMAL hold?
+LAYER_COLOR(layer5_colors, HSV_PURPLE); // use for FUNC hold?
+LAYER_COLOR(layer6_colors, HSV_RED); // use for NAS hold 
 LAYER_COLOR(layer7_colors, HSV_RED);
 LAYER_COLOR(layer8_colors, HSV_PINK);
 LAYER_COLOR(layer9_colors, HSV_PURPLE);

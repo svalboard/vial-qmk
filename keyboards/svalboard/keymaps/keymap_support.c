@@ -43,19 +43,21 @@ void mouse_mode(bool);
 
 #define SCROLL_DIVISOR 20
 
+bool mouse_mode_enabled = false;
+
 static int _ds_l_x = 0;
 static int _ds_l_y = 0;
 static int _ds_r_x = 0;
 static int _ds_r_y = 0;
 
-static bool left_scroll_hold = false, right_scroll_hold = false;
+static bool scroll_hold = false, scroll_toggle = false;
 
 report_mouse_t pointing_device_task_combined_user(report_mouse_t reportMouse1, report_mouse_t reportMouse2) {
     report_mouse_t ret_mouse;
     if (reportMouse1.x == 0 && reportMouse1.y == 0 && reportMouse2.x == 0 && reportMouse2.y == 0)
         return pointing_device_combine_reports(reportMouse1, reportMouse2);
 
-    if (global_saved_values.left_scroll || left_scroll_hold) {
+    if ((global_saved_values.left_scroll != scroll_hold) != scroll_toggle) {
         int div_x;
         int div_y;
 
@@ -79,7 +81,7 @@ report_mouse_t pointing_device_task_combined_user(report_mouse_t reportMouse1, r
         reportMouse1.y = 0;
     }
 
-    if (global_saved_values.right_scroll || right_scroll_hold) {
+    if ((global_saved_values.right_scroll != scroll_hold) != scroll_toggle) {
         int div_x;
         int div_y;
 
@@ -103,14 +105,7 @@ report_mouse_t pointing_device_task_combined_user(report_mouse_t reportMouse1, r
         reportMouse2.y = 0;
     }
 
-    if (mh_auto_buttons_timer) {
-        mh_auto_buttons_timer = timer_read();
-    } else {
-        mouse_mode(true);
-#if defined CONSOLE_ENABLE
-        print("task - combined mh_auto_buttons: on\n");
-#endif
-    }
+    mouse_mode(true);
     ret_mouse = pointing_device_combine_reports(reportMouse1, reportMouse2);
 
     return pointing_device_task_user(ret_mouse);
@@ -124,14 +119,7 @@ report_mouse_t pointing_device_task_user(report_mouse_t reportMouse) {
     if (reportMouse.x == 0 && reportMouse.y == 0)
         return reportMouse;
 
-    if (mh_auto_buttons_timer) {
-        mh_auto_buttons_timer = timer_read();
-    } else {
-        mouse_mode(true);
-#if defined CONSOLE_ENABLE
-        print("user - mh_auto_buttons: on\n");
-#endif
-    }
+    mouse_mode(true);
 
     if (snipe_div != 1) {
         int div_x;
@@ -186,7 +174,9 @@ void check_layer_67(void) {
 
 bool in_mod_tap = false;
 int8_t in_mod_tap_layer = -1;
+int8_t mouse_keys_pressed = 0;
 bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
+
 
     // Abort additional processing if userspace code did
     if (!process_record_user(keycode, record)) { return false;}
@@ -218,41 +208,41 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
     uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
 #endif
 
-    if (mh_auto_buttons_timer) {
-        switch (keycode) {
-            case KC_BTN1:
-            case KC_BTN2:
-            case KC_BTN3:
-            case KC_BTN4:
-            case KC_BTN5:
-            case KC_WH_U:
-            case KC_WH_D:
-            case KC_WH_R:
-            case KC_WH_L:
-            case KC_LSFT:
-            case KC_RSFT:
-            case KC_LCTL:
-            case KC_RCTL:
-            case KC_LALT:
-            case KC_RALT:
-            case KC_LGUI:
-            case KC_RGUI:
-            case SV_LEFT_SCROLL_TOGGLE:
-            case SV_RIGHT_SCROLL_TOGGLE:
-            case SV_LEFT_SCROLL_HOLD:
-            case SV_RIGHT_SCROLL_HOLD:
-            case SV_SNIPER_2:
-            case SV_SNIPER_3:
-            case SV_SNIPER_5:
-            case SV_RECALIBRATE_POINTER:
-                break;
-            default:
+    if (mouse_mode_enabled && layer_state & (1 << MH_AUTO_BUTTONS_LAYER)) {
+        // The keycodes below are all that are forced to drop you out of mouse mode.
+        // The intent is for this list to eventually become just KC_NO, and KC_TRNS
+        // as more functionality is exported to keybard, and those keys are removed
+        // from the firmware. - ilc - 2024-10-05
+        if (keycode == KC_NO ||
+	    keycode == KC_TRNS ||
+	    keycode == SV_LEFT_DPI_INC ||
+	    keycode == SV_LEFT_DPI_DEC ||
+	    keycode == SV_RIGHT_DPI_INC ||
+	    keycode == SV_RIGHT_DPI_DEC ||
+	    keycode == SV_LEFT_SCROLL_TOGGLE ||
+	    keycode == SV_RIGHT_SCROLL_TOGGLE ||
+	    keycode == SV_TOGGLE_ACHORDION ||
+	    keycode == SV_MH_CHANGE_TIMEOUTS ||
+	    keymap_key_to_keycode(MH_AUTO_BUTTONS_LAYER, record->event.key) != keycode) {
 #ifdef CONSOLE_ENABLE
-                uprintf("process_record - mh_auto_buttons: off\n");
+            uprintf("process_record - mh_auto_buttons: off\n");
 #endif
-                mouse_mode(false);
+            mouse_mode(false);
+            return false;
+        } else {
+            if (record->event.pressed) {
+                mouse_keys_pressed++;
+                mouse_mode(true);
+            } else {
+                // keys that are held before the mouse layer is active can mess this up.
+                if (mouse_keys_pressed > 0) {
+                    mouse_keys_pressed--;
+                }
+                mouse_mode(true);
+            }
         }
     }
+
     if (record->event.pressed) { // key pressed
         switch (keycode) {
             case SV_LEFT_DPI_INC:
@@ -312,11 +302,10 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 snipe_x *= 5;
                 snipe_y *= 5;
                 return false;
-            case SV_LEFT_SCROLL_HOLD:
-                left_scroll_hold = true;
+            case SV_SCROLL_HOLD:
+                scroll_hold = true;
                 return false;
-            case SV_RIGHT_SCROLL_HOLD:
-                right_scroll_hold = true;
+            case SV_SCROLL_TOGGLE:
                 return false;
             case SV_OUTPUT_STATUS:
                 output_keyboard_info();
@@ -350,11 +339,11 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 snipe_x /= 5;
                 snipe_y /= 5;
                 return false;
-            case SV_LEFT_SCROLL_HOLD:
-                left_scroll_hold = false;
+            case SV_SCROLL_HOLD:
+                scroll_hold = false;
                 return false;
-            case SV_RIGHT_SCROLL_HOLD:
-                right_scroll_hold = false;
+            case SV_SCROLL_TOGGLE:
+                scroll_toggle ^= true;
                 return false;
         }
     }
@@ -365,16 +354,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 
 #if defined MH_AUTO_BUTTONS && defined PS2_MOUSE_ENABLE && defined MOUSEKEY_ENABLE
 void ps2_mouse_moved_user(report_mouse_t *mouse_report) {
-    if (mh_auto_buttons_timer) {
-        mh_auto_buttons_timer = timer_read();
-    } else {
-        if (!tp_buttons) {
-            mouse_mode(true);
-#if defined CONSOLE_ENABLE
-            print("ps2 / mh_auto_buttons: on\n");
-#endif
-        }
-    }
+    mouse_mode(true);
 }
 #endif
 
@@ -383,7 +363,7 @@ void matrix_scan_kb(void) {
         achordion_task();
     }
 
-    if ((mh_timer_choices[global_saved_values.mh_timer_index] >= 0) && mh_auto_buttons_timer && (timer_elapsed(mh_auto_buttons_timer) > mh_timer_choices[global_saved_values.mh_timer_index])) {
+    if ((mh_timer_choices[global_saved_values.mh_timer_index] >= 0) && mouse_mode_enabled && (timer_elapsed(mh_auto_buttons_timer) > mh_timer_choices[global_saved_values.mh_timer_index]) && mouse_keys_pressed == 0) {
         if (!tp_buttons) {
             mouse_mode(false);
 #if defined CONSOLE_ENABLE
@@ -399,8 +379,11 @@ void mouse_mode(bool on) {
     if (on) {
         layer_on(MH_AUTO_BUTTONS_LAYER);
         mh_auto_buttons_timer = timer_read();
+        mouse_mode_enabled = true;
     } else {
         layer_off(MH_AUTO_BUTTONS_LAYER);
         mh_auto_buttons_timer = 0;
+        mouse_mode_enabled = false;
+        mouse_keys_pressed = 0;
     }
 }

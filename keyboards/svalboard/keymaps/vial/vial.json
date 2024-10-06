@@ -82,20 +82,20 @@
         "name": "SV_SNIPER_5"
       },
       {
-        "shortName": "Scroll\nLeft\nHold",
+        "shortName": "Scroll\nToggle\nHold",
         "title": "Hold to make the left pointing device scroll",
-        "name": "SV_LEFT_SCROLL_HOLD"
+        "name": "SV_SCROLL_HOLD"
       },
       {
-        "shortName": "Scroll\nRight\nHold",
+        "shortName": "Scroll\nToggle",
         "title": "Hold to make the right pointing device scroll",
-        "name": "SV_RIGHT_SCROLL_HOLD"
+        "name": "SV_SCROLL_TOGGLE"
       },
       {
 	"shortName": "Output\nStatus",
 	"title": "Output the current internal state of the keyboard.",
 	"name": "SV_OUTPUT_STATUS"
-      }    
+      }
     ],
     "layouts": {
       "keymap": [

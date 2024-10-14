@@ -30,7 +30,7 @@ LAYER_COLOR(layer1_colors, HSV_ORANGE); // FUNC
 LAYER_COLOR(layer2_colors, HSV_AZURE); // NAS
 LAYER_COLOR(layer3_colors, HSV_CORAL); // FKEYS
 LAYER_COLOR(layer4_colors, HSV_YELLOW); // use for NORMAL hold?
-LAYER_COLOR(layer5_colors, HSV_PURPLE); // use for FUNC hold?
+LAYER_COLOR(layer5_colors, HSV_TEAL); // use for FUNC hold?
 LAYER_COLOR(layer6_colors, HSV_RED); // use for NAS hold 
 LAYER_COLOR(layer7_colors, HSV_RED);
 LAYER_COLOR(layer8_colors, HSV_PINK);

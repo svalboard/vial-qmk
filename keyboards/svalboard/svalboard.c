@@ -3,7 +3,7 @@
 #include "version.h"
 
 saved_values_t global_saved_values;
-const int16_t mh_timer_choices[3] = { 300, 500, -1 }; // -1 is infinite.
+const int16_t mh_timer_choices[4] = { 300, 500, 800, -1 }; // -1 is infinite.
 
 void write_eeprom_kb(void) {
     eeconfig_update_kb_datablock(&global_saved_values);
@@ -20,7 +20,7 @@ void read_eeprom_kb(void) {
     }
     if (global_saved_values.version < 2) {
         global_saved_values.version = 2;
-        global_saved_values.mh_timer_index = 2;
+        global_saved_values.mh_timer_index = 1;
         modified = true;
     }
     // As we add versions, just append here.

@@ -41,7 +41,7 @@ void mouse_mode(bool);
 
 #if defined(POINTING_DEVICE_AUTO_MOUSE_MH_ENABLE)
 
-#define SCROLL_DIVISOR 20
+#define SCROLL_DIVISOR 80
 
 bool mouse_mode_enabled = false;
 
@@ -212,7 +212,9 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
         // The keycodes below are all that are forced to drop you out of mouse mode.
         // The intent is for this list to eventually become just KC_NO, and KC_TRNS
         // as more functionality is exported to keybard, and those keys are removed
-        // from the firmware. - ilc - 2024-10-05
+        // from the firmmware. - ilc - 2024-10-05
+
+      uint16_t layer_keycode = keymap_key_to_keycode(MH_AUTO_BUTTONS_LAYER, record->event.key);
         if (keycode == KC_NO ||
 	    keycode == KC_TRNS ||
 	    keycode == SV_LEFT_DPI_INC ||
@@ -223,12 +225,16 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 	    keycode == SV_RIGHT_SCROLL_TOGGLE ||
 	    keycode == SV_TOGGLE_ACHORDION ||
 	    keycode == SV_MH_CHANGE_TIMEOUTS ||
-	    keymap_key_to_keycode(MH_AUTO_BUTTONS_LAYER, record->event.key) != keycode) {
+	    layer_keycode != keycode) {
 #ifdef CONSOLE_ENABLE
             uprintf("process_record - mh_auto_buttons: off\n");
 #endif
-            mouse_mode(false);
-            return false;
+            if (layer_keycode == KC_TRNS) {
+                mouse_mode(false);
+            } else {
+                mouse_mode(false);
+                return false;
+            }
         } else {
             if (record->event.pressed) {
                 mouse_keys_pressed++;

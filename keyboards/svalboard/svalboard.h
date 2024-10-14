@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "quantum.h"
 
-extern const int16_t mh_timer_choices[3];
+extern const int16_t mh_timer_choices[4];
 
 struct saved_values {
     uint8_t version;  // Currently at 1,  We assume all new data will be zeroed.

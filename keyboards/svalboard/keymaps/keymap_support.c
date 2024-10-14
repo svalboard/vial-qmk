@@ -213,27 +213,28 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
         // The intent is for this list to eventually become just KC_NO, and KC_TRNS
         // as more functionality is exported to keybard, and those keys are removed
         // from the firmmware. - ilc - 2024-10-05
+#define BAD_KEYCODE_CONDITONAL  (keycode == KC_NO ||  \
+	                    keycode == KC_TRNS || \
+		            keycode == SV_LEFT_DPI_INC || \
+	                    keycode == SV_LEFT_DPI_DEC || \
+	                    keycode == SV_RIGHT_DPI_INC || \
+	                    keycode == SV_RIGHT_DPI_DEC || \
+	                    keycode == SV_LEFT_SCROLL_TOGGLE || \
+		            keycode == SV_RIGHT_SCROLL_TOGGLE || \
+		            keycode == SV_TOGGLE_ACHORDION || \
+	                    keycode == SV_MH_CHANGE_TIMEOUTS)
 
-      uint16_t layer_keycode = keymap_key_to_keycode(MH_AUTO_BUTTONS_LAYER, record->event.key);
-        if (keycode == KC_NO ||
-	    keycode == KC_TRNS ||
-	    keycode == SV_LEFT_DPI_INC ||
-	    keycode == SV_LEFT_DPI_DEC ||
-	    keycode == SV_RIGHT_DPI_INC ||
-	    keycode == SV_RIGHT_DPI_DEC ||
-	    keycode == SV_LEFT_SCROLL_TOGGLE ||
-	    keycode == SV_RIGHT_SCROLL_TOGGLE ||
-	    keycode == SV_TOGGLE_ACHORDION ||
-	    keycode == SV_MH_CHANGE_TIMEOUTS ||
+        uint16_t layer_keycode = keymap_key_to_keycode(MH_AUTO_BUTTONS_LAYER, record->event.key);
+        if (BAD_KEYCODE_CONDITONAL ||
 	    layer_keycode != keycode) {
 #ifdef CONSOLE_ENABLE
             uprintf("process_record - mh_auto_buttons: off\n");
 #endif
-            if (layer_keycode == KC_TRNS) {
+            if (BAD_KEYCODE_CONDITONAL) {
                 mouse_mode(false);
+	        return false;
             } else {
                 mouse_mode(false);
-                return false;
             }
         } else {
             if (record->event.pressed) {

@@ -83,12 +83,12 @@
       },
       {
         "shortName": "Scroll\nToggle\nHold",
-        "title": "Hold to make the left pointing device scroll",
+        "title": "Hold to toggle the pointer's scroll status.",
         "name": "SV_SCROLL_HOLD"
       },
       {
         "shortName": "Scroll\nToggle",
-        "title": "Hold to make the right pointing device scroll",
+        "title": "Togglle the pointer's scroll status.",
         "name": "SV_SCROLL_TOGGLE"
       },
       {

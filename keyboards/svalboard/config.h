@@ -71,7 +71,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SPLIT_POINTING_ENABLE
 #define POINTING_DEVICE_COMBINED
 #define POINTING_DEVICE_AUTO_MOUSE_MH_ENABLE
-#define POINTING_DEVICE_TASK_THROTTLE 0
+
 // Avoid slave-slave deadlock due to missing USB_VBUS_PIN.
 //
 // End result of enabling this: when you plug the keyboard to a finnicky USB

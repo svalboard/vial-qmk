@@ -23,6 +23,28 @@ void read_eeprom_kb(void) {
         global_saved_values.mh_timer_index = 1;
         modified = true;
     }
+    if (global_saved_values.version < 3) {
+        global_saved_values.version = 3;
+#define HSV(c) (struct layer_hsv) { (c >> 16) & 0xFF, (c >> 8) & 0xFF, c & 0xFF}
+        // Colors from chatgpt.
+        global_saved_values.layer_colors[0] = HSV(0x55FFFF); // Green
+        global_saved_values.layer_colors[1] = HSV(0x15FFFF); // Orange
+        global_saved_values.layer_colors[2] = HSV(0x95FFFF); // Azure
+        global_saved_values.layer_colors[3] = HSV(0x0BB0FF); // Coral
+        global_saved_values.layer_colors[4] = HSV(0x2BFFFF); // Yellow
+        global_saved_values.layer_colors[5] = HSV(0x80FF80); // Teal
+        global_saved_values.layer_colors[6] = HSV(0x00FFFF); // Red
+        global_saved_values.layer_colors[7] = HSV(0xEAFFFF); // Pink
+        global_saved_values.layer_colors[8] = HSV(0xBFFF80); // Purple
+        global_saved_values.layer_colors[9] = HSV(0xAAFFFF); // Blue
+        global_saved_values.layer_colors[10] = HSV(0x6AFFFF); // Spring Green
+        global_saved_values.layer_colors[11] = HSV(0x80FFFF); // Turquoise
+        global_saved_values.layer_colors[12] = HSV(0x24FFFF); // Gold
+        global_saved_values.layer_colors[13] = HSV(0x1ED9D9); // Goldenrod
+        global_saved_values.layer_colors[14] = HSV(0x80FFFF); // Cyan
+        global_saved_values.layer_colors[15] = HSV(0xD5FFFF); // Magenta
+        modified = true;
+    }
     // As we add versions, just append here.
     if (modified) {
         write_eeprom_kb();
@@ -109,6 +131,12 @@ void set_dpi_from_eeprom(void) {
 void keyboard_post_init_kb(void) {
     set_dpi_from_eeprom();
     keyboard_post_init_user();
+}
+
+void sval_set_active_layer(uint32_t layer) {
+  if (layer > 15) layer = 15;
+  struct layer_hsv cols = global_saved_values.layer_colors[layer];
+  rgblight_sethsv_noeeprom(cols.hue, cols.sat, cols.val);
 }
 
 #ifndef SVALBOARD_REENABLE_BOOTMAGIC_LITE

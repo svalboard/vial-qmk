@@ -20,6 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 extern const int16_t mh_timer_choices[4];
 
+struct layer_hsv {
+    uint8_t hue;
+    uint8_t sat;
+    uint8_t val;
+};
+
 struct saved_values {
     uint8_t version;  // Currently at 1,  We assume all new data will be zeroed.
     bool left_scroll :1;
@@ -29,6 +35,7 @@ struct saved_values {
     uint8_t left_dpi_index;
     uint8_t right_dpi_index;
     uint8_t mh_timer_index;
+    struct layer_hsv layer_colors[DYNAMIC_KEYMAP_LAYER_COUNT];
 };
 
 typedef struct saved_values saved_values_t;
@@ -43,3 +50,4 @@ void set_left_dpi(uint8_t index);
 void set_right_dpi(uint8_t index);
 void write_eeprom_kb(void);
 void recalibrate_pointer(void);
+void sval_set_active_layer(uint32_t layer);

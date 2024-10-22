@@ -49,6 +49,11 @@ enum sval_command_ids {
     sval_id_set_layer_hsv                        = 0x11,
 };
 
+// Just for ping pong, do we want anything else for it?
+typedef struct _presence_rpc_t {
+  int presence;
+} presence_rpc_t;
+
 typedef struct saved_values saved_values_t;
 
 extern saved_values_t global_saved_values;
@@ -61,4 +66,5 @@ void set_left_dpi(uint8_t index);
 void set_right_dpi(uint8_t index);
 void write_eeprom_kb(void);
 void recalibrate_pointer(void);
-void sval_set_active_layer(uint32_t layer);
+void sval_set_active_layer(uint32_t layer, bool save);
+void sval_on_reconnect(void);

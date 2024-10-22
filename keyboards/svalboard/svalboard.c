@@ -1,6 +1,7 @@
 #include "svalboard.h"
 #include "eeconfig.h"
 #include "version.h"
+#include "split_common/transactions.h"
 
 saved_values_t global_saved_values;
 const int16_t mh_timer_choices[4] = { 300, 500, 800, -1 }; // -1 is infinite.
@@ -130,10 +131,38 @@ void set_dpi_from_eeprom(void) {
     set_right_dpi(global_saved_values.right_dpi_index);
 }
 
+void kb_sync_listener(uint8_t in_buflen, const void* in_data, uint8_t out_buflen, void* out_data) {
+    // Just a ping-pong, no need to do anything.
+}
+
 void keyboard_post_init_kb(void) {
     set_dpi_from_eeprom();
     keyboard_post_init_user();
-    sval_set_active_layer(sval_active_layer);
+    transaction_register_rpc(KEYBOARD_SYNC_A, kb_sync_listener);
+    if (is_keyboard_master()) {
+        sval_set_active_layer(sval_active_layer, false);
+    }
+}
+
+bool is_connected = false;
+
+void housekeeping_task_kb(void) {
+    if (is_keyboard_master()) {
+        static uint32_t last_ping = 0;
+        if (timer_elapsed(last_ping) > 500) {
+            presence_rpc_t rpcout = {0};
+            presence_rpc_t rpcin = {0};
+            if (transaction_rpc_exec(KEYBOARD_SYNC_A, sizeof(presence_rpc_t), &rpcout, sizeof(presence_rpc_t), &rpcin)) {
+                if (!is_connected) {
+                    is_connected = true;
+                    sval_on_reconnect();
+                }
+            } else {
+                is_connected = false;
+            }
+            last_ping = timer_read32();
+        }
+    }
 }
 
 void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
@@ -170,16 +199,26 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
                 cols->val = data[5];
                 write_eeprom_kb();
             }
-            sval_set_active_layer(sval_active_layer);
+            sval_set_active_layer(sval_active_layer, false);
             break;
     }
 }
 
-void sval_set_active_layer(uint32_t layer) {
+void sval_on_reconnect(void) {
+    // Reset colors, or it won't communicate the right color.
+    rgblight_sethsv_noeeprom(0, 0, 0);
+    sval_set_active_layer(sval_active_layer, true);
+}
+
+void sval_set_active_layer(uint32_t layer, bool save) {
     if (layer > 15) layer = 15;
     sval_active_layer = layer;
     struct layer_hsv cols = global_saved_values.layer_colors[layer];
-    rgblight_sethsv_noeeprom(cols.hue, cols.sat, cols.val);
+    if (save) {
+        rgblight_sethsv(cols.hue, cols.sat, cols.val);
+    } else {
+        rgblight_sethsv_noeeprom(cols.hue, cols.sat, cols.val);
+    }
 }
 
 #ifndef SVALBOARD_REENABLE_BOOTMAGIC_LITE

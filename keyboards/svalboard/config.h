@@ -95,6 +95,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLIGHT_VAL_STEP 10
 #define RGBLIGHT_LED_COUNT 2
 
+#define SPLIT_TRANSACTION_IDS_KB KEYBOARD_SYNC_A
 
 #define PERMISSIVE_HOLD
 #define ACHORDION_STREAK

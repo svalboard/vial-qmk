@@ -24,12 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "svalboard.h"
 
 layer_state_t default_layer_state_set_user(layer_state_t state) {
-  sval_set_active_layer(0);
+  sval_set_active_layer(0, false);
   return state;
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-  sval_set_active_layer(get_highest_layer(state));
+  sval_set_active_layer(get_highest_layer(state), false);
   return state;
 }
 

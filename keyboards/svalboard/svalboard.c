@@ -4,6 +4,7 @@
 
 saved_values_t global_saved_values;
 const int16_t mh_timer_choices[4] = { 300, 500, 800, -1 }; // -1 is infinite.
+uint8_t sval_active_layer = 0;
 
 void write_eeprom_kb(void) {
     eeconfig_update_kb_datablock(&global_saved_values);
@@ -49,6 +50,7 @@ void read_eeprom_kb(void) {
     if (modified) {
         write_eeprom_kb();
     }
+    sval_active_layer = 0;
 }
 
 static const char YES[] = "yes";
@@ -131,12 +133,53 @@ void set_dpi_from_eeprom(void) {
 void keyboard_post_init_kb(void) {
     set_dpi_from_eeprom();
     keyboard_post_init_user();
+    sval_set_active_layer(sval_active_layer);
+}
+
+void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
+    struct layer_hsv *cols;
+    uint8_t layer;
+    if (data[0] != SVAL_VIA_PREFIX) return;
+    switch (data[1]) {
+        case sval_id_get_protocol_version:
+            data[0] = 's';
+            data[1] = 'v';
+            data[2] = 'a';
+            data[3] = 'l';
+            data[4] = SVAL_PROTO_VERSION & 0xFF;
+            data[5] = (SVAL_PROTO_VERSION >> 8) & 0xFF;
+            data[6] = (SVAL_PROTO_VERSION >> 16) & 0xFF;
+            data[7] = (SVAL_PROTO_VERSION >> 24) & 0xFF;
+            break;
+        case sval_id_get_layer_hsv:
+            layer = data[2];
+            if (layer > 15) layer = 15;
+            cols = &global_saved_values.layer_colors[layer];
+            data[0] = cols->hue;
+            data[1] = cols->sat;
+            data[2] = cols->val;
+            break;
+        case sval_id_set_layer_hsv:
+            // Parameters start at data[2].
+            layer = data[2];
+            if (layer > 15) layer = 15;
+            cols = &global_saved_values.layer_colors[layer];
+            if (cols->hue != data[3] || cols->sat != data[4] || cols->val != data[5]) {
+                cols->hue = data[3];
+                cols->sat = data[4];
+                cols->val = data[5];
+                write_eeprom_kb();
+            }
+            sval_set_active_layer(sval_active_layer);
+            break;
+    }
 }
 
 void sval_set_active_layer(uint32_t layer) {
-  if (layer > 15) layer = 15;
-  struct layer_hsv cols = global_saved_values.layer_colors[layer];
-  rgblight_sethsv_noeeprom(cols.hue, cols.sat, cols.val);
+    if (layer > 15) layer = 15;
+    sval_active_layer = layer;
+    struct layer_hsv cols = global_saved_values.layer_colors[layer];
+    rgblight_sethsv_noeeprom(cols.hue, cols.sat, cols.val);
 }
 
 #ifndef SVALBOARD_REENABLE_BOOTMAGIC_LITE

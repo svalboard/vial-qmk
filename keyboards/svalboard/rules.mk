@@ -5,6 +5,7 @@ BOARD = GENERIC_RP_RP2040
 
 # we want some pretty lights
 RGBLIGHT_ENABLE = yes
+RGBLIGHT_SPLIT = yes
 RGBLIGHT_DRIVER = ws2812
 WS2812_DRIVER   = vendor
 

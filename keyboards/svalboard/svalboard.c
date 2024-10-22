@@ -36,14 +36,14 @@ void read_eeprom_kb(void) {
         global_saved_values.layer_colors[4] = HSV(0x2BFFFF); // Yellow
         global_saved_values.layer_colors[5] = HSV(0x80FF80); // Teal
         global_saved_values.layer_colors[6] = HSV(0x00FFFF); // Red
-        global_saved_values.layer_colors[7] = HSV(0xEAFFFF); // Pink
-        global_saved_values.layer_colors[8] = HSV(0xBFFF80); // Purple
-        global_saved_values.layer_colors[9] = HSV(0xAAFFFF); // Blue
-        global_saved_values.layer_colors[10] = HSV(0x6AFFFF); // Spring Green
-        global_saved_values.layer_colors[11] = HSV(0x80FFFF); // Turquoise
-        global_saved_values.layer_colors[12] = HSV(0x24FFFF); // Gold
-        global_saved_values.layer_colors[13] = HSV(0x1ED9D9); // Goldenrod
-        global_saved_values.layer_colors[14] = HSV(0x80FFFF); // Cyan
+        global_saved_values.layer_colors[7] = HSV(0x00FFFF); // Red
+        global_saved_values.layer_colors[8] = HSV(0xEAFFFF); // Pink
+        global_saved_values.layer_colors[9] = HSV(0xBFFF80); // Purple
+        global_saved_values.layer_colors[10] = HSV(0x0BB0FF); // Coral
+        global_saved_values.layer_colors[11] = HSV(0x6AFFFF); // Spring Green
+        global_saved_values.layer_colors[12] = HSV(0x80FF80); // Teal
+        global_saved_values.layer_colors[13] = HSV(0x80FFFF); // Turquoise
+        global_saved_values.layer_colors[14] = HSV(0x2BFFFF); // Yellow
         global_saved_values.layer_colors[15] = HSV(0xD5FFFF); // Magenta
         modified = true;
     }

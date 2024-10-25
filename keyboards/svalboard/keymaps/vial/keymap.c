@@ -81,6 +81,9 @@ enum layer {
     MBO = MH_AUTO_BUTTONS_LAYER,
 };
 
+#if __has_include("keymap_all.h")
+#include "keymap_all.h"
+#else
 const uint16_t PROGMEM keymaps[DYNAMIC_KEYMAP_LAYER_COUNT][MATRIX_ROWS][MATRIX_COLS] = {
     [NORMAL] = LAYOUT(
         /*Center           North           East            South           West*/
@@ -167,6 +170,7 @@ const uint16_t PROGMEM keymaps[DYNAMIC_KEYMAP_LAYER_COUNT][MATRIX_ROWS][MATRIX_C
         )
 
 };
+#endif
 
 bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
                      uint16_t other_keycode, keyrecord_t* other_record) {

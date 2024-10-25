@@ -166,6 +166,8 @@ void housekeeping_task_kb(void) {
 }
 
 void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
+    // raw_hid_receive_kb uses data for both input and output.
+    // If a command code is unknown, it is simply echoed back.
     struct layer_hsv *cols;
     uint8_t layer;
     if (data[0] != SVAL_VIA_PREFIX) return;
@@ -179,6 +181,9 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
             data[5] = (SVAL_PROTO_VERSION >> 8) & 0xFF;
             data[6] = (SVAL_PROTO_VERSION >> 16) & 0xFF;
             data[7] = (SVAL_PROTO_VERSION >> 24) & 0xFF;
+            break;
+        case sval_id_get_firmware_version:
+            snprintf((char *) data, length, "%s", QMK_VERSION);
             break;
         case sval_id_get_layer_hsv:
             layer = data[2];

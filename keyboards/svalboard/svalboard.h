@@ -38,12 +38,13 @@ struct saved_values {
     struct layer_hsv layer_colors[DYNAMIC_KEYMAP_LAYER_COUNT];
 };
 
-#define SVAL_PROTO_VERSION 1
+#define SVAL_PROTO_VERSION 3
 
 #define SVAL_VIA_PREFIX 0xEE
 
 enum sval_command_ids {
     sval_id_get_protocol_version                 = 0x01,
+    sval_id_get_firmware_version                 = 0x02,
     // Layer HSVs
     sval_id_get_layer_hsv                        = 0x10,
     sval_id_set_layer_hsv                        = 0x11,

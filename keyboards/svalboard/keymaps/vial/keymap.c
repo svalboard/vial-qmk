@@ -181,6 +181,7 @@ void keyboard_post_init_user(void) {
   //debug_mouse=true;
   rgblight_layers = sval_rgb_layers;
 
+#if __has_include("keymap_all.h")
   // Check if we've already got our macros set. At this point we're just
   // seeing if ANY macro is defined.
   if (sval_macro_size > 0) {
@@ -194,4 +195,5 @@ void keyboard_post_init_user(void) {
       dynamic_keymap_macro_set_buffer(0, sval_macro_size, sval_macros);
     }
   }
+#endif
 }

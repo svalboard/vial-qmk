@@ -62,17 +62,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   return state;
 }
 
-
-
-void keyboard_post_init_user(void) {
-  // Customise these values if you need to debug the matrix
-  //debug_enable=true;
-  //debug_matrix=true;
-  //debug_keyboard=true;
-  //debug_mouse=true;
-  rgblight_layers = sval_rgb_layers;
-}
-
 enum layer {
     NORMAL,
     FUNC,
@@ -84,6 +73,8 @@ enum layer {
 #if __has_include("keymap_all.h")
 #include "keymap_all.h"
 #else
+int sval_macro_size = 0;
+uint8_t sval_macros[] = {0};
 const uint16_t PROGMEM keymaps[DYNAMIC_KEYMAP_LAYER_COUNT][MATRIX_ROWS][MATRIX_COLS] = {
     [NORMAL] = LAYOUT(
         /*Center           North           East            South           West*/
@@ -182,3 +173,25 @@ bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
     return achordion_opposite_hands(tap_hold_record, other_record);
 }
 
+void keyboard_post_init_user(void) {
+  // Customise these values if you need to debug the matrix
+  //debug_enable=true;
+  //debug_matrix=true;
+  //debug_keyboard=true;
+  //debug_mouse=true;
+  rgblight_layers = sval_rgb_layers;
+
+  // Check if we've already got our macros set. At this point we're just
+  // seeing if ANY macro is defined.
+  if (sval_macro_size > 0) {
+    uint8_t get[DYNAMIC_KEYMAP_MACRO_COUNT];
+    uint8_t check[DYNAMIC_KEYMAP_MACRO_COUNT];
+
+    memset(check, 0, DYNAMIC_KEYMAP_MACRO_COUNT);
+    dynamic_keymap_macro_get_buffer(0, DYNAMIC_KEYMAP_MACRO_COUNT, get);
+    if (memcmp(get, check, DYNAMIC_KEYMAP_MACRO_COUNT) == 0) {
+      // We have a blank keymap. Copy ours over.
+      dynamic_keymap_macro_set_buffer(0, sval_macro_size, sval_macros);
+    }
+  }
+}

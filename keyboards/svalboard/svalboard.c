@@ -4,6 +4,7 @@
 
 saved_values_t global_saved_values;
 const int16_t mh_timer_choices[4] = { 300, 500, 800, -1 }; // -1 is infinite.
+bool fresh_install = false;
 
 void write_eeprom_kb(void) {
     eeconfig_update_kb_datablock(&global_saved_values);
@@ -101,12 +102,18 @@ void set_right_dpi(uint8_t index) {
 }
 
 void set_dpi_from_eeprom(void) {
-    read_eeprom_kb();
     set_left_dpi(global_saved_values.left_dpi_index);
     set_right_dpi(global_saved_values.right_dpi_index);
 }
 
+// Called from via_init, we can check here if we're a fresh
+// installation.
+void via_init_kb(void) {
+  fresh_install = !via_eeprom_is_valid();
+}
+
 void keyboard_post_init_kb(void) {
+    read_eeprom_kb();
     set_dpi_from_eeprom();
     keyboard_post_init_user();
 }

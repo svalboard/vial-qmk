@@ -182,18 +182,8 @@ void keyboard_post_init_user(void) {
   rgblight_layers = sval_rgb_layers;
 
 #if __has_include("keymap_all.h")
-  // Check if we've already got our macros set. At this point we're just
-  // seeing if ANY macro is defined.
-  if (sval_macro_size > 0) {
-    uint8_t get[DYNAMIC_KEYMAP_MACRO_COUNT];
-    uint8_t check[DYNAMIC_KEYMAP_MACRO_COUNT];
-
-    memset(check, 0, DYNAMIC_KEYMAP_MACRO_COUNT);
-    dynamic_keymap_macro_get_buffer(0, DYNAMIC_KEYMAP_MACRO_COUNT, get);
-    if (memcmp(get, check, DYNAMIC_KEYMAP_MACRO_COUNT) == 0) {
-      // We have a blank keymap. Copy ours over.
-      dynamic_keymap_macro_set_buffer(0, sval_macro_size, sval_macros);
-    }
+  if (fresh_install) {
+    sval_init_defaults();
   }
 #endif
 }

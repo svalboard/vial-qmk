@@ -46,6 +46,7 @@ jobs:
       id: build_firmware
       run: |
         git config --global --add safe.directory '*'
+        qmk setup -y
         make ${{ inputs.keyboard }}/${{ inputs.side }}:${{ inputs.keymap }}
       shell: bash
 

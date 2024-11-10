@@ -58,14 +58,9 @@ center.
 
 ### By Button Press
 
-Hitting any key not on a short list of "mouse-related" keys will automatically
-leave the automouse layer. By default, this means hitting most any other key on
-the Svalboard that isn't mapped on the automouse layer, since the remaining keys
-are "transparent" (and will thus press the key on the next-highest active
-layer).
+Hitting any key not on the mouse layer will leave the automouse layer.
 
-The following keys will *not* cause the automouse layer to deactivate:
-
+Some keys typically useful on the mouse layer if not accessible via transparency to other layers:
 * Mouse Buttons (`KC_BTN1`, `KC_BTN2`, `KC_BTN3`, `KC_BTN4`, `KC_BTN5`)
 * Mouse Scrollwheel Up/Down/Right/Left (`KC_WH_U`, `KC_WH_D`, `KC_WH_R`,
   `KC_WH_L`)

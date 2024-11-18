@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // This is used by our user's keymaps for conditionals.
 #define SVALBOARD
 
+#define AXIS_TYPE int16_t
+
 //#define FORTY_FOUR_MM_TB
 /* key matrix size */
 // Rows are doubled-up
@@ -31,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define DEBUG_MATRIX_SCAN_RATE
 // Data size is 5 + (16 * 3), to include layer colors in HSV struct.
 #define EECONFIG_KB_DATA_SIZE 53
-
 
 #define FLASH_LEN (16 * 1024 * 1024)
 #define WEAR_LEVELING_BACKING_SIZE (128 * 1024)
@@ -72,6 +73,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SPLIT_POINTING_ENABLE
 #define POINTING_DEVICE_COMBINED
 #define POINTING_DEVICE_AUTO_MOUSE_MH_ENABLE
+#define POINTING_DEVICE_TASK_THROTTLE_MS 5
 
 // Avoid slave-slave deadlock due to missing USB_VBUS_PIN.
 //

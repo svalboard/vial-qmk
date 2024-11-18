@@ -14,13 +14,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-#include QMK_KEYBOARD_H
+#include <complex.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include "svalboard.h"
 #include "features/achordion.h"
 #include "keymap_support.h"
+#include "axis_scale.h"
 
 // in keymap.c:
 #ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
@@ -45,62 +45,54 @@ void mouse_mode(bool);
 
 bool mouse_mode_enabled = false;
 
-static int _ds_l_x = 0;
-static int _ds_l_y = 0;
-static int _ds_r_x = 0;
-static int _ds_r_y = 0;
+axis_scale_t l_x = {1, SCROLL_DIVISOR, 0};
+axis_scale_t l_y = {1, SCROLL_DIVISOR, 0};
+axis_scale_t r_x = {1, SCROLL_DIVISOR, 0};
+axis_scale_t r_y = {1, SCROLL_DIVISOR, 0};
 
-static bool scroll_hold = false, scroll_toggle = false;
+
+axis_scale_t sniper_x = {1, 1, 0};
+axis_scale_t sniper_y = {1, 1, 0};
+axis_scale_t sniper_h = {1, 1, 0};
+axis_scale_t sniper_v = {1, 1, 0};
+
+bool enable_scale_2 = false;
+bool enable_scale_3 = false;
+bool enable_scale_5 = false;
+
+static bool scroll_hold    = false,
+            scroll_toggle  = false;
 
 report_mouse_t pointing_device_task_combined_user(report_mouse_t reportMouse1, report_mouse_t reportMouse2) {
     report_mouse_t ret_mouse;
+
+    if (enable_scale_2 || enable_scale_3 || enable_scale_5) {
+        reportMouse1.x = add_to_axis(&sniper_x, reportMouse1.x);
+        reportMouse1.y = add_to_axis(&sniper_y, reportMouse1.y);
+        reportMouse1.h = add_to_axis(&sniper_h, reportMouse1.h);
+        reportMouse1.v = add_to_axis(&sniper_v, reportMouse1.v);
+
+        reportMouse2.x = add_to_axis(&sniper_x, reportMouse2.x);
+        reportMouse2.y = add_to_axis(&sniper_y, reportMouse2.y);
+        reportMouse2.h = add_to_axis(&sniper_h, reportMouse2.h);
+        reportMouse2.v = add_to_axis(&sniper_v, reportMouse2.v);
+    }
+
     if (reportMouse1.x == 0 && reportMouse1.y == 0 && reportMouse2.x == 0 && reportMouse2.y == 0)
         return pointing_device_combine_reports(reportMouse1, reportMouse2);
 
     if ((global_saved_values.left_scroll != scroll_hold) != scroll_toggle) {
-        int div_x;
-        int div_y;
+        reportMouse1.h = add_to_axis(&l_x, reportMouse1.x);
+        reportMouse1.v = add_to_axis(&l_y, -reportMouse1.y);
 
-        reportMouse1.y = -reportMouse1.y;
-
-        _ds_l_x += reportMouse1.x;
-        _ds_l_y += reportMouse1.y;
-
-        div_x = _ds_l_x / SCROLL_DIVISOR;
-        div_y = _ds_l_y / SCROLL_DIVISOR;
-        if (div_x != 0) {
-            reportMouse1.h += div_x;
-            _ds_l_x -= div_x * SCROLL_DIVISOR;
-        }
-
-        if (div_y != 0) {
-            reportMouse1.v += div_y;
-            _ds_l_y -= div_y * SCROLL_DIVISOR;
-        }
         reportMouse1.x = 0;
         reportMouse1.y = 0;
     }
 
     if ((global_saved_values.right_scroll != scroll_hold) != scroll_toggle) {
-        int div_x;
-        int div_y;
+        reportMouse2.h = add_to_axis(&r_x, reportMouse2.x);
+        reportMouse2.v = add_to_axis(&r_y, -reportMouse2.y);
 
-        reportMouse2.y = -reportMouse2.y;
-
-        _ds_r_x += reportMouse2.x;
-        _ds_r_y += reportMouse2.y;
-
-        div_x = _ds_r_x / SCROLL_DIVISOR;
-        div_y = _ds_r_y / SCROLL_DIVISOR;
-        if (div_x != 0) {
-            reportMouse2.h += div_x;
-            _ds_r_x -= div_x * SCROLL_DIVISOR;
-        }
-
-        if (div_y != 0) {
-            reportMouse2.v += div_y;
-            _ds_r_y -= div_y * SCROLL_DIVISOR;
-        }
         reportMouse2.x = 0;
         reportMouse2.y = 0;
     }
@@ -111,37 +103,26 @@ report_mouse_t pointing_device_task_combined_user(report_mouse_t reportMouse1, r
     return pointing_device_task_user(ret_mouse);
 }
 
-static int snipe_x = 0;
-static int snipe_y = 0;
+void handle_sniper_key(bool pressed, uint8_t divisor) {
+    if (!pressed) {
+        div_div_axis(&sniper_x, divisor);
+        div_div_axis(&sniper_y, divisor);
+        div_div_axis(&sniper_h, divisor);
+        div_div_axis(&sniper_v, divisor);
+    } else {
+        mult_div_axis(&sniper_x, divisor);
+        mult_div_axis(&sniper_y, divisor);
+        mult_div_axis(&sniper_h, divisor);
+        mult_div_axis(&sniper_v, divisor);
+    }
+}
 
-static int snipe_div = 1;
 report_mouse_t pointing_device_task_user(report_mouse_t reportMouse) {
     if (reportMouse.x == 0 && reportMouse.y == 0)
         return reportMouse;
 
     mouse_mode(true);
 
-    if (snipe_div != 1) {
-        int div_x;
-        int div_y;
-        snipe_x += reportMouse.x;
-        snipe_y += reportMouse.y;
-
-        reportMouse.x = 0;
-        reportMouse.y = 0;
-
-        div_x = snipe_x / snipe_div;
-        div_y = snipe_y / snipe_div;
-        if (div_x != 0) {
-            reportMouse.x = div_x;
-            snipe_x -= div_x * snipe_div;
-        }
-
-        if (div_y != 0) {
-            reportMouse.y = div_y;
-            snipe_y -= div_y * snipe_div;
-        }
-    }
     return reportMouse;
 }
 #endif
@@ -176,7 +157,6 @@ bool in_mod_tap = false;
 int8_t in_mod_tap_layer = -1;
 int8_t mouse_keys_pressed = 0;
 bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
-
 
     // Abort additional processing if userspace code did
     if (!process_record_user(keycode, record)) { return false;}
@@ -295,19 +275,16 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 check_layer_67();
                 return false;
             case SV_SNIPER_2:
-                snipe_x *= 2;
-                snipe_y *= 2;
-                snipe_div *= 2;
+	            enable_scale_2 = true;
+				handle_sniper_key(true, 2);
                 return false;
             case SV_SNIPER_3:
-                snipe_div *= 3;
-                snipe_x *= 3;
-                snipe_y *= 3;
+                enable_scale_3 = true;
+                handle_sniper_key(true, 3);
                 return false;
             case SV_SNIPER_5:
-                snipe_div *= 5;
-                snipe_x *= 5;
-                snipe_y *= 5;
+                enable_scale_5 = true;
+                handle_sniper_key(true, 5);
                 return false;
             case SV_SCROLL_HOLD:
                 scroll_hold = true;
@@ -332,19 +309,16 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 check_layer_67();
                 return false;
             case SV_SNIPER_2:
-                snipe_div /= 2;
-                snipe_x /= 2;
-                snipe_y /= 2;
+                enable_scale_2 = false;
+                handle_sniper_key(false, 2);
                 return false;
             case SV_SNIPER_3:
-                snipe_div /= 3;
-                snipe_x /= 3;
-                snipe_y /= 3;
+                enable_scale_3 = false;
+                handle_sniper_key(false, 3);
                 return false;
             case SV_SNIPER_5:
-                snipe_div /= 5;
-                snipe_x /= 5;
-                snipe_y /= 5;
+                enable_scale_5 = false;
+                handle_sniper_key(false, 5);
                 return false;
             case SV_SCROLL_HOLD:
                 scroll_hold = false;

@@ -33,14 +33,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   return state;
 }
 
-void keyboard_post_init_user(void) {
-  // Customise these values if you need to debug the matrix
-  //debug_enable=true;
-  //debug_matrix=true;
-  //debug_keyboard=true;
-  //debug_mouse=true;
-}
-
 enum layer {
     NORMAL,
     FUNC,

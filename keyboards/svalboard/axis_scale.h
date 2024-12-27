@@ -32,7 +32,11 @@ typedef struct {
 
 AXIS_TYPE add_to_axis(axis_scale_t *, AXIS_TYPE);
 void clear_remainder_axis(axis_scale_t *);
+
 void mult_mult_axis(axis_scale_t *, uint8_t);
 void div_mult_axis(axis_scale_t *, uint8_t);
+void set_mult_axis(axis_scale_t *, uint8_t);
+
 void mult_div_axis(axis_scale_t *, uint8_t);
 void div_div_axis(axis_scale_t *, uint8_t);
+void set_div_axis(axis_scale_t *, uint8_t);

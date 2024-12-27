@@ -36,6 +36,13 @@ void div_mult_axis(axis_scale_t *as, uint8_t div) {
     }
 }
 
+void set_mult_axis(axis_scale_t *as, uint8_t val) {
+    if (val != 0) {
+        as->mult = val;
+        as->remainder = 0;
+    }
+}
+
 AXIS_TYPE add_to_axis(axis_scale_t *as, AXIS_TYPE val) {
     AXIS_TYPE ret_val;
 
@@ -63,6 +70,13 @@ void div_div_axis(axis_scale_t *as, uint8_t div) {
         }
         as->remainder *= div;
         as->div = new_div;
+    }
+}
+
+void set_div_axis(axis_scale_t *as, uint8_t val) {
+    if (val != 0) {
+        as->div = val;
+        as->remainder = 0;
     }
 }
 

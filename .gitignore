@@ -115,3 +115,4 @@ compile_commands.json
 .clangd/
 .cache/
 keyboards/svalboard/sweep_keymap.yaml
+keyboards/svalboard/keymaps/**/keymap_all.h

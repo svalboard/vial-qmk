@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "quantum.h"
 
 extern const int16_t mh_timer_choices[4];
+extern bool fresh_install;
 
 struct layer_hsv {
     uint8_t hue;

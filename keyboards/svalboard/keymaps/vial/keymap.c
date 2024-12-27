@@ -49,6 +49,11 @@ enum layer {
     MBO = MH_AUTO_BUTTONS_LAYER,
 };
 
+#if __has_include("keymap_all.h")
+#include "keymap_all.h"
+#else
+int sval_macro_size = 0;
+uint8_t sval_macros[] = {0};
 const uint16_t PROGMEM keymaps[DYNAMIC_KEYMAP_LAYER_COUNT][MATRIX_ROWS][MATRIX_COLS] = {
     [NORMAL] = LAYOUT(
         /*Center           North           East            South           West*/
@@ -130,11 +135,12 @@ const uint16_t PROGMEM keymaps[DYNAMIC_KEYMAP_LAYER_COUNT][MATRIX_ROWS][MATRIX_C
         /*L3*/ KC_BTN2,        KC_TRNS,       KC_TRNS,       SV_SNIPER_3,        KC_TRNS, XXXXXXX,
         /*L4*/ SV_RECALIBRATE_POINTER, KC_TRNS, KC_TRNS,       SV_SNIPER_5,      KC_TRNS, XXXXXXX,
         /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
-        /*RT*/ KC_TRNS,        KC_BTN1,       KC_TRNS,       KC_BTN2,       KC_BTN3,   KC_TRNS,
-        /*LT*/ KC_TRNS,        KC_BTN1,       KC_TRNS,       KC_BTN2,       KC_BTN3,   KC_TRNS
+        /*RT*/ KC_TRNS,        KC_BTN1,       KC_TRNS,       KC_BTN2,       KC_TRNS,   KC_TRNS,
+        /*LT*/ KC_TRNS,        KC_BTN1,       KC_TRNS,       KC_BTN2,       KC_TRNS,   KC_TRNS
         )
 
 };
+#endif
 
 bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
                      uint16_t other_keycode, keyrecord_t* other_record) {
@@ -146,3 +152,17 @@ bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
     return achordion_opposite_hands(tap_hold_record, other_record);
 }
 
+void keyboard_post_init_user(void) {
+  // Customise these values if you need to debug the matrix
+  //debug_enable=true;
+  //debug_matrix=true;
+  //debug_keyboard=true;
+  //debug_mouse=true;
+  rgblight_layers = sval_rgb_layers;
+
+#if __has_include("keymap_all.h")
+  if (fresh_install) {
+    sval_init_defaults();
+  }
+#endif
+}

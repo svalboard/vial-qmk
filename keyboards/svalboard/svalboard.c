@@ -5,7 +5,9 @@
 
 saved_values_t global_saved_values;
 const int16_t mh_timer_choices[4] = { 300, 500, 800, -1 }; // -1 is infinite.
+
 uint8_t sval_active_layer = 0;
+bool fresh_install = false;
 
 void write_eeprom_kb(void) {
     eeconfig_update_kb_datablock(&global_saved_values);
@@ -126,16 +128,21 @@ void set_right_dpi(uint8_t index) {
 }
 
 void set_dpi_from_eeprom(void) {
-    read_eeprom_kb();
     set_left_dpi(global_saved_values.left_dpi_index);
     set_right_dpi(global_saved_values.right_dpi_index);
 }
 
 void kb_sync_listener(uint8_t in_buflen, const void* in_data, uint8_t out_buflen, void* out_data) {
     // Just a ping-pong, no need to do anything.
+)
+// Called from via_init, we can check here if we're a fresh
+// installation.
+void via_init_kb(void) {
+  fresh_install = !via_eeprom_is_valid()
 }
 
 void keyboard_post_init_kb(void) {
+    read_eeprom_kb();
     set_dpi_from_eeprom();
     keyboard_post_init_user();
     transaction_register_rpc(KEYBOARD_SYNC_A, kb_sync_listener);

@@ -138,7 +138,7 @@ void kb_sync_listener(uint8_t in_buflen, const void* in_data, uint8_t out_buflen
 // Called from via_init, we can check here if we're a fresh
 // installation.
 void via_init_kb(void) {
-  fresh_install = !via_eeprom_is_valid()
+  fresh_install = !via_eeprom_is_valid();
 }
 
 void keyboard_post_init_kb(void) {

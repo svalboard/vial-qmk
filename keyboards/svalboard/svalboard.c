@@ -134,7 +134,7 @@ void set_dpi_from_eeprom(void) {
 
 void kb_sync_listener(uint8_t in_buflen, const void* in_data, uint8_t out_buflen, void* out_data) {
     // Just a ping-pong, no need to do anything.
-)
+}
 // Called from via_init, we can check here if we're a fresh
 // installation.
 void via_init_kb(void) {

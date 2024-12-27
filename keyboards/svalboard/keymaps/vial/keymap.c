@@ -158,7 +158,6 @@ void keyboard_post_init_user(void) {
   //debug_matrix=true;
   //debug_keyboard=true;
   //debug_mouse=true;
-  rgblight_layers = sval_rgb_layers;
 
 #if __has_include("keymap_all.h")
   if (fresh_install) {

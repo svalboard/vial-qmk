@@ -17,6 +17,7 @@
 #define AZOTEQ_IQS5XX_REG_PREVIOUS_CYCLE_TIME 0x000C
 #define AZOTEQ_IQS5XX_REG_SYSTEM_CONTROL_1 0x0432
 #define AZOTEQ_IQS5XX_REG_REPORT_RATE_ACTIVE 0x057A
+#define AZOTEQ_IQS5XX_REG_IDLE_MODE_TIMEOUT 0x0586
 #define AZOTEQ_IQS5XX_REG_SYSTEM_CONFIG_0 0x058E
 #define AZOTEQ_IQS5XX_REG_SYSTEM_CONFIG_1 0x058F
 #define AZOTEQ_IQS5XX_REG_X_RESOLUTION 0x066E
@@ -77,6 +78,10 @@
 #ifndef AZOTEQ_IQS5XX_ZOOM_CONSECUTIVE_DISTANCE
 #    define AZOTEQ_IQS5XX_ZOOM_CONSECUTIVE_DISTANCE 0x19
 #endif
+#ifndef AZOTEQ_IQS5XX_EVENT_MODE
+// Event mode can't be used until the pointing code has changed (stuck buttons)
+#    define AZOTEQ_IQS5XX_EVENT_MODE false
+#endif
 
 #if defined(AZOTEQ_IQS5XX_TPS43)
 #    define AZOTEQ_IQS5XX_WIDTH_MM 43
@@ -105,12 +110,6 @@ static struct {
     uint16_t resolution_y;
 } azoteq_iqs5xx_device_resolution_t;
 
-i2c_status_t azoteq_iqs5xx_wake(void) {
-    uint8_t      data   = 0;
-    i2c_status_t status = i2c_read_register16(AZOTEQ_IQS5XX_ADDRESS, AZOTEQ_IQS5XX_REG_PREVIOUS_CYCLE_TIME, (uint8_t *)&data, sizeof(data), 1);
-    wait_us(150);
-    return status;
-}
 i2c_status_t azoteq_iqs5xx_end_session(void) {
     const uint8_t END_BYTE = 1; // any data
     return i2c_write_register16(AZOTEQ_IQS5XX_ADDRESS, AZOTEQ_IQS5XX_REG_END_COMMS, &END_BYTE, 1, AZOTEQ_IQS5XX_TIMEOUT_MS);

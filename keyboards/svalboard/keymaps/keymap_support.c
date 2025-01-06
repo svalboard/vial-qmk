@@ -156,6 +156,11 @@ void mh_change_timeouts(void) {
     write_eeprom_kb();
 }
 
+void toggle_chordal_hold(void) {
+    chordal_hold_toggle();
+    write_eeprom_kb();
+}
+
 void toggle_achordion(void) {
     global_saved_values.disable_achordion = !global_saved_values.disable_achordion;
     write_eeprom_kb();
@@ -280,6 +285,9 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 return false;
             case SV_CAPS_WORD:
                 caps_word_toggle();
+                return false;
+            case SV_TOGGLE_CHORDAL_HOLD:
+                toggle_chordal_hold();
                 return false;
             case SV_TOGGLE_ACHORDION:
                 toggle_achordion();

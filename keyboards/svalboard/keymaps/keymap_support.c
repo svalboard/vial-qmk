@@ -317,6 +317,10 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
             case SV_OUTPUT_STATUS:
                 output_keyboard_info();
                 return false;
+            case SV_TOGGLE_AUTOMOUSE:
+                global_saved_values.auto_mouse = !global_saved_values.auto_mouse;
+                write_eeprom_kb();
+                return false;
         }
     } else { // key released
         switch (keycode) {
@@ -383,14 +387,16 @@ void matrix_scan_kb(void) {
 }
 
 void mouse_mode(bool on) {
-    if (on) {
-        layer_on(MH_AUTO_BUTTONS_LAYER);
-        mh_auto_buttons_timer = timer_read();
-        mouse_mode_enabled = true;
-    } else {
-        layer_off(MH_AUTO_BUTTONS_LAYER);
-        mh_auto_buttons_timer = 0;
-        mouse_mode_enabled = false;
-        mouse_keys_pressed = 0;
+    if (global_saved_values.auto_mouse) {
+        if (on) {
+            layer_on(MH_AUTO_BUTTONS_LAYER);
+            mh_auto_buttons_timer = timer_read();
+            mouse_mode_enabled = true;
+        } else {
+            layer_off(MH_AUTO_BUTTONS_LAYER);
+            mh_auto_buttons_timer = 0;
+            mouse_mode_enabled = false;
+            mouse_keys_pressed = 0;
+        }
     }
 }

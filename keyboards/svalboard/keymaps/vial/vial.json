@@ -95,6 +95,11 @@
 	"shortName": "Output\nStatus",
 	"title": "Output the current internal state of the keyboard.",
 	"name": "SV_OUTPUT_STATUS"
+      },
+      {
+        "shortName": "AutoMouse\nToggle",
+        "title": "Toggle Auto Mouse layer activation.",
+        "name": "SV_TOGGLE_AUTOMOUSE"
       }
     ],
     "layouts": {

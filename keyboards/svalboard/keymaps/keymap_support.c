@@ -158,6 +158,7 @@ void mh_change_timeouts(void) {
 
 void toggle_chordal_hold(void) {
     chordal_hold_toggle();
+    global_saved_values.enable_chordal_hold = chordal_hold_is_enabled();
     write_eeprom_kb();
 }
 

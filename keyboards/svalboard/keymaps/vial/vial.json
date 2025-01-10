@@ -52,11 +52,6 @@
         "name": "SV_CAPS_WORD"
       },
       {
-        "shortName": "Toggle\nChordal",
-        "title": "Toggle Chordal Hold",
-        "name": "SV_TOGGLE_CHORDAL_HOLD"
-      },
-      {
         "shortName": "Toggle\nACH",
         "title": "Toggle Achordion",
         "name": "SV_TOGGLE_ACHORDION"
@@ -100,6 +95,11 @@
 	"shortName": "Output\nStatus",
 	"title": "Output the current internal state of the keyboard.",
 	"name": "SV_OUTPUT_STATUS"
+      },
+      {
+        "shortName": "Toggle\nChordal",
+        "title": "Toggle Chordal Hold",
+        "name": "SV_TOGGLE_CHORDAL_HOLD"
       }
     ],
     "layouts": {

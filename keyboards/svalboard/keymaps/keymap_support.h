@@ -31,7 +31,6 @@ enum my_keycodes {
     SV_RECALIBRATE_POINTER,
     SV_MH_CHANGE_TIMEOUTS,
     SV_CAPS_WORD,
-    SV_TOGGLE_CHORDAL_HOLD,
     SV_TOGGLE_ACHORDION,
     SV_TOGGLE_23_67,
     SV_TOGGLE_45_67,
@@ -41,6 +40,7 @@ enum my_keycodes {
     SV_SCROLL_HOLD,
     SV_SCROLL_TOGGLE,
     SV_OUTPUT_STATUS,
+    SV_TOGGLE_CHORDAL_HOLD,
     // New keycodes should go here, to avoid breaking existing keymaps - order must match vial.json
     KC_NORMAL_HOLD = SAFE_RANGE,
     KC_FUNC_HOLD,

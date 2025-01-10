@@ -51,7 +51,7 @@ __attribute__((weak)) bool get_permissive_hold(uint16_t keycode, keyrecord_t *re
 
 #    if defined(CHORDAL_HOLD)
 // Make it possible to enable Chordal Hold dynamically for Vial.
-static bool chordal_hold_enabled = false;
+static bool chordal_hold_enabled = true;
 bool chordal_hold_is_enabled(void) {
     return chordal_hold_enabled;
 }

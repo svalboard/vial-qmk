@@ -56,6 +56,8 @@ void read_eeprom_kb(void) {
     sval_active_layer = 0;
     if (global_saved_values.enable_chordal_hold) {
         chordal_hold_enable();
+    } else {
+        chordal_hold_disable();
     }
 }
 

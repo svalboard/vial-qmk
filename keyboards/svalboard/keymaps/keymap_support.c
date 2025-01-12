@@ -156,6 +156,12 @@ void mh_change_timeouts(void) {
     write_eeprom_kb();
 }
 
+void toggle_chordal_hold(void) {
+    chordal_hold_toggle();
+    global_saved_values.enable_chordal_hold = chordal_hold_is_enabled();
+    write_eeprom_kb();
+}
+
 void toggle_achordion(void) {
     global_saved_values.disable_achordion = !global_saved_values.disable_achordion;
     write_eeprom_kb();
@@ -212,7 +218,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
         // The keycodes below are all that are forced to drop you out of mouse mode.
         // The intent is for this list to eventually become just KC_NO, and KC_TRNS
         // as more functionality is exported to keybard, and those keys are removed
-        // from the firmmware. - ilc - 2024-10-05
+        // from the firmware. - ilc - 2024-10-05
 #define BAD_KEYCODE_CONDITONAL  (keycode == KC_NO ||  \
 	                    keycode == KC_TRNS || \
 		            keycode == SV_LEFT_DPI_INC || \
@@ -221,6 +227,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 	                    keycode == SV_RIGHT_DPI_DEC || \
 	                    keycode == SV_LEFT_SCROLL_TOGGLE || \
 		            keycode == SV_RIGHT_SCROLL_TOGGLE || \
+		            keycode == SV_TOGGLE_CHORDAL_HOLD || \
 		            keycode == SV_TOGGLE_ACHORDION || \
 	                    keycode == SV_MH_CHANGE_TIMEOUTS)
 
@@ -280,6 +287,9 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 return false;
             case SV_CAPS_WORD:
                 caps_word_toggle();
+                return false;
+            case SV_TOGGLE_CHORDAL_HOLD:
+                toggle_chordal_hold();
                 return false;
             case SV_TOGGLE_ACHORDION:
                 toggle_achordion();

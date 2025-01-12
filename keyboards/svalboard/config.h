@@ -97,5 +97,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define SPLIT_TRANSACTION_IDS_KB KEYBOARD_SYNC_A
 
+#define CHORDAL_HOLD
 #define PERMISSIVE_HOLD
 #define ACHORDION_STREAK

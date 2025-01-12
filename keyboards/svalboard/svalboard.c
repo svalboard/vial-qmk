@@ -54,6 +54,11 @@ void read_eeprom_kb(void) {
         write_eeprom_kb();
     }
     sval_active_layer = 0;
+    if (global_saved_values.enable_chordal_hold) {
+        chordal_hold_enable();
+    } else {
+        chordal_hold_disable();
+    }
 }
 
 static const char YES[] = "yes";
@@ -79,7 +84,8 @@ void output_keyboard_info(void) {
 	    yes_or_no(global_saved_values.left_scroll), dpi_choices[global_saved_values.left_dpi_index],
 	    yes_or_no(global_saved_values.right_scroll), dpi_choices[global_saved_values.right_dpi_index]);
     send_string(output_buffer);
-    sprintf(output_buffer, "Achordion: %s, MH Keys Timer: %d\n",
+    sprintf(output_buffer, "Chordal Hold: %s, Achordion: %s, MH Keys Timer: %d\n",
+	    yes_or_no(global_saved_values.enable_chordal_hold),
 	    yes_or_no(!global_saved_values.disable_achordion),
 	    mh_timer_choices[global_saved_values.mh_timer_index]);
     send_string(output_buffer);

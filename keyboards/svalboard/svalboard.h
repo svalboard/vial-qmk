@@ -31,11 +31,14 @@ struct saved_values {
     uint8_t version;  // Currently at 1,  We assume all new data will be zeroed.
     bool left_scroll :1;
     bool right_scroll :1;
+    bool auto_mouse :1;
     bool disable_achordion: 1;
     unsigned int unused0 :5;
     uint8_t left_dpi_index;
     uint8_t right_dpi_index;
     uint8_t mh_timer_index;
+    uint8_t dir_mode; //keep track of the current universal mode: 0 for lstick, 1 for dpad, 2 for rstick
+    uint8_t socd_mode; //track socd mode: 10 Up Priority Last Input SOCD, 20 Last Input SOCD, 30 Up Priority Neutral SOCD, and 40 Neutral SOCD
     struct layer_hsv layer_colors[DYNAMIC_KEYMAP_LAYER_COUNT];
 };
 
@@ -70,3 +73,5 @@ void write_eeprom_kb(void);
 void recalibrate_pointer(void);
 void sval_set_active_layer(uint32_t layer, bool save);
 void sval_on_reconnect(void);
+void change_dir_mode(int8_t mode);
+void change_socd_mode(int8_t mode);

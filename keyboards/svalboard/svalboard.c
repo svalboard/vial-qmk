@@ -49,6 +49,13 @@ void read_eeprom_kb(void) {
         global_saved_values.layer_colors[15] = HSV(0xD5FFFF); // Magenta
         modified = true;
     }
+    if (global_saved_values.version < 4) {
+        global_saved_values.version = 4;
+        global_saved_values.dir_mode = 0;
+        global_saved_values.socd_mode = 0;
+        global_saved_values.auto_mouse = true; //temporary to avoid issues down the line
+        modified = true;
+    }
     // As we add versions, just append here.
     if (modified) {
         write_eeprom_kb();
@@ -70,6 +77,32 @@ const char *yes_or_no(int flag) {
 const uint16_t dpi_choices[] = { 200, 400, 800, 1200, 1600, 2400 }; // If we need more, add them.
 #define DPI_CHOICES_LENGTH (sizeof(dpi_choices)/sizeof(dpi_choices[0]))
 
+const char * get_dir_mode(void) {
+    switch (global_saved_values.dir_mode) {
+        case 0:
+            return "Left Stick";
+        case 1:
+            return "D-pad";
+        case 2:
+            return "Right Stick";
+    }
+    return "Unknown";
+}
+
+const char * get_socd_mode(void) {
+    switch (global_saved_values.socd_mode) {
+        case 0:
+            return "Last Input Wins with Up Priority";
+        case 1:
+            return "Last Input Wins";
+        case 2:
+            return "Neutral with Up Priority";
+        case 3:
+            return "Neutral";
+    }
+    return "Unknown";
+}
+
 void output_keyboard_info(void) {
     char output_buffer[256];
 
@@ -82,6 +115,9 @@ void output_keyboard_info(void) {
     sprintf(output_buffer, "Achordion: %s, MH Keys Timer: %d\n",
 	    yes_or_no(!global_saved_values.disable_achordion),
 	    mh_timer_choices[global_saved_values.mh_timer_index]);
+    sprintf(output_buffer, "SOCD Mode: %s, Direction Mode: %s\n",
+	    get_dir_mode(),
+	    get_socd_mode());
     send_string(output_buffer);
 }
 
@@ -231,6 +267,35 @@ void sval_set_active_layer(uint32_t layer, bool save) {
     } else {
         rgblight_sethsv_noeeprom(cols.hue, cols.sat, cols.val);
     }
+}
+
+void change_dir_mode(int8_t mode) {
+    if (mode == -1) {
+        if (global_saved_values.dir_mode == 2) {
+            global_saved_values.dir_mode = 0;
+        }
+        else {
+            global_saved_values.dir_mode += 1;
+        }
+    }
+    else {
+        global_saved_values.dir_mode = mode;
+    }
+    write_eeprom_kb();
+}
+void change_socd_mode(int8_t mode) {
+    if (mode == -1) {
+        if (global_saved_values.socd_mode == 3) {
+            global_saved_values.socd_mode = 0;
+        }
+        else {
+            global_saved_values.socd_mode += 1;
+        }
+    }
+    else {
+        global_saved_values.socd_mode = mode;
+    }
+    write_eeprom_kb();
 }
 
 #ifndef SVALBOARD_REENABLE_BOOTMAGIC_LITE

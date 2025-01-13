@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdint.h>
 #include "svalboard.h"
 #include "features/achordion.h"
+#include "features/fightstick.h"
 #include "keymap_support.h"
 
 // in keymap.c:
@@ -208,6 +209,9 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
     uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
 #endif
 
+    // Handle gamepad keycodes
+    if (!process_gamepad(keycode, record->event.pressed)) {return false;}
+
     if (mouse_mode_enabled && layer_state & (1 << MH_AUTO_BUTTONS_LAYER)) {
         // The keycodes below are all that are forced to drop you out of mouse mode.
         // The intent is for this list to eventually become just KC_NO, and KC_TRNS
@@ -222,7 +226,16 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 	                    keycode == SV_LEFT_SCROLL_TOGGLE || \
 		            keycode == SV_RIGHT_SCROLL_TOGGLE || \
 		            keycode == SV_TOGGLE_ACHORDION || \
-	                    keycode == SV_MH_CHANGE_TIMEOUTS)
+	                    keycode == SV_MH_CHANGE_TIMEOUTS || \
+                    keycode == GC_TOG || \
+                    keycode == GC_TDP || \
+                    keycode == GC_TLS || \
+                    keycode == GC_TRS || \
+                    keycode == GC_SCD || \
+                    keycode == GC_UPLI || \
+                    keycode == GC_LAST || \
+                    keycode == GC_SUPN || \
+                    keycode == GC_NEUT)
 
         uint16_t layer_keycode = keymap_key_to_keycode(MH_AUTO_BUTTONS_LAYER, record->event.key);
         if (BAD_KEYCODE_CONDITONAL ||

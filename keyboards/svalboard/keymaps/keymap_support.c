@@ -222,7 +222,8 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 	                    keycode == SV_LEFT_SCROLL_TOGGLE || \
 		            keycode == SV_RIGHT_SCROLL_TOGGLE || \
 		            keycode == SV_TOGGLE_ACHORDION || \
-	                    keycode == SV_MH_CHANGE_TIMEOUTS)
+	                    keycode == SV_MH_CHANGE_TIMEOUTS || \
+                        keycode == SV_TOGGLE_AUTOMOUSE)
 
         uint16_t layer_keycode = keymap_key_to_keycode(MH_AUTO_BUTTONS_LAYER, record->event.key);
         if (BAD_KEYCODE_CONDITONAL ||
@@ -317,6 +318,15 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
             case SV_OUTPUT_STATUS:
                 output_keyboard_info();
                 return false;
+            case SV_TOGGLE_AUTOMOUSE:
+                //if we disable automouse, manually kick out of mouse mode in case timer was running
+                //needs to go first to avoid the lockout
+                if (global_saved_values.auto_mouse) {
+                    mouse_mode(false);
+                }
+                global_saved_values.auto_mouse = !global_saved_values.auto_mouse;
+                write_eeprom_kb();
+                return false;
         }
     } else { // key released
         switch (keycode) {
@@ -383,14 +393,16 @@ void matrix_scan_kb(void) {
 }
 
 void mouse_mode(bool on) {
-    if (on) {
-        layer_on(MH_AUTO_BUTTONS_LAYER);
-        mh_auto_buttons_timer = timer_read();
-        mouse_mode_enabled = true;
-    } else {
-        layer_off(MH_AUTO_BUTTONS_LAYER);
-        mh_auto_buttons_timer = 0;
-        mouse_mode_enabled = false;
-        mouse_keys_pressed = 0;
+    if (global_saved_values.auto_mouse) {
+        if (on) {
+            layer_on(MH_AUTO_BUTTONS_LAYER);
+            mh_auto_buttons_timer = timer_read();
+            mouse_mode_enabled = true;
+        } else {
+            layer_off(MH_AUTO_BUTTONS_LAYER);
+            mh_auto_buttons_timer = 0;
+            mouse_mode_enabled = false;
+            mouse_keys_pressed = 0;
+        }
     }
 }

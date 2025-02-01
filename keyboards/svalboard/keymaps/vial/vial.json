@@ -95,6 +95,196 @@
 	"shortName": "Output\nStatus",
 	"title": "Output the current internal state of the keyboard.",
 	"name": "SV_OUTPUT_STATUS"
+      },
+      {
+        "shortName": "Game\nSquare",
+        "title": "Square Key on Gamepad.",
+        "name": "GC_SQU"
+      },
+      {
+        "shortName": "Game\nCross",
+        "title": "Cross Key on Gamepad.",
+        "name": "GC_CRO"
+      },
+      {
+        "shortName": "Game\nCircle",
+        "title": "Circle Key on Gamepad.",
+        "name": "GC_CIR"
+      },
+      {
+        "shortName": "Game\nTriangle",
+        "title": "Triangle Key on Gamepad.",
+        "name": "GC_TRI"
+      },
+      {
+        "shortName": "Game\nL1",
+        "title": "L1 Key on Gamepad.",
+        "name": "GC_L1"
+      },
+      {
+        "shortName": "Game\nR1",
+        "title": "R1 Key on Gamepad.",
+        "name": "GC_R1"
+      },
+      {
+        "shortName": "Game\nL2",
+        "title": "L2 Key on Gamepad.",
+        "name": "GC_L2"
+      },
+      {
+        "shortName": "Game\nR2",
+        "title": "R2 Key on Gamepad.",
+        "name": "GC_R2"
+      },
+      {
+        "shortName": "Game\nL3",
+        "title": "L3 Key on Gamepad.",
+        "name": "GC_L3"
+      },
+      {
+        "shortName": "Game\nR3",
+        "title": "R3 Key on Gamepad.",
+        "name": "GC_R3"
+      },
+      {
+        "shortName": "Game\nSelect",
+        "title": "Select Key on Gamepad.",
+        "name": "GC_SEL"
+      },
+      {
+        "shortName": "Game\nStart",
+        "title": "Start Key on Gamepad.",
+        "name": "GC_STA"
+      },
+      {
+        "shortName": "Game\nHome",
+        "title": "Home Key on Gamepad.",
+        "name": "GC_HOM"
+      },
+      {
+        "shortName": "Game\nDown",
+        "title": "Universal Down Key on Gamepad.",
+        "name": "GC_UND"
+      },
+      {
+        "shortName": "Game\nLeft",
+        "title": "Universal Left Key on Gamepad.",
+        "name": "GC_UNL"
+      },
+      {
+        "shortName": "Game\nRight",
+        "title": "Universal Right Key on Gamepad.",
+        "name": "GC_UNR"
+      },
+      {
+        "shortName": "Game\nUp",
+        "title": "Universal Up Key on Gamepad.",
+        "name": "GC_UNU"
+      },
+      {
+        "shortName": "DPad\nDown",
+        "title": "DPad Down Key on Gamepad.",
+        "name": "GC_DND"
+      },
+      {
+        "shortName": "DPad\nLeft",
+        "title": "DPad Left Key on Gamepad.",
+        "name": "GC_DNL"
+      },
+      {
+        "shortName": "DPad\nRight",
+        "title": "DPad Right Key on Gamepad.",
+        "name": "GC_DNR"
+      },
+      {
+        "shortName": "DPad\nUp",
+        "title": "DPad Up Key on Gamepad.",
+        "name": "GC_DNU"
+      },
+      {
+        "shortName": "LS\nDown",
+        "title": "Left Stick Down Key on Gamepad.",
+        "name": "GC_LND"
+      },
+      {
+        "shortName": "LS\nLeft",
+        "title": "Left Stick Left Key on Gamepad.",
+        "name": "GC_LNL"
+      },
+      {
+        "shortName": "LS\nRight",
+        "title": "Left Stick Right Key on Gamepad.",
+        "name": "GC_LNR"
+      },
+      {
+        "shortName": "LS\nUp",
+        "title": "Left Stick Up Key on Gamepad.",
+        "name": "GC_LNU"
+      },
+      {
+        "shortName": "RS\nDown",
+        "title": "Right Stick Down Key on Gamepad.",
+        "name": "GC_RND"
+      },
+      {
+        "shortName": "RS\nLeft",
+        "title": "Right Stick Left Key on Gamepad.",
+        "name": "GC_RNL"
+      },
+      {
+        "shortName": "RS\nRight",
+        "title": "Right Stick Right Key on Gamepad.",
+        "name": "GC_RNR"
+      },
+      {
+        "shortName": "RS\nUp",
+        "title": "Right Stick Up Key on Gamepad.",
+        "name": "GC_RNU"
+      },
+      {
+        "shortName": "Game\nToggle",
+        "title": "Toggles between the stick options.",
+        "name": "GC_TOG"
+      },
+      {
+        "shortName": "Game\nSet DPad",
+        "title": "Sets universal directions to DPad.",
+        "name": "GC_TDP"
+      },
+      {
+        "shortName": "Game\nSet LS",
+        "title": "Sets universal directions to Left Stick.",
+        "name": "GC_TLS"
+      },
+      {
+        "shortName": "Game\nSet RS",
+        "title": "Sets universal directions to Right Stick.",
+        "name": "GC_TRS"
+      },
+      {
+        "shortName": "Game\nSOCD",
+        "title": "Cyles between Up Priority Last Input SOCD, Last Input SOCD, Up Priority Neutral SOCD, and Neutral SOCD.",
+        "name": "GC_SCD"
+      },
+      {
+        "shortName": "Game\nSet UPLI",
+        "title": "Sets SOCD to Up Priority Last Input.",
+        "name": "GC_UPLI"
+      },
+      {
+        "shortName": "Game\nSet Last",
+        "title": "Sets SOCD to Last Input.",
+        "name": "GC_LAST"
+      },
+      {
+        "shortName": "Game\nSet UPN",
+        "title": "Sets SOCD to Up Priority Neutral.",
+        "name": "GC_SUPN"
+      },
+      {
+        "shortName": "Game\nSet Neutral",
+        "title": "Sets SOCD to Neutral.",
+        "name": "GC_NEUT"
       }
     ],
     "layouts": {

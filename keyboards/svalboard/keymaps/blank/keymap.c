@@ -95,3 +95,12 @@ bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
     return achordion_opposite_hands(tap_hold_record, other_record);
 }
 
+// Joystick Config
+joystick_config_t joystick_axes[JOYSTICK_AXIS_COUNT] = {
+	JOYSTICK_AXIS_VIRTUAL,
+	JOYSTICK_AXIS_VIRTUAL,
+	JOYSTICK_AXIS_VIRTUAL,
+	JOYSTICK_AXIS_VIRTUAL,
+	JOYSTICK_AXIS_VIRTUAL,
+	JOYSTICK_AXIS_VIRTUAL,
+};

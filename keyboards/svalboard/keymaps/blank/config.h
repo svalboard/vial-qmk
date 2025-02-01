@@ -21,3 +21,12 @@
 // Shorten the unlock timeout (needs mod in `quantum/vial.c`; without
 // it the override doesn't work)
 #define VIAL_UNLOCK_COUNTER_MAX 12
+
+// Joystick Button Count
+#define JOYSTICK_BUTTON_COUNT 32
+
+// Joystick Axes Count
+#define JOYSTICK_AXIS_COUNT 6
+
+// Joystick Axes Resolution
+#define JOYSTICK_AXIS_RESOLUTION 8

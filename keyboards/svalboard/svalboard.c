@@ -7,7 +7,9 @@ saved_values_t global_saved_values;
 const int16_t mh_timer_choices[4] = { 300, 500, 800, -1 }; // -1 is infinite.
 
 uint8_t sval_active_layer = 0;
+#ifdef VIAL_ENABLE
 bool fresh_install = false;
+#endif
 
 void write_eeprom_kb(void) {
     eeconfig_update_kb_datablock(&global_saved_values);
@@ -132,9 +134,23 @@ void set_dpi_from_eeprom(void) {
     set_right_dpi(global_saved_values.right_dpi_index);
 }
 
+void sval_set_active_layer(uint32_t layer, bool save) {
+    if (layer > 15) layer = 15;
+    sval_active_layer = layer;
+    struct layer_hsv cols = global_saved_values.layer_colors[layer];
+    if (save) {
+        rgblight_sethsv(cols.hue, cols.sat, cols.val);
+    } else {
+        rgblight_sethsv_noeeprom(cols.hue, cols.sat, cols.val);
+    }
+}
+
+// VIAL SPECIFIC FOR SVALBOARD + KEYBARD
+#ifdef VIAL_ENABLE
 void kb_sync_listener(uint8_t in_buflen, const void* in_data, uint8_t out_buflen, void* out_data) {
     // Just a ping-pong, no need to do anything.
 }
+
 // Called from via_init, we can check here if we're a fresh
 // installation.
 void via_init_kb(void) {
@@ -221,17 +237,7 @@ void sval_on_reconnect(void) {
     rgblight_sethsv_noeeprom(0, 0, 0);
     sval_set_active_layer(sval_active_layer, true);
 }
-
-void sval_set_active_layer(uint32_t layer, bool save) {
-    if (layer > 15) layer = 15;
-    sval_active_layer = layer;
-    struct layer_hsv cols = global_saved_values.layer_colors[layer];
-    if (save) {
-        rgblight_sethsv(cols.hue, cols.sat, cols.val);
-    } else {
-        rgblight_sethsv_noeeprom(cols.hue, cols.sat, cols.val);
-    }
-}
+#endif
 
 #ifndef SVALBOARD_REENABLE_BOOTMAGIC_LITE
 // This is to override `bootmagic_lite` feature (see docs/feature_bootmagic.md),

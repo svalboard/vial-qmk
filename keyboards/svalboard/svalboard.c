@@ -54,11 +54,6 @@ void read_eeprom_kb(void) {
         write_eeprom_kb();
     }
     sval_active_layer = 0;
-    if (global_saved_values.enable_chordal_hold) {
-        chordal_hold_enable();
-    } else {
-        chordal_hold_disable();
-    }
 }
 
 static const char YES[] = "yes";

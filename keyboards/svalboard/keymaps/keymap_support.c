@@ -156,9 +156,16 @@ void mh_change_timeouts(void) {
     write_eeprom_kb();
 }
 
+char chordal_hold_handedness(keypos_t key) {
+    // When disabled, return '*' for all keys to bypass Chordal Hold.
+    if (!global_saved_values.enable_chordal_hold) {
+        return '*';
+    }
+    return (char)pgm_read_byte(&chordal_hold_layout[key.row][key.col]);
+}
+
 void toggle_chordal_hold(void) {
-    chordal_hold_toggle();
-    global_saved_values.enable_chordal_hold = chordal_hold_is_enabled();
+    global_saved_values.enable_chordal_hold = !global_saved_values.enable_chordal_hold;
     write_eeprom_kb();
 }
 

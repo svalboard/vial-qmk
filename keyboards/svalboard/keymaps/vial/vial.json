@@ -95,6 +95,11 @@
 	"shortName": "Output\nStatus",
 	"title": "Output the current internal state of the keyboard.",
 	"name": "SV_OUTPUT_STATUS"
+      },
+      {
+        "shortName": "Toggle\nChordal",
+        "title": "Toggle Chordal Hold",
+        "name": "SV_TOGGLE_CHORDAL_HOLD"
       }
     ],
     "layouts": {

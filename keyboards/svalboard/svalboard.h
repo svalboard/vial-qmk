@@ -32,7 +32,8 @@ struct saved_values {
     bool left_scroll :1;
     bool right_scroll :1;
     bool disable_achordion: 1;
-    unsigned int unused0 :5;
+    bool enable_chordal_hold: 1;
+    unsigned int unused0: 4;
     uint8_t left_dpi_index;
     uint8_t right_dpi_index;
     uint8_t mh_timer_index;

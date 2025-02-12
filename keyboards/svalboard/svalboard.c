@@ -29,31 +29,33 @@ void read_eeprom_kb(void) {
         global_saved_values.mh_timer_index = 1;
         modified = true;
     }
-    if (global_saved_values.version < 3) {
-        global_saved_values.version = 3;
-#define HSV(c) (struct layer_hsv) { (c >> 16) & 0xFF, (c >> 8) & 0xFF, c & 0xFF}
-        // Colors from chatgpt.
-        global_saved_values.layer_colors[0] = HSV(0x55FFFF); // Green
-        global_saved_values.layer_colors[1] = HSV(0x15FFFF); // Orange
-        global_saved_values.layer_colors[2] = HSV(0x95FFFF); // Azure
-        global_saved_values.layer_colors[3] = HSV(0x0BB0FF); // Coral
-        global_saved_values.layer_colors[4] = HSV(0x2BFFFF); // Yellow
-        global_saved_values.layer_colors[5] = HSV(0x80FF80); // Teal
-        global_saved_values.layer_colors[6] = HSV(0x00FFFF); // Red
-        global_saved_values.layer_colors[7] = HSV(0x00FFFF); // Red
-        global_saved_values.layer_colors[8] = HSV(0xEAFFFF); // Pink
-        global_saved_values.layer_colors[9] = HSV(0xBFFF80); // Purple
-        global_saved_values.layer_colors[10] = HSV(0x0BB0FF); // Coral
-        global_saved_values.layer_colors[11] = HSV(0x6AFFFF); // Spring Green
-        global_saved_values.layer_colors[12] = HSV(0x80FF80); // Teal
-        global_saved_values.layer_colors[13] = HSV(0x80FFFF); // Turquoise
-        global_saved_values.layer_colors[14] = HSV(0x2BFFFF); // Yellow
-        global_saved_values.layer_colors[15] = HSV(0xD5FFFF); // Magenta
-        modified = true;
-    }
     if (global_saved_values.version < 4) {
         global_saved_values.version = 4;
         global_saved_values.auto_mouse = true;
+        modified = true;
+    }
+    if (global_saved_values.version < 5) {
+        // This was version 3, but version 3's colors are too bright, so
+        // using version 5 lets us overwrite version 3 colors.
+        global_saved_values.version = 5;
+#define HSV(c) (struct layer_hsv) { (c >> 16) & 0xFF, (c >> 8) & 0xFF, c & 0xFF}
+        // Colors from chatgpt.
+        global_saved_values.layer_colors[0] = HSV(0x55FF80); // Green
+        global_saved_values.layer_colors[1] = HSV(0x15FF80); // Orange
+        global_saved_values.layer_colors[2] = HSV(0x95FF80); // Azure
+        global_saved_values.layer_colors[3] = HSV(0x0BB080); // Coral
+        global_saved_values.layer_colors[4] = HSV(0x2BFF80); // Yellow
+        global_saved_values.layer_colors[5] = HSV(0x80FF80); // Teal
+        global_saved_values.layer_colors[6] = HSV(0x00FF80); // Red
+        global_saved_values.layer_colors[7] = HSV(0x00FF80); // Red
+        global_saved_values.layer_colors[8] = HSV(0xEAFF80); // Pink
+        global_saved_values.layer_colors[9] = HSV(0xBFFF80); // Purple
+        global_saved_values.layer_colors[10] = HSV(0x0BB080); // Coral
+        global_saved_values.layer_colors[11] = HSV(0x6AFF80); // Spring Green
+        global_saved_values.layer_colors[12] = HSV(0x80FF80); // Teal
+        global_saved_values.layer_colors[13] = HSV(0x80FF80); // Turquoise
+        global_saved_values.layer_colors[14] = HSV(0x2BFF80); // Yellow
+        global_saved_values.layer_colors[15] = HSV(0xD5FF80); // Magenta
         modified = true;
     }
     // As we add versions, just append here.
@@ -241,7 +243,7 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
 void sval_on_reconnect(void) {
     // Reset colors, or it won't communicate the right color.
     rgblight_sethsv_noeeprom(0, 0, 0);
-    sval_set_active_layer(sval_active_layer, true);
+    sval_set_active_layer(sval_active_layer, false);
 }
 #endif
 

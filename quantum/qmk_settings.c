@@ -158,6 +158,9 @@ void qmk_settings_init(void) {
         if (notify)
             notify();
     }
+#ifdef SVALBOARD_USER_SETTINGS
+    qmk_settings_init_user();
+#endif  // SVALBOARD_USER_SETTINGS
 }
 
 void qmk_settings_reset(void) {
@@ -185,6 +188,10 @@ void qmk_settings_reset(void) {
     QS.tap_code_delay = TAP_CODE_DELAY;
     QS.tap_hold_caps_delay = TAP_HOLD_CAPS_DELAY;
     QS.tapping_toggle = TAPPING_TOGGLE;
+
+#ifdef SVALBOARD_USER_SETTINGS
+    qmk_settings_reset_user();
+#endif  // SVALBOARD_USER_SETTINGS
 
     eeprom_settings_save();
 
@@ -216,6 +223,9 @@ void qmk_settings_query(uint16_t qsid_gt, void *buffer, size_t sz) {
             buffer_offset += sizeof(qsid);
         }
     }
+#ifdef SVALBOARD_USER_SETTINGS
+    qmk_settings_query_user(qsid_gt, (char*)buffer + buffer_offset, sz - buffer_offset);
+#endif  // SVALBOARD_USER_SETTINGS
 }
 
 static const qmk_settings_proto_t *find_setting(uint16_t qsid) {
@@ -227,8 +237,13 @@ static const qmk_settings_proto_t *find_setting(uint16_t qsid) {
 
 int qmk_settings_get(uint16_t qsid, void *setting, size_t maxsz) {
     const qmk_settings_proto_t *proto = find_setting(qsid);
-    if (!proto)
-        return -1;
+    if (!proto) {
+#ifdef SVALBOARD_USER_SETTINGS
+      return qmk_settings_get_user(qsid, setting, maxsz);
+#else
+      return -1;
+#endif  // SVALBOARD_USER_SETTINGS
+    }
 
     qmk_settings_get_t get = pgm_read_ptr(&proto->get);
     if (!get)
@@ -239,8 +254,13 @@ int qmk_settings_get(uint16_t qsid, void *setting, size_t maxsz) {
 
 int qmk_settings_set(uint16_t qsid, const void *setting, size_t maxsz) {
     const qmk_settings_proto_t *proto = find_setting(qsid);
-    if (!proto)
-        return -1;
+    if (!proto) {
+#ifdef SVALBOARD_USER_SETTINGS
+      return qmk_settings_set_notify_user(qsid, setting, maxsz);
+#else
+      return -1;
+#endif  // SVALBOARD_USER_SETTINGS
+    }
 
     qmk_settings_set_t set = pgm_read_ptr(&proto->set);
     if (!set)

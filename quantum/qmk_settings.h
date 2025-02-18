@@ -150,6 +150,16 @@ int qmk_settings_set(uint16_t qsid, const void *setting, size_t maxsz);
 
 uint16_t qs_get_tapping_term(uint16_t keycode, keyrecord_t *record);
 
+#define SVALBOARD_USER_SETTINGS 1
+
+#ifdef SVALBOARD_USER_SETTINGS
+extern void qmk_settings_init_user(void);
+extern void qmk_settings_reset_user(void);
+extern void qmk_settings_query_user(uint16_t qsid_gt, void *buffer, size_t sz);
+extern int qmk_settings_get_user(uint16_t qsid, void *setting, size_t maxsz);
+extern int qmk_settings_set_notify_user(uint16_t qsid, const void *setting, size_t maxsz);
+#endif  // SVALBOARD_USER_SETTINGS
+
 extern qmk_settings_t QS;
 
 /* Grave escape */

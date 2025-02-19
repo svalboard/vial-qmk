@@ -1,4 +1,5 @@
 // Functions that pertain to the QMK Settings tab in vial.
+// See doc/qmk_user_settings.md.
 #include "svalboard.h"
 
 #define STATIC_ASSERT(x) do { typedef char Assert[(x) > 0? 1: -1] __attribute__((unused)); } while (0)
@@ -6,9 +7,8 @@
 /**
  * QS ids. You need a matching;
  * https://github.com/vial-kb/vial-gui/blob/main/src/main/resources/base/qmk_settings.json
- * We don't use the "bit" value. Just one value per setting.
  */
-#define SVALBOARD_BASE_QSID 500 // uint16_t. We use a decimal value for readability in the json.
+#define SVALBOARD_BASE_QSID 500  // uint16_t. We use a decimal value for readability in the json.
 
 // switch is optimized for contiguous cases, use contiguous values if possible.
 enum QsidMap {
@@ -25,7 +25,7 @@ enum QsidMap {
 
 /**
  * Called after eepom_settings_load, this just sets up the pointers and calls notify
- * if required. It invoked at the end of qmk_settings_reset.
+ * if required. It is invoked at the end of qmk_settings_reset.
  */
 void qmk_settings_init_user(void) {
   // Nothing to do: Already done with read_eeprom.
@@ -33,13 +33,14 @@ void qmk_settings_init_user(void) {
 
 /**
  * Reset to default values.
- * Called before eeprom_save and clear_keyboard.
+ * Called before clear_keyboard.
  */
 void qmk_settings_reset_user(void) {
 }
 
 /**
- * If we find a qsid that's greater that qsdig_gt.
+ * If we find a qsid that's greater that qsdig_gt that we can handle, return
+ * it. This is where we can deprecate QSIDs.
  *
  * It is called by the vial command: vial_qmk_settings_query. It is called by:
  * vial-gui/src/main/python/protocol/keyboard_comm.py
@@ -63,7 +64,7 @@ void qmk_settings_query_user(uint16_t qsid_gt, void *buffer, size_t sz) {
 }
 
 /**
- * Returns 0 on success? -1 if not found or failure.
+ * Returns 0 on success and -1 if not found or failure.
  */
 int qmk_settings_get_user(uint16_t qsid, void *setting, size_t maxsz) {
   if (qsid < SVALBOARD_BASE_QSID)
@@ -132,13 +133,13 @@ int qmk_settings_set_notify_user(uint16_t qsid, const void *setting, size_t maxs
         return -1;
       (void)memcpy(&wanted, setting, SVAL_SZ_QSID_MOUSE_SCROLLS);
       const bool left = wanted & 0x1;
-      const bool right = (wanted >> 1) & 0x0F;
+      const bool right = (wanted >> 1) & 0x01;
       global_saved_values.left_scroll = left;
       global_saved_values.right_scroll = right;
       ret = 0;
     }
     default:
-      ret = -1;
+      return -1;
   }
   if (ret != -1) {
     write_eeprom_kb();

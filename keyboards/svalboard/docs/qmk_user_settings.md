@@ -58,3 +58,5 @@ to continue working.
 * Need matching vial GUI and firmware
 * Forward path with dual dynamic (with keys) and static (with settings) is unclear
 * Default (reset) values are in `svalboard.h` and should be exported
+* The QSID is a dense array, so private branches will naturally have conflicting QSID values
+  and be incompatible by design

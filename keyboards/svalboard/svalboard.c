@@ -4,7 +4,7 @@
 #include "split_common/transactions.h"
 
 saved_values_t global_saved_values;
-const int16_t mh_timer_choices[4] = { 300, 500, 800, -1 }; // -1 is infinite.
+const int16_t sval_settings_default_mh_timer_choices[4] = { 300, 500, 800, -1 }; // -1 is infinite.
 
 uint8_t sval_active_layer = 0;
 #ifdef VIAL_ENABLE
@@ -26,7 +26,7 @@ void read_eeprom_kb(void) {
     }
     if (global_saved_values.version < 2) {
         global_saved_values.version = 2;
-        global_saved_values.mh_timer_index = 1;
+        global_saved_values.mh_timer_index = SVAL_SETTINGS_DEFAULT_MH_TIMER_INDEX;
         modified = true;
     }
     if (global_saved_values.version < 3) {
@@ -53,7 +53,14 @@ void read_eeprom_kb(void) {
     }
     if (global_saved_values.version < 4) {
         global_saved_values.version = 4;
-        global_saved_values.auto_mouse = true;
+        global_saved_values.auto_mouse = SVAL_SETTINGS_DEFAULT_AUTO_MOUSE;
+        modified = true;
+    }
+    if (global_saved_values.version < 5) {
+        global_saved_values.version = 5;
+        (void)memcpy(global_saved_values.mh_timer_choices,
+                     sval_settings_default_mh_timer_choices,
+                     sizeof(global_saved_values.mh_timer_choices));
         modified = true;
     }
     // As we add versions, just append here.
@@ -89,7 +96,7 @@ void output_keyboard_info(void) {
     sprintf(output_buffer, "Achordion: %s, MH Keys: %s, MH Keys Timer: %d\n",
 	    yes_or_no(!global_saved_values.disable_achordion),
         yes_or_no(global_saved_values.auto_mouse),
-	    mh_timer_choices[global_saved_values.mh_timer_index]);
+	    global_saved_values.mh_timer_choices[global_saved_values.mh_timer_index]);
     send_string(output_buffer);
 }
 
@@ -264,4 +271,3 @@ void bootmagic_lite(void) {
 
 __attribute__((weak)) void recalibrate_pointer(void) {
 }
-

@@ -15,20 +15,28 @@ enum QsidMap {
   SVAL_QSID_ACHORDION_MODE = 0,
   SVAL_QSID_AUTO_MOUSE = 1,
   SVAL_QSID_MOUSE_SCROLLS = 2,  // Bit 0: left, bit 1: right
-  SVAL_QSID_NUM_VALUES = 3,  // Update this to the highest index if you add some entry.
+  SVAL_QSID_MH_TIMER_INDEX = 3,
+  SVAL_QSID_MH_TIMER_SLOT0_MS = 4,
+  SVAL_QSID_MH_TIMER_SLOT1_MS = 5,
+  SVAL_QSID_MH_TIMER_SLOT2_MS = 6,
+  SVAL_QSID_MH_TIMER_SLOT3_MS = 7,
+  SVAL_QSID_NUM_VALUES = 8,  // Update this to the highest index if you add some entry.
 };
 
 // Size in bytes.
 #define SVAL_SZ_QSID_ACHORDION_MODE 1
 #define SVAL_SZ_QSID_AUTO_MOUSE 1
 #define SVAL_SZ_QSID_MOUSE_SCROLLS 1
+#define SVAL_SZ_QSID_MH_TIMER_INDEX 1
+#define SVAL_SZ_QSID_MH_TIMER_SLOT_VALUES 2
 
 /**
  * Called after eepom_settings_load, this just sets up the pointers and calls notify
  * if required. It is invoked at the end of qmk_settings_reset.
  */
 void qmk_settings_init_user(void) {
-  // Nothing to do: Already done with read_eeprom.
+  // This is where we would call notify callbacks that need to be called when
+  // global_saved_values changes.
 }
 
 /**
@@ -94,6 +102,26 @@ int qmk_settings_get_user(uint16_t qsid, void *setting, size_t maxsz) {
       (void)memcpy(setting, &cur, SVAL_SZ_QSID_MOUSE_SCROLLS);
       return 0;
     }
+    case SVAL_QSID_MH_TIMER_INDEX: {
+      const unsigned char cur = global_saved_values.mh_timer_index;
+      STATIC_ASSERT(sizeof(cur) == SVAL_SZ_QSID_MH_TIMER_INDEX);
+      if (maxsz < SVAL_SZ_QSID_MH_TIMER_INDEX)
+        return -1;
+      (void)memcpy(setting, &cur, SVAL_SZ_QSID_MH_TIMER_INDEX);
+      return 0;
+    }
+    case SVAL_QSID_MH_TIMER_SLOT0_MS:
+    case SVAL_QSID_MH_TIMER_SLOT1_MS:
+    case SVAL_QSID_MH_TIMER_SLOT2_MS:
+    case SVAL_QSID_MH_TIMER_SLOT3_MS: {
+      const int idx = qsid - SVALBOARD_BASE_QSID - SVAL_QSID_MH_TIMER_SLOT0_MS;
+      const uint16_t cur = global_saved_values.mh_timer_choices[idx];
+      STATIC_ASSERT(sizeof(cur) == SVAL_SZ_QSID_MH_TIMER_SLOT_VALUES);
+      if (maxsz < SVAL_SZ_QSID_MH_TIMER_SLOT_VALUES)
+        return -1;
+      (void)memcpy(setting, &cur, SVAL_SZ_QSID_MH_TIMER_SLOT_VALUES);
+      return 0;
+    }
     default:
       return -1;
   }
@@ -138,6 +166,28 @@ int qmk_settings_set_notify_user(uint16_t qsid, const void *setting, size_t maxs
       global_saved_values.right_scroll = right;
       ret = 0;
     } break;
+    case SVAL_QSID_MH_TIMER_INDEX: {
+      unsigned char wanted;
+      STATIC_ASSERT(sizeof(wanted) == SVAL_SZ_QSID_MH_TIMER_INDEX);
+      if (maxsz < SVAL_SZ_QSID_MH_TIMER_INDEX)
+        return -1;
+      (void)memcpy(&wanted, setting, SVAL_SZ_QSID_MH_TIMER_INDEX);
+      global_saved_values.mh_timer_index = wanted;
+      ret = 0;
+    } break;
+    case SVAL_QSID_MH_TIMER_SLOT0_MS:
+    case SVAL_QSID_MH_TIMER_SLOT1_MS:
+    case SVAL_QSID_MH_TIMER_SLOT2_MS:
+    case SVAL_QSID_MH_TIMER_SLOT3_MS: {
+      const int idx = qsid - SVALBOARD_BASE_QSID - SVAL_QSID_MH_TIMER_SLOT0_MS;
+      uint16_t wanted;
+      STATIC_ASSERT(sizeof(wanted) == SVAL_SZ_QSID_MH_TIMER_SLOT_VALUES);
+      if (maxsz < SVAL_SZ_QSID_MH_TIMER_SLOT_VALUES)
+        return -1;
+      (void)memcpy(&wanted, setting, SVAL_SZ_QSID_MH_TIMER_SLOT_VALUES);
+      global_saved_values.mh_timer_choices[idx] = wanted;
+      ret = 0;
+    }
     default:
       return -1;
   }

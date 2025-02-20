@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "quantum.h"
 
-extern const int16_t mh_timer_choices[4];
 extern bool fresh_install;
 
 struct layer_hsv {
@@ -28,7 +27,7 @@ struct layer_hsv {
 };
 
 struct saved_values {
-    uint8_t version;  // Currently at 1,  We assume all new data will be zeroed.
+    uint8_t version;
     bool left_scroll :1;
     bool right_scroll :1;
     bool disable_achordion: 1;
@@ -38,7 +37,13 @@ struct saved_values {
     uint8_t right_dpi_index;
     uint8_t mh_timer_index;
     struct layer_hsv layer_colors[DYNAMIC_KEYMAP_LAYER_COUNT];
+    int16_t mh_timer_choices[4];
 };
+
+#define SVAL_SETTINGS_DEFAULT_AUTO_MOUSE (true)  // Cannot be changed. It's in keymap_suport.c.
+#define SVAL_SETTINGS_DEFAULT_DISABLE_ACHORDION (false)   // Obtained by blank init.
+#define SVAL_SETTINGS_DEFAULT_MH_TIMER_INDEX (1)
+extern const int16_t sval_settings_default_mh_timer_choices[4];
 
 #define SVAL_PROTO_VERSION 3
 

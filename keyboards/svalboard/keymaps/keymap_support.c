@@ -128,12 +128,12 @@ report_mouse_t pointing_device_task_user(report_mouse_t reportMouse) {
 #endif
 
 void mh_change_timeouts(void) {
-    if (sizeof(mh_timer_choices) / sizeof(int16_t) - 1 <= global_saved_values.mh_timer_index) {
+    if (sizeof(global_saved_values.mh_timer_choices) / sizeof(int16_t) - 1 <= global_saved_values.mh_timer_index) {
         global_saved_values.mh_timer_index = 0;
     } else {
         global_saved_values.mh_timer_index++;
     }
-    uprintf("mh_timer:%d\n", mh_timer_choices[global_saved_values.mh_timer_index]);
+    uprintf("mh_timer:%d\n", global_saved_values.mh_timer_choices[global_saved_values.mh_timer_index]);
     write_eeprom_kb();
 }
 
@@ -354,13 +354,17 @@ void matrix_scan_kb(void) {
         achordion_task();
     }
 
-    if ((mh_timer_choices[global_saved_values.mh_timer_index] >= 0) && mouse_mode_enabled && (timer_elapsed(mh_auto_buttons_timer) > mh_timer_choices[global_saved_values.mh_timer_index]) && mouse_keys_pressed == 0) {
+    const bool not_infinite = global_saved_values.mh_timer_choices[global_saved_values.mh_timer_index] >= 0;
+    if (not_infinite && mouse_mode_enabled && mouse_keys_pressed == 0) {
+      const bool timeout_elapsed = (timer_elapsed(mh_auto_buttons_timer) > global_saved_values.mh_timer_choices[global_saved_values.mh_timer_index]);
+      if (timeout_elapsed) {
         if (!tp_buttons) {
             mouse_mode(false);
 #if defined CONSOLE_ENABLE
             print("matrix - mh_auto_buttons: off\n");
 #endif
         }
+      }
     }
 
     matrix_scan_user();

@@ -124,7 +124,7 @@ int qmk_settings_get_user(uint16_t qsid, void *setting, size_t maxsz) {
     case SVAL_QSID_MH_TIMER_SLOT2_MS:
     case SVAL_QSID_MH_TIMER_SLOT3_MS: {
       const int idx = qsid - SVALBOARD_BASE_QSID - SVAL_QSID_MH_TIMER_SLOT0_MS;
-      const uint16_t cur = global_saved_values.mh_timer_choices[idx];
+      const int16_t cur = global_saved_values.mh_timer_choices[idx];
       STATIC_ASSERT(sizeof(cur) == SVAL_SZ_QSID_MH_TIMER_SLOT_VALUES);
       if (maxsz < SVAL_SZ_QSID_MH_TIMER_SLOT_VALUES)
         return -1;
@@ -193,7 +193,7 @@ int qmk_settings_set_notify_user(uint16_t qsid, const void *setting, size_t maxs
     case SVAL_QSID_MH_TIMER_SLOT2_MS:
     case SVAL_QSID_MH_TIMER_SLOT3_MS: {
       const int idx = qsid - SVALBOARD_BASE_QSID - SVAL_QSID_MH_TIMER_SLOT0_MS;
-      uint16_t wanted;
+      int16_t wanted;
       STATIC_ASSERT(sizeof(wanted) == SVAL_SZ_QSID_MH_TIMER_SLOT_VALUES);
       if (maxsz < SVAL_SZ_QSID_MH_TIMER_SLOT_VALUES)
         return -1;

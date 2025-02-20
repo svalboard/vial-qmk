@@ -176,11 +176,15 @@ int qmk_settings_set_notify_user(uint16_t qsid, const void *setting, size_t maxs
       ret = 0;
     } break;
     case SVAL_QSID_MH_TIMER_INDEX: {
-      unsigned char wanted;
+      uint8_t wanted;
       STATIC_ASSERT(sizeof(wanted) == SVAL_SZ_QSID_MH_TIMER_INDEX);
       if (maxsz < SVAL_SZ_QSID_MH_TIMER_INDEX)
         return -1;
       (void)memcpy(&wanted, setting, SVAL_SZ_QSID_MH_TIMER_INDEX);
+      const uint8_t len_valid = sizeof(global_saved_values.mh_timer_choices) / sizeof(uint16_t);
+      if (wanted >= len_valid) {
+        wanted = len_valid - 1;
+      }
       global_saved_values.mh_timer_index = wanted;
       ret = 0;
     } break;

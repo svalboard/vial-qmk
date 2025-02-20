@@ -116,7 +116,7 @@ int qmk_settings_set_notify_user(uint16_t qsid, const void *setting, size_t maxs
       (void)memcpy(&want_on, setting, SVAL_SZ_QSID_ACHORDION_MODE);
       global_saved_values.disable_achordion = !want_on;
       ret = 0;
-    }
+    } break;
     case SVAL_QSID_AUTO_MOUSE: {
       char want_on;
       STATIC_ASSERT(sizeof(want_on) == SVAL_SZ_QSID_AUTO_MOUSE);
@@ -125,7 +125,7 @@ int qmk_settings_set_notify_user(uint16_t qsid, const void *setting, size_t maxs
       (void)memcpy(&want_on, setting, SVAL_SZ_QSID_AUTO_MOUSE);
       global_saved_values.auto_mouse = want_on;
       ret = 0;
-    }
+    } break;
     case SVAL_QSID_MOUSE_SCROLLS: {
       unsigned char wanted;
       STATIC_ASSERT(sizeof(wanted) == SVAL_SZ_QSID_MOUSE_SCROLLS);
@@ -137,7 +137,7 @@ int qmk_settings_set_notify_user(uint16_t qsid, const void *setting, size_t maxs
       global_saved_values.left_scroll = left;
       global_saved_values.right_scroll = right;
       ret = 0;
-    }
+    } break;
     default:
       return -1;
   }

@@ -12,6 +12,10 @@ Some behaviors can be modified with keys and through the user settings. If you h
 the Sval settings tab open and use the keyboard keys to change a value, it will
 not be refreshed in the Vial interface. Navigate away and back to see the new values.
 
+The `Reset` button is only partially implemented so far.
+
+It's not clear if the settings automouse works with the multiple reset paths.
+
 ## Adding new user setings
 
 ### Architecture
@@ -34,6 +38,11 @@ We have four hooks set up in `qmk_settings.c`:
 * `qmk_settings_init_user`: called after reset, sets up any RAM values or code that need to be run after the setting has been reset.
 * `qmk_settings_get_user`: used by the Vial GUI to read the keyboard value.
 * `qmk_settings_set_notify_user`: set the value and calls any function that needs to be called after the value has changed, e. g. `set_left_dpi`.
+
+The file contains only protocol code and shall not contain:
+* init values
+* keyboard logic
+which should be relayed to `svalboard.c`.
 
 ### Adding a new value
 To add a new value, go to `keyboards/svalboard/user_settings.c`. You will find `QsIdMap`.

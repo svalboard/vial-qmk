@@ -44,6 +44,15 @@ void qmk_settings_init_user(void) {
  * Called before clear_keyboard.
  */
 void qmk_settings_reset_user(void) {
+  global_saved_values.auto_mouse = SVAL_SETTINGS_DEFAULT_AUTO_MOUSE;
+  global_saved_values.disable_achordion = SVAL_SETTINGS_DEFAULT_DISABLE_ACHORDION;
+  global_saved_values.mh_timer_index = SVAL_SETTINGS_DEFAULT_MH_TIMER_INDEX;
+  (void)memcpy(global_saved_values.mh_timer_choices,
+               sval_settings_default_mh_timer_choices,
+               sizeof(global_saved_values.mh_timer_choices));
+  // We just have 4 slots hard-wired in the enum.
+  STATIC_ASSERT(sizeof(global_saved_values.mh_timer_choices) / sizeof(uint16_t) == 4);
+  write_eeprom_kb();
 }
 
 /**

@@ -16,6 +16,9 @@ The `Reset` button is only partially implemented so far.
 
 It's not clear if the settings automouse works with the multiple reset paths.
 
+The first time the user flashes, the setttings will reset to zero, because the
+layout doesn't have them. And you need the updated firmware to save the new values.
+
 ## Adding new user setings
 
 ### Architecture

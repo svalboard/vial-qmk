@@ -32,6 +32,9 @@ Then, we have setter and getters. They read and write from a buffer `setting` wh
 allocated length is `sz`. For version compatibility and sanity checks we must
 ensure that the width is the requested width.
 
+Note, integers are unsigned over the wire. If you use negative values internally, they may not
+be displayed in the Vial UI. For limited cases, you may translate values in the get/setters.
+
 We have four hooks set up in `qmk_settings.c`:
 * `qmk_settings_query_user`: that is called by the Vial GUI to query what values can be configured.
 * `qmk_settings_reset_user`: called to reset values. You can set RAM variables there. TODO(png): verify that this is used by the reset button and that we should also revert to default values.

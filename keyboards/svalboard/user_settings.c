@@ -47,11 +47,11 @@ void qmk_settings_reset_user(void) {
   global_saved_values.auto_mouse = SVAL_SETTINGS_DEFAULT_AUTO_MOUSE;
   global_saved_values.disable_achordion = SVAL_SETTINGS_DEFAULT_DISABLE_ACHORDION;
   global_saved_values.mh_timer_index = SVAL_SETTINGS_DEFAULT_MH_TIMER_INDEX;
-  (void)memcpy(global_saved_values.mh_timer_choices,
-               sval_settings_default_mh_timer_choices,
-               sizeof(global_saved_values.mh_timer_choices));
+  const size_t n = sizeof(global_saved_values.mh_timer_choices) / sizeof(int16_t);
+  for (size_t k = 0; k < n; ++k)
+    global_saved_values.mh_timer_choices[k] = sval_settings_default_mh_timer_choices[k];
   // We just have 4 slots hard-wired in the enum.
-  STATIC_ASSERT(sizeof(global_saved_values.mh_timer_choices) / sizeof(uint16_t) == 4);
+  STATIC_ASSERT(sizeof(global_saved_values.mh_timer_choices) / sizeof(int16_t) == 4);
   write_eeprom_kb();
 }
 
@@ -69,13 +69,14 @@ void qmk_settings_reset_user(void) {
 void qmk_settings_query_user(uint16_t qsid_gt, void *buffer, size_t sz) {
   char* cbuf = (char*)buffer;
   const char* end = cbuf + sz;
-  for (uint16_t qsid = qsid_gt; qsid < SVALBOARD_BASE_QSID + SVAL_QSID_NUM_VALUES; ++qsid) {
-    char *next = buffer + sizeof(qsid);
-    if (next > end) {
+  const uint16_t start_qsid = qsid_gt > SVALBOARD_BASE_QSID ? qsid_gt : SVALBOARD_BASE_QSID;
+  for (uint16_t qsid = start_qsid; qsid < SVALBOARD_BASE_QSID + SVAL_QSID_NUM_VALUES; ++qsid) {
+    if (cbuf + sizeof(qsid) > end) {
       // Buffer is full.
       return;
     }
     (void)memcpy(cbuf, &qsid, sizeof(qsid));
+    char* next = cbuf + sizeof(qsid);
     cbuf = next;
   }
 }
@@ -124,10 +125,12 @@ int qmk_settings_get_user(uint16_t qsid, void *setting, size_t maxsz) {
     case SVAL_QSID_MH_TIMER_SLOT2_MS:
     case SVAL_QSID_MH_TIMER_SLOT3_MS: {
       const int idx = qsid - SVALBOARD_BASE_QSID - SVAL_QSID_MH_TIMER_SLOT0_MS;
-      const int16_t cur = global_saved_values.mh_timer_choices[idx];
+      int16_t cur = global_saved_values.mh_timer_choices[idx];
       STATIC_ASSERT(sizeof(cur) == SVAL_SZ_QSID_MH_TIMER_SLOT_VALUES);
       if (maxsz < SVAL_SZ_QSID_MH_TIMER_SLOT_VALUES)
         return -1;
+      if (cur == -1)
+        cur = 0;  // Use unsigned int.
       (void)memcpy(setting, &cur, SVAL_SZ_QSID_MH_TIMER_SLOT_VALUES);
       return 0;
     }
@@ -198,6 +201,8 @@ int qmk_settings_set_notify_user(uint16_t qsid, const void *setting, size_t maxs
       if (maxsz < SVAL_SZ_QSID_MH_TIMER_SLOT_VALUES)
         return -1;
       (void)memcpy(&wanted, setting, SVAL_SZ_QSID_MH_TIMER_SLOT_VALUES);
+      if (wanted == 0)
+        wanted = -1;  // Acual values are unsigned.
       global_saved_values.mh_timer_choices[idx] = wanted;
       ret = 0;
     }

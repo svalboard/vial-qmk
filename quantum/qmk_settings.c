@@ -224,7 +224,8 @@ void qmk_settings_query(uint16_t qsid_gt, void *buffer, size_t sz) {
         }
     }
 #ifdef SVALBOARD_USER_SETTINGS
-    qmk_settings_query_user(qsid_gt, (char*)buffer + buffer_offset, sz - buffer_offset);
+    if (buffer_offset + sizeof(uint16_t) <= sz)
+      qmk_settings_query_user(qsid_gt, (char*)buffer + buffer_offset, sz - buffer_offset);
 #endif  // SVALBOARD_USER_SETTINGS
 }
 

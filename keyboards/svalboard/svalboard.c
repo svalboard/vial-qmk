@@ -58,9 +58,9 @@ void read_eeprom_kb(void) {
     }
     if (global_saved_values.version < 5) {
         global_saved_values.version = 5;
-        (void)memcpy(global_saved_values.mh_timer_choices,
-                     sval_settings_default_mh_timer_choices,
-                     sizeof(global_saved_values.mh_timer_choices));
+        const size_t n = sizeof(global_saved_values.mh_timer_choices) / sizeof(int16_t);
+        for (size_t k = 0; k < n; ++k)
+          global_saved_values.mh_timer_choices[k] = sval_settings_default_mh_timer_choices[k];
         modified = true;
     }
     // As we add versions, just append here.

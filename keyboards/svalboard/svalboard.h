@@ -48,7 +48,7 @@ typedef char ShouldDecreaseSizeInConfigHeader[EECONFIG_KB_DATA_SIZE > sizeof(str
 #define SVAL_SETTINGS_DEFAULT_DISABLE_ACHORDION (false)   // Obtained by blank init.
 #define SVAL_SETTINGS_DEFAULT_MH_TIMER_INDEX (1)
 extern const int16_t sval_settings_default_mh_timer_choices[4];
-void sval_settings_reset_default_layer_colors();
+void sval_settings_reset_default_layer_colors(void);
 
 #define SVAL_PROTO_VERSION 3
 

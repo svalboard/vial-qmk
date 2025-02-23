@@ -20,7 +20,23 @@ enum QsidMap {
   SVAL_QSID_MH_TIMER_SLOT1_MS = 5,
   SVAL_QSID_MH_TIMER_SLOT2_MS = 6,
   SVAL_QSID_MH_TIMER_SLOT3_MS = 7,
-  SVAL_QSID_NUM_VALUES = 8,  // Update this to the highest index if you add some entry.
+  SVAL_QSID_LAYER_HSV_0  = 8,
+  SVAL_QSID_LAYER_HSV_1  = 9,
+  SVAL_QSID_LAYER_HSV_2  = 10,
+  SVAL_QSID_LAYER_HSV_3  = 11,
+  SVAL_QSID_LAYER_HSV_4  = 12,
+  SVAL_QSID_LAYER_HSV_5  = 13,
+  SVAL_QSID_LAYER_HSV_6  = 14,
+  SVAL_QSID_LAYER_HSV_7  = 15,
+  SVAL_QSID_LAYER_HSV_8  = 16,
+  SVAL_QSID_LAYER_HSV_9  = 17,
+  SVAL_QSID_LAYER_HSV_10 = 18,
+  SVAL_QSID_LAYER_HSV_11 = 19,
+  SVAL_QSID_LAYER_HSV_12 = 20,
+  SVAL_QSID_LAYER_HSV_13 = 21,
+  SVAL_QSID_LAYER_HSV_14 = 22,
+  SVAL_QSID_LAYER_HSV_15 = 23,
+  SVAL_QSID_NUM_VALUES = 24,  // Update this to the highest index if you add some entry.
 };
 
 // Size in bytes.
@@ -29,6 +45,7 @@ enum QsidMap {
 #define SVAL_SZ_QSID_MOUSE_SCROLLS 1
 #define SVAL_SZ_QSID_MH_TIMER_INDEX 1
 #define SVAL_SZ_QSID_MH_TIMER_SLOT_VALUES 2
+#define SVAL_SZ_QSID_LAYER_HSV 3
 
 /**
  * Called after eepom_settings_load, this just sets up the pointers and calls notify
@@ -134,6 +151,33 @@ int qmk_settings_get_user(uint16_t qsid, void *setting, size_t maxsz) {
       (void)memcpy(setting, &cur, SVAL_SZ_QSID_MH_TIMER_SLOT_VALUES);
       return 0;
     }
+    case SVAL_QSID_LAYER_HSV_0:
+    case SVAL_QSID_LAYER_HSV_1:
+    case SVAL_QSID_LAYER_HSV_2:
+    case SVAL_QSID_LAYER_HSV_3:
+    case SVAL_QSID_LAYER_HSV_4:
+    case SVAL_QSID_LAYER_HSV_5:
+    case SVAL_QSID_LAYER_HSV_6:
+    case SVAL_QSID_LAYER_HSV_7:
+    case SVAL_QSID_LAYER_HSV_8:
+    case SVAL_QSID_LAYER_HSV_9:
+    case SVAL_QSID_LAYER_HSV_10:
+    case SVAL_QSID_LAYER_HSV_11:
+    case SVAL_QSID_LAYER_HSV_12:
+    case SVAL_QSID_LAYER_HSV_13:
+    case SVAL_QSID_LAYER_HSV_14:
+    case SVAL_QSID_LAYER_HSV_15: {
+      const int idx = qsid - SVALBOARD_BASE_QSID - SVAL_QSID_LAYER_HSV_0;
+      const struct layer_hsv* cur = &global_saved_values.layer_colors[idx];
+      if (maxsz < SVAL_SZ_QSID_LAYER_HSV)
+        return -1;
+      // Copy values one by one to make sure there are no align issues.
+      char* dest = (char*)setting;
+      (void)memcpy(dest, &cur->hue, 1);
+      (void)memcpy(dest + 1, &cur->sat, 1);
+      (void)memcpy(dest + 2, &cur->val, 1);
+      return 0;
+    }
     default:
       return -1;
   }
@@ -205,7 +249,31 @@ int qmk_settings_set_notify_user(uint16_t qsid, const void *setting, size_t maxs
         wanted = -1;  // Acual values are unsigned.
       global_saved_values.mh_timer_choices[idx] = wanted;
       ret = 0;
-    }
+    } break;
+    case SVAL_QSID_LAYER_HSV_0:
+    case SVAL_QSID_LAYER_HSV_1:
+    case SVAL_QSID_LAYER_HSV_2:
+    case SVAL_QSID_LAYER_HSV_3:
+    case SVAL_QSID_LAYER_HSV_4:
+    case SVAL_QSID_LAYER_HSV_5:
+    case SVAL_QSID_LAYER_HSV_6:
+    case SVAL_QSID_LAYER_HSV_7:
+    case SVAL_QSID_LAYER_HSV_8:
+    case SVAL_QSID_LAYER_HSV_9:
+    case SVAL_QSID_LAYER_HSV_10:
+    case SVAL_QSID_LAYER_HSV_11:
+    case SVAL_QSID_LAYER_HSV_12:
+    case SVAL_QSID_LAYER_HSV_13:
+    case SVAL_QSID_LAYER_HSV_14:
+    case SVAL_QSID_LAYER_HSV_15: {
+      const int idx = qsid - SVALBOARD_BASE_QSID - SVAL_QSID_LAYER_HSV_0;
+      const uint8_t* hsv = (const uint8_t*)setting;
+      if (maxsz < SVAL_SZ_QSID_LAYER_HSV)
+        return -1;
+      global_saved_values.layer_colors[idx].hue = hsv[0];
+      global_saved_values.layer_colors[idx].sat = hsv[1];
+      global_saved_values.layer_colors[idx].val = hsv[2];
+    } break;
     default:
       return -1;
   }

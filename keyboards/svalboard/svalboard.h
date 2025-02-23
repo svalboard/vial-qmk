@@ -41,12 +41,14 @@ struct saved_values {
 };
 
 // If you change the above, you must change the EECONFIG_KB_DATA_SIZE in config.h.
-typedef char SizeMustMatchInConfigHeader[EECONFIG_KB_DATA_SIZE == sizeof(struct saved_values) ? 0: -1];
+typedef char ShouldIncreaseSizeInConfigHeader[EECONFIG_KB_DATA_SIZE < sizeof(struct saved_values) ? -1: 0];
+typedef char ShouldDecreaseSizeInConfigHeader[EECONFIG_KB_DATA_SIZE > sizeof(struct saved_values) ? -1: 0];
 
 #define SVAL_SETTINGS_DEFAULT_AUTO_MOUSE (true)  // Cannot be changed. It's in keymap_suport.c.
 #define SVAL_SETTINGS_DEFAULT_DISABLE_ACHORDION (false)   // Obtained by blank init.
 #define SVAL_SETTINGS_DEFAULT_MH_TIMER_INDEX (1)
 extern const int16_t sval_settings_default_mh_timer_choices[4];
+void sval_settings_reset_default_layer_colors();
 
 #define SVAL_PROTO_VERSION 3
 

@@ -60,7 +60,7 @@ void qmk_settings_init_user(void) {
  * Reset to default values.
  * Called before clear_keyboard.
  */
-void qmk_settings_reset_user(void) {
+__attribute__((cold)) void qmk_settings_reset_user(void) {
   global_saved_values.auto_mouse = SVAL_SETTINGS_DEFAULT_AUTO_MOUSE;
   global_saved_values.disable_achordion = SVAL_SETTINGS_DEFAULT_DISABLE_ACHORDION;
   global_saved_values.mh_timer_index = SVAL_SETTINGS_DEFAULT_MH_TIMER_INDEX;

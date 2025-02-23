@@ -53,7 +53,7 @@ void read_eeprom_kb(void) {
     sval_active_layer = 0;
 }
 
-void sval_settings_reset_default_layer_colors(void) {
+__attribute__((cold)) void sval_settings_reset_default_layer_colors(void) {
 #define HSV(c) (struct layer_hsv) { (c >> 16) & 0xFF, (c >> 8) & 0xFF, c & 0xFF}
     // Colors from chatgpt.
     global_saved_values.layer_colors[0] = HSV(0x55FFFF); // Green

@@ -40,6 +40,9 @@ struct saved_values {
     int16_t mh_timer_choices[4];
 };
 
+// If you change the above, you must change the EECONFIG_KB_DATA_SIZE in config.h.
+typedef char SizeMustMatchInConfigHeader[EECONFIG_KB_DATA_SIZE == sizeof(struct saved_values) ? 0: -1];
+
 #define SVAL_SETTINGS_DEFAULT_AUTO_MOUSE (true)  // Cannot be changed. It's in keymap_suport.c.
 #define SVAL_SETTINGS_DEFAULT_DISABLE_ACHORDION (false)   // Obtained by blank init.
 #define SVAL_SETTINGS_DEFAULT_MH_TIMER_INDEX (1)

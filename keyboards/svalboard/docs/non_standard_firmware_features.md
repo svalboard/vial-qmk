@@ -39,17 +39,24 @@ If this behavior is not desirable, Achordion can be toggled off/on by binding
 the `Toggle ACH` key in the `User` tab of Vial somewhere in your layout and
 pressing it.
 
-![The "Toggle ACH" key in the "User" tab of Vial.](images/achordion_key.png)
+![The "Toggle ACH" key in the "User" tab of Vial.](images/vial_toggle_achordion.png)
+
+![The "Toggle ACH" key in the "Mouse and Special Keys" -> "Keyboard's custom
+keys" tab of Keybard.](images/kb_toggle_achordion.png)
 
 *The Svalboard remembers this setting, so you won't need to do it every time you
 plug in your keyboard.*
+
+**Note that such permanent toggles cannot be placed on the automouse layer, as
+keys that permanently change the Svalboards state are forbidden there to avoid
+burning out the EEPROM.**
 
 ### Customizing Achordion
 
 If more complex Achordion behavior than same-hand inactivation is desired, it
 can be customized further. This requires compiling custom firmware and should be
-attempted only with some knowledge of QMK/C. See [Achordion: Customizing the
-tap-hold
+attempted only with some knowledge of QMK/C. See
+[Achordion: Customizing the tap-hold
 decision](https://getreuer.info/posts/keyboards/achordion/index.html#customization)
 for more information.
 
@@ -76,7 +83,10 @@ type lowercase temporarily without inactivating Caps Word.
 To use Caps Word, bind `Caps Word Toggle` in the `User` tab of Vial somewhere in
 your layout.
 
-![The "Caps Word Toggle" key in the "User" tab of Vial](images/caps_word_key.png)
+![The "Caps Word Toggle" key in the "User" tab of Vial](images/vial_caps_word_key.png)
+
+![The "Caps Word Toggle" key in the "Mouse and Special Keys" -> "Keyboard's custom
+keys" tab of Keybard.](images/kb_caps_word_key.png)
 
 ## Dual-Function (Mod-Tap) Keys With Modified/Advanced Tap Values
 
@@ -114,18 +124,22 @@ The Svalboard firmware includes two custom keys to make this work even better.
 The keys labeled `MO 23 45=67` and `MO 45 23=67` in the `User` tab of Vial have
 the following behavior:
 
-* When held, they **activate two layers**, not just one. `MO 23 45=67` will activate
-  layer 2 and 3, while `MO 45 23=67` will activate layer 4 and 5.
+* When held, they **activate two layers**, not just one. `MO 23 45=67` will
+  activate layer 2 and 3, while `MO 45 23=67` will activate layer 4 and 5.
 * **When both are held, they activate layer 6 and 7**. Thus, this behavior is
   referred to as "23 + 45 = 67."
 
 ![The "MO 23 45=67" and "MO 45 23=67" keys in the "User" tab of
-Vial](images/23_45_67_keys.png)
+Vial](images/vial_23_45_67_keys.png)
+
+![The "MO 23 45=67" and "MO 45 23=67" keys in the "Mouse and Special Keys" -> "Keyboard's custom
+keys" tab of Keybard.](images/kb_23_45_67_keys.png)
 
 The advantages of these keys are as follow:
 
 * Activating two layers at once means it is easy to use modified mod-tap keys
-  (see [Dual-Function (Mod-Tap) Keys With Modified/Advanced Tap
+  (see
+  [Dual-Function (Mod-Tap) Keys With Modified/Advanced Tap
   Values](#dual-function-mod-tap-keys-with-modifiedadvanced-tap-values) for more
   information); if you will have HRMs on a layer with symbols, this is
   essential, as you can place your mod-taps on layer 3 and your modified values
@@ -147,4 +161,7 @@ Left Ptr: Scroll <yes/no>, cpi: <current DPI>, Right Ptr: Scroll <yes/no>, cpi: 
 Achordion: <yes/no>, MH Keys Timer: <current automouse timeout in ms, or -1 for infinite>
 ```
 
-![The "Output Status" key in the "User" tab of Vial](images/output_status_key.png)
+![The "Output Status" key in the "User" tab of Vial](images/vial_output_status_key.png)
+
+![The "Output Status" key in the "Mouse and Special Keys" -> "Keyboard's custom
+keys" tab of Keybard.](images/kb_output_status_key.png)

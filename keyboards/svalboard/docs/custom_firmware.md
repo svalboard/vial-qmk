@@ -27,13 +27,13 @@ In some advanced cases, it may be desirable to compile custom
 firmware/hard-coded keymaps for the Svalboard. For example:
 
 * You need custom userspace code for advanced, non-standard features (adaptive
- keys, complex macros, keyloggers, etc.).
+  keys, complex macros, keyloggers, etc.).
 * You need to customize the behavior of features that *are* included (e.g.
- Achordion) to a degree not possible with Vial.
+  Achordion) to a degree not possible with Vial.
 * You want to share configurations across multiple keyboards, some of which
- don't support Vial or it would be inconvenient to configure.
+  don't support Vial or it would be inconvenient to configure.
 * You already have a QMK setup that "just works" and don't want to mess with
- Vial.
+  Vial.
 
 ## Detecting The Svalboard
 
@@ -61,7 +61,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 The Svalboard supports some keycodes that are unique to it, for instance,
 `SV_RECALIBRATE_POINTER`, which recalibrates the deadzone of the trackpoint (if
-installed). To use these in your `keymap.c`, include:
+installed). These are all prefixed with `SV_` as opposed to the usual `KC_`. To
+use these in your `keymap.c`, include:
 
 ```c
 #include "keymap_support.h"
@@ -91,7 +92,6 @@ If you are sharing code across keyboards, you can do the following (see
 [Detecting The Svalboard](#detecting-the-svalboard)):
 
 ```c
-
 #ifdef SVALBOARD
 #include "keymap_support.h"
 #define RANGE_START SV_SAFE_RANGE

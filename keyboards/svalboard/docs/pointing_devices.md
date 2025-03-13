@@ -11,10 +11,13 @@
       * [By Timeout](#by-timeout)
     * [Editing The Automouse Layer](#editing-the-automouse-layer)
     * [Changing The Timeout](#changing-the-timeout)
+    * [Disabling The Automouse Layer](#disabling-the-automouse-layer)
   * [Adjusting Sensitivity](#adjusting-sensitivity)
     * [DPI](#dpi)
     * [Sniper Mode](#sniper-mode)
   * [Using A Pointing Device To Scroll](#using-a-pointing-device-to-scroll)
+    * [Permanently](#permanently)
+    * [Temporarily](#temporarily)
   * [Trackpoint Calibration/Drift](#trackpoint-calibrationdrift)
     * [Changing The Deadzone](#changing-the-deadzone)
 
@@ -22,12 +25,24 @@
 
 The Svalboard supports up to one pointing device on each side.
 
+Note that throughout this document, QMK keycodes are rendered as `KC_XYZ` (for a
+standard keycode) or `SV_XYZ` (for a Svalboard-specific keycode). In
+[Vial](https://get.vial.today)/[Keybard](https://captdeaf.github.io/keybard),
+the corresponding keys have more human-readable names.
+
 ### Current Options
 
-* Trackball (pmw3389)
+* Trackball (`pmw3389`)
+
   ![A trackball, mounted on the right half of a Svalboard.](images/trackball.jpg)
 
-* Trackpoint ![A trackpoint, in isolation.](images/trackpoint.jpg)
+* Trackpad (`azoteq`)
+
+  ![A trackpad, mounted on the right half of a Svalboard.](images/trackpad.jpg)
+
+* Trackpoint
+
+  ![A trackpoint, in isolation.](images/trackpoint.jpg)
 
 ### Deprecated Options
 
@@ -54,7 +69,7 @@ The left-hand south keys have "sniper" keys, which may be held to temporarily
 decrease the sensitivity of the pointer. Additionally, left- and right-click are
 duplicated on the thumb pad/nail keys, respectively.
 
-![A screenshot from Vial showing the aforementioned layer](images/mouse_layer.png)
+![A screenshot from Keybard showing the aforementioned layer](images/mouse_layer.png)
 
 ### Leaving The Automouse Layer
 
@@ -67,7 +82,7 @@ the remaining keys are "transparent".
 
 The following keys will cause the automouse layer to deactivate:
 
-* An unassigned or transparent key (`KC_NO` or `KC_TRNS`)
+* An unassigned " " or transparent "▽" key (`KC_NO` or `KC_TRNS`)
 * Any key that permanently changes the state of the Svalboard, i.e.
   * Keys that change pointer DPI (`SV_LEFT_DPI_INC`, `SV_LEFT_DPI_DEC`,
     `SV_RIGHT_DPI_INC`, `SV_RIGHT_DPI_DEC`)
@@ -75,6 +90,7 @@ The following keys will cause the automouse layer to deactivate:
     `SV_RIGHT_SCROLL_TOGGLE`)
   * Toggling achordion (`SV_TOGGLE_ACHORDION`)
   * Changing the automouse layer timer (`SV_MH_CHANGE_TIMEOUTS`)
+  * Toggling the automouse layer (`SV_TOGGLE_AUTOMOUSE`)
 
 #### By Timeout
 
@@ -91,7 +107,7 @@ By default, this timer is 500ms. See
 ### Editing The Automouse Layer
 
 To edit the buttons on this layer, simply edit the last layer (layer 15) in
-Vial.
+Vial/Keybard.
 
 The following keys may be particularly useful on this layer:
 
@@ -108,12 +124,35 @@ The following keys may be particularly useful on this layer:
 
 The automouse layer timer may be cycled through four settings: 300ms, 500ms,
 800ms, and infinite (in that order, wrapping around). To cycle to the next
-timeout setting, bind the key `Mouse Key Timer` (`SV_MH_CHANGE_TIMEOUTS`), found
-in the `User` tab in Vial, somewhere on your layout, and press it. *The
-Svalboard remembers this setting, so you won't need to do it every time you plug
-in your keyboard.*
+timeout setting, bind the key `Mouse Key Timer` (`SV_MH_CHANGE_TIMEOUTS`)
+somewhere in your layout and press it. *The Svalboard remembers this setting, so
+you won't need to do it every time you plug in your keyboard.*
 
-![The "Mouse Key Timer" key in the "User" tab of Vial.](images/mouse_key_timer.png)
+**Note that such permanent toggles cannot be placed on the automouse layer
+itself, as keys that permanently change the Svalboards state are forbidden there
+to avoid burning out the EEPROM.**
+
+![The "Mouse Key Timer" key in the "User" tab of Vial.](images/vial_mouse_key_timer.png)
+
+![The "Mouse Key Timer" key in the "Mouse and Special Keys" -> "Keyboard's
+custom keys" tab of Keybard.](images/kb_mouse_key_timer.png)
+
+### Disabling The Automouse Layer
+
+The automouse layer may be toggled off/back on using the "AutoMouse Toggle"
+(`SV_TOGGLE_AUTOMOUSE`) key. Binding it in your layout and tapping it once will
+turn off the automatic switching (or back on, if it is already off). The
+Svalboard remembers this toggle, so you won't need to do it every time you plug
+in your keyboard.
+
+**Note that such permanent toggles cannot be placed on the automouse layer
+itself, as keys that permanently change the Svalboards state are forbidden there
+to avoid burning out the EEPROM.**
+
+![The "AutoMouse Toggle" key in the "User" tab of Vial.](images/vial_automouse_toggle.png)
+
+![The "AutoMouse Toggle" key in the "Mouse and Special Keys" -> "Keyboard's
+custom keys" tab of Keybard.](images/kb_automouse_toggle.png)
 
 ## Adjusting Sensitivity
 
@@ -125,7 +164,14 @@ independently, using the left and right DPI +/- keys in the `User` tab of Vial
 Bind these keys somewhere on your layout, and then press them to change the DPI
 of the trackball.
 
-![The "Left/Right DPI +/-" keys in the "User" tab of Vial.](images/dpi_keys.png)
+**Note that these cannot be placed on the automouse layer, as keys that
+permanently change the Svalboards state are forbidden there, to avoid burning
+out the EEPROM.**
+
+![The "Left/Right DPI +/-" keys in the "User" tab of Vial.](images/vial_dpi_keys.png)
+
+![The "Left/Right DPI +/-" keys in the "Mouse and Special Keys" -> "Keyboard's
+custom keys" tab of Keybard.](images/kb_dpi_keys.png)
 
 Available DPIs are: 200, 400, 800, 1200, 1600, 2400. They do **not** wrap around
 (i.e. pressing the button to increase DPI will never go from 2400 to 200).
@@ -149,6 +195,11 @@ effects of these keys combine, e.g. holding both `Sniper 2x` and `Sniper 5x`
 results in a 10-fold reduction in sensitivity. As soon as the keys are released,
 sensitivity returns to normal.
 
+![The "Sniper 2/3/5x" keys in the "User" tab of Vial.](images/vial_sniper_keys.png)
+
+![The "Sniper 2/3/5x" keys in the "Mouse and Special Keys" -> "Keyboard's
+custom keys" tab of Keybard.](images/kb_sniper_keys.png)
+
 Note that **unlike DPI, sniper mode works with the trackpoint.**
 
 ## Using A Pointing Device To Scroll
@@ -156,20 +207,49 @@ Note that **unlike DPI, sniper mode works with the trackpoint.**
 One popular use of dual pointing devices is to use the left hand to scroll and
 the right to move the cursor.
 
-Either (or both) pointing devices may be set to act as a scrollwheel instead of
-moving the cursor. Bind one or more of the scroll toggle/hold keys in the `User`
-tab of Vial (`SV_SCROLL_TOGGLE`, `SV_SCROLL_HOLD`, `SV_LEFT_SCROLL_TOGGLE`,
-`SV_RIGHT_SCROLL_TOGGLE`) somewhere on your layout. These keys may be used to
-either permanently (for toggle) or temporarily (for hold) make one or both
-pointing devices scroll instead of moving the cursor.
+Each hand's pointing device can be independently set either to scroll or to move
+the cursor.
 
-![The "Scroll Toggle/Hold" keys in the "User" tab of
-Vial.](images/scroll_keys.png)
+### Permanently
 
-*The Svalboard remembers left/right scroll toggles, so you won't need to do it
-every time you plug in your keyboard. The both scroll toggle does not persist
-through power state; if you want both sides to permanently scroll, then use left
-and right toggle separately.*
+To toggle a side between movement and scrolling, assign the "Scroll Left Toggle"
+(`SV_LEFT_SCROLL_TOGGLE`) or "Scroll Right Toggle" (`SV_RIGHT_SCROLL_TOGGLE`)
+keys in your layout.
+
+Pressing the toggle for a side will switch that side's mode between scrolling
+and cursor movement. The Svalboard remembers these left/right scroll toggles, so
+you won't need to do it every time you plug in your keyboard. If you only want
+to set a side up once, you can unbind the keys once you're done using them (or
+leave them on a config layer or the like).
+
+**Note that permanent toggles (`SV_LEFT_SCROLL_TOGGLE`,
+`SV_RIGHT_SCROLL_TOGGLE`) cannot be placed on the automouse layer, as keys that
+permanently change the Svalboards state are forbidden there to avoid burning out
+the EEPROM.**
+
+![The "Scroll Left/Right Toggle" keys in the "User" tab of Vial.](images/vial_permanent_scroll_toggle.png)
+
+![The "Scroll Left/Right Toggle" keys in the "Mouse and Special Keys" -> "Keyboard's
+custom keys" tab of Keybard.](images/kb_permanent_scroll_toggle.png)
+
+### Temporarily
+
+You might also wish to temporarily switch a side between scrolling and cursor
+movement, for instance if you need to mouse one-handed. Two keys are provided
+for this use:
+
+* "Scroll Toggle" (`SV_SCROLL_TOGGLE`). Tap once to toggle both sides (scroll to
+  cursor or cursor to scroll). This toggling does **not** persist between
+  reboots; upon unplugging your Svalboard, it will default back to whatever
+  state is permanently set ([see above](#permanently)).
+* "Scroll Toggle Hold" (`SV_SCROLL_HOLD`). Hold down to toggle both sides
+  (scroll to cursor or cursor to scroll). The devices return to their former
+  setting once the key is released.
+
+![The "Scroll Toggle/Hold" keys in the "User" tab of Vial.](images/vial_temp_scroll.png)
+
+![The "Scroll Toggle/Hold" keys in the "Mouse and Special Keys" -> "Keyboard's
+custom keys" tab of Keybard.](images/kb_temp_scroll.png)
 
 ## Trackpoint Calibration/Drift
 
@@ -180,7 +260,9 @@ you notice your cursor drifting, you may press the "Fix Drift" key
 key is available on the default automouse layer as left/right pinky center, or
 may be bound from the `User` tab in Vial.
 
-![The "Fix Drift" key in the "User" tab of Vial.](images/fix_drift_key.png)
+![The "Fix Drift" key in the "User" tab of Vial.](images/vial_fix_drift.png)
+![The "Fix Drift" key in the "Mouse and Special Keys" -> "Keyboard's
+custom keys" tab of Keybard.](images/kb_fix_drift.png)
 
 **Make certain you are not touching the trackpoint while you calibrate it.**
 

@@ -1,6 +1,9 @@
 #include "svalboard.h"
 #include "eeconfig.h"
 #include "version.h"
+#ifdef RAW_ENABLE
+#include "raw_hid.h"
+#endif
 #include "split_common/transactions.h"
 
 saved_values_t global_saved_values;
@@ -54,6 +57,12 @@ void read_eeprom_kb(void) {
     if (global_saved_values.version < 4) {
         global_saved_values.version = 4;
         global_saved_values.auto_mouse = true;
+        modified = true;
+    }
+
+    if (global_saved_values.version < 5) {
+        global_saved_values.version = 5;
+        global_saved_values.layout_indicator = false;
         modified = true;
     }
     // As we add versions, just append here.
@@ -149,6 +158,15 @@ void sval_set_active_layer(uint32_t layer, bool save) {
     } else {
         rgblight_sethsv_noeeprom(cols.hue, cols.sat, rgblight_get_val()); //reuse currrent brightness
     }
+
+    #ifdef RAW_ENABLE
+    if (global_saved_values.layout_indicator) {
+        uint8_t buffer[RAW_EPSIZE] = {0};
+        buffer[0] = MSG_ACTIVE_LAYER;
+        buffer[1] = layer;
+        raw_hid_send(buffer, RAW_EPSIZE);
+    }
+    #endif
 }
 
 // VIAL SPECIFIC FOR SVALBOARD + KEYBARD

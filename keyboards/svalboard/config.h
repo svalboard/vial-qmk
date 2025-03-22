@@ -101,3 +101,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define PERMISSIVE_HOLD
 #define ACHORDION_STREAK
+
+#ifdef RAW_ENABLE
+#define RAW_EPSIZE 32
+#endif

@@ -100,6 +100,11 @@
         "shortName": "AutoMouse\nToggle",
         "title": "Toggle Auto Mouse layer activation.",
         "name": "SV_TOGGLE_AUTOMOUSE"
+      },
+      {
+        "shortName": "Layout\nIndicator\nToggle",
+        "title": "Toggles Klayi protocol (sends layer data via raw hid).",
+        "name": "SV_KLAYI_PROTOCOL"
       }
     ],
     "layouts": {

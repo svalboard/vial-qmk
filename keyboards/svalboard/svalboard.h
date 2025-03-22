@@ -33,7 +33,8 @@ struct saved_values {
     bool right_scroll :1;
     bool disable_achordion: 1;
     bool auto_mouse: 1;
-    unsigned int unused0 :4;
+    bool layout_indicator :1;
+    unsigned int unused0 :3;
     uint8_t left_dpi_index;
     uint8_t right_dpi_index;
     uint8_t mh_timer_index;
@@ -43,6 +44,8 @@ struct saved_values {
 #define SVAL_PROTO_VERSION 3
 
 #define SVAL_VIA_PREFIX 0xEE
+
+#define MSG_ACTIVE_LAYER 0xA5
 
 enum sval_command_ids {
     sval_id_get_protocol_version                 = 0x01,

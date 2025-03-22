@@ -304,6 +304,9 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 global_saved_values.auto_mouse = !global_saved_values.auto_mouse;
                 write_eeprom_kb();
                 return false;
+            case SV_KLAYI_PROTOCOL:
+                global_saved_values.layout_indicator = !global_saved_values.layout_indicator;
+                return false;
         }
     } else { // key released
         switch (keycode) {

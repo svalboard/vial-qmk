@@ -103,8 +103,8 @@
       },
       {
         "shortName": "Layout\nIndicator\nToggle",
-        "title": "Toggles Klayi protocol (sends layer data via raw hid).",
-        "name": "SV_KLAYI_PROTOCOL"
+        "title": "Toggles sending layer data via raw hid.",
+        "name": "SV_TOGGLE_LAYOUT_INDICATOR"
       }
     ],
     "layouts": {

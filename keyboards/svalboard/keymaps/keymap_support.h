@@ -41,7 +41,7 @@ enum my_keycodes {
     SV_SCROLL_TOGGLE,
     SV_OUTPUT_STATUS,
     SV_TOGGLE_AUTOMOUSE,
-    SV_KLAYI_PROTOCOL,
+    SV_TOGGLE_LAYOUT_INDICATOR,
     // New keycodes should go here, to avoid breaking existing keymaps - order must match vial.json
     KC_NORMAL_HOLD = SAFE_RANGE,
     KC_FUNC_HOLD,

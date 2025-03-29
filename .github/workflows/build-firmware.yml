@@ -12,7 +12,7 @@ on:
       side:
         required: true
         type: string
-      
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -53,15 +53,29 @@ jobs:
         make ${{ inputs.keyboard }}/${{ inputs.side }}:${{ inputs.keymap }}
       shell: bash
 
-    - name: Move file into position
-      id: move_file
-      if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    - name: Calculate keyboard name
+      id: keyboard_vars
       run: |
         KEYBOARD_NAME="${{ inputs.keyboard }}"
         KEYBOARD_NAME="${KEYBOARD_NAME//\//_}"
-        FILE_NAME="${KEYBOARD_NAME}${DOWNKEY}_${{ inputs.side }}_${{ inputs.keymap }}_${{ steps.get_version.outputs.VERSION }}.uf2"
-        mv ${KEYBOARD_NAME}_${{ inputs.side }}_${{ inputs.keymap }}.uf2 "$FILE_NAME"
-        echo "::set-output name=file_name::$FILE_NAME"
+        echo "keyboard_name=$KEYBOARD_NAME" >> $GITHUB_ENV
+        echo "keyboard_name=$KEYBOARD_NAME" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Add file to PR.
+      uses: actions/upload-artifact@v4
+      if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+      with:
+        name: ${{ env.keyboard_name }}_${{ inputs.side }}_${{ inputs.keymap }}.uf2
+        path: ${{ env.keyboard_name }}_${{ inputs.side }}_${{ inputs.keymap }}.uf2
+
+    - name: Move file into position (for tags only)
+      id: move_file
+      if: ${{ startsWith(github.ref, 'refs/tags/') }}
+      run: |
+        FILE_NAME="${{ env.keyboard_name }}${DOWNKEY}_${{ inputs.side }}_${{ inputs.keymap }}_${{ steps.get_version.outputs.VERSION }}.uf2"
+        mv ${{ env.keyboard_name }}_${{ inputs.side }}_${{ inputs.keymap }}.uf2 "$FILE_NAME"
+        echo "file_name=$FILE_NAME" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Release

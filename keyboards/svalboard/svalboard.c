@@ -56,6 +56,10 @@ void read_eeprom_kb(void) {
         global_saved_values.auto_mouse = true;
         modified = true;
     }
+    if (global_saved_values.version < 5) {
+        global_saved_values.version = 5;
+        global_saved_values.layer_options = 0;
+    }
     // As we add versions, just append here.
     if (modified) {
         write_eeprom_kb();
@@ -144,10 +148,14 @@ void sval_set_active_layer(uint32_t layer, bool save) {
     if (layer > 15) layer = 15;
     sval_active_layer = layer;
     struct layer_hsv cols = global_saved_values.layer_colors[layer];
+    uint8_t val = cols.val;
+    if (LAYER_OPTION_BACKLIGHT) {
+      val = rgblight_get_val();
+    }
     if (save) {
-        rgblight_sethsv(cols.hue, cols.sat, rgblight_get_val()); //store using current brightness
+        rgblight_sethsv(cols.hue, cols.sat, val); //store using current brightness
     } else {
-        rgblight_sethsv_noeeprom(cols.hue, cols.sat, rgblight_get_val()); //reuse currrent brightness
+        rgblight_sethsv_noeeprom(cols.hue, cols.sat, val); //reuse currrent brightness
     }
 }
 
@@ -234,6 +242,15 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
                 write_eeprom_kb();
             }
             sval_set_active_layer(sval_active_layer, false);
+            break;
+        case sval_id_get_layer_options:
+            data[0] = global_saved_values.layer_options;
+            break;
+        case sval_id_set_layer_options:
+            global_saved_values.layer_options = data[2];
+            break;
+        case sval_id_set_color_hsv:
+            rgblight_sethsv(data[2], data[3], data[4]);
             break;
     }
 }

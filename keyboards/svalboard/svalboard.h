@@ -38,9 +38,12 @@ struct saved_values {
     uint8_t right_dpi_index;
     uint8_t mh_timer_index;
     struct layer_hsv layer_colors[DYNAMIC_KEYMAP_LAYER_COUNT];
+    uint8_t layer_options;
 };
 
-#define SVAL_PROTO_VERSION 3
+#define LAYER_OPTION_BACKLIGHT (global_saved_values.layer_options & 1)
+
+#define SVAL_PROTO_VERSION 4
 
 #define SVAL_VIA_PREFIX 0xEE
 
@@ -50,6 +53,9 @@ enum sval_command_ids {
     // Layer HSVs
     sval_id_get_layer_hsv                        = 0x10,
     sval_id_set_layer_hsv                        = 0x11,
+    sval_id_get_layer_options                    = 0x12,
+    sval_id_set_layer_options                    = 0x13,
+    sval_id_set_color_hsv                        = 0x14,
 };
 
 // Just for ping pong, do we want anything else for it?

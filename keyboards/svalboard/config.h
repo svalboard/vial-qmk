@@ -31,8 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define FORCE_NKRO
 #define EE_HANDS
 //#define DEBUG_MATRIX_SCAN_RATE
-// Data size is 5 + (16 * 3), to include layer colors in HSV struct.
-#define EECONFIG_KB_DATA_SIZE 53
+// Data size is 6 + (16 * 3), to include layer colors in HSV struct.
+#define EECONFIG_KB_DATA_SIZE (6 + (16 * 3))
 
 #define FLASH_LEN (16 * 1024 * 1024)
 #define WEAR_LEVELING_BACKING_SIZE (128 * 1024)
@@ -87,7 +87,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //  https://docs.qmk.fm/#/feature_rgblight?id=configuration
 #define WS2812_DI_PIN GP19
 #define RGBLED_SPLIT { 1, 1 }
-#define RGBLIGHT_LAYERS_RETAIN_VAL
+// #define RGBLIGHT_LAYERS_RETAIN_VAL
 #define RGBLIGHT_LAYERS DYNAMIC_KEYMAP_LAYER_COUNT
 #define RGBLIGHT_DEFAULT_SAT 0 // white?
 #define RGBLIGHT_LIMIT_VAL 255

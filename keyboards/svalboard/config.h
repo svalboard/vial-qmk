@@ -43,7 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //Both Thumbs (these are same as lalboard_v2)
 //OL OU D IL MODE DOUBLE
 //Knuckle Nail Down Pad Up Double
-//#define THUMB_DOWN_ACTIVE_DARK
+#define THUMB_DOWN_ACTIVE_DARK
 
 #define MATRIX_COL_PUSHED_STATES { 0, 0, 1, 0, 0, 0 }
 #ifdef THUMB_DOWN_ACTIVE_DARK

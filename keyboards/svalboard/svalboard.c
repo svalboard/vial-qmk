@@ -99,7 +99,7 @@ void output_keyboard_info(void) {
 	    yes_or_no(global_saved_values.left_scroll), dpi_choices[global_saved_values.left_dpi_index],
 	    yes_or_no(global_saved_values.right_scroll), dpi_choices[global_saved_values.right_dpi_index]);
     send_string(output_buffer);
-    sprintf(output_buffer, "Axis Scroll Lock: %s (is Mac: %d), Mouse Layer: %s, Mouse Layer Timer: %d, Turbo Scan: %d\n",
+    sprintf(output_buffer, "Axis Scroll Lock: %s (is Mac: %d), Mouse Layer: %s, Mouse Layer Timeout: %d, Turbo Scan: %d\n",
 	    yes_or_no(global_saved_values.axis_scroll_lock),
 	    is_mac,
 	    yes_or_no(global_saved_values.auto_mouse),

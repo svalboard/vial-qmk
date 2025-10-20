@@ -42,7 +42,7 @@
         "name": "SV_RECALIBRATE_POINTER"
       },
       {
-        "shortName": "Mouse\nKey\nTimer",
+        "shortName": "Mouse\nLayer\nTimer",
         "title": "Cycle between various settings of the mouse keys timer.",
         "name": "SV_MH_CHANGE_TIMEOUTS"
       },

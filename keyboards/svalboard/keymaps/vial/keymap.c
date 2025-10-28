@@ -47,7 +47,7 @@ enum layer {
 int sval_macro_size = 0;
 uint8_t sval_macros[] = {0};
 const uint16_t PROGMEM keymaps[DYNAMIC_KEYMAP_LAYER_COUNT][MATRIX_ROWS][MATRIX_COLS] = {
-    /* ===== NORMAL ===== */
+    /* ===== NORMAL ===== . */
     [NORMAL] = LAYOUT(
         /*      Center           North               East                South                West                Double*/
         /*R1*/ KC_J              , KC_U              , KC_QUOTE          , KC_M            , KC_H              , KC_NO           ,

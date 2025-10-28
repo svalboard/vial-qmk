@@ -37,8 +37,8 @@ enum layer {
     NORMAL,
     NAVNAS,
     FUNC,
-    BOARD_CONFIG = (MH_AUTO_BUTTONS_LAYER - 1),
-    MBO = MH_AUTO_BUTTONS_LAYER
+    BOARD_CONFIG,
+    MBO = MH_AUTO_BUTTONS_LAYER,
 };
 
 #if __has_include("keymap_all.h")
@@ -131,16 +131,6 @@ const uint16_t PROGMEM keymaps[DYNAMIC_KEYMAP_LAYER_COUNT][MATRIX_ROWS][MATRIX_C
         ),
 };
 #endif
-
-bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
-                     uint16_t other_keycode, keyrecord_t* other_record) {
-    if (tap_hold_record->event.key.row == 0 || tap_hold_record->event.key.row == 5 ||
-        other_record->event.key.row    == 0 || other_record->event.key.row    == 5) {
-        return true;
-    }
-
-    return achordion_opposite_hands(tap_hold_record, other_record);
-}
 
 void keyboard_post_init_user(void) {
   // Customise these values if you need to debug the matrix

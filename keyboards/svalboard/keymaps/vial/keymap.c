@@ -66,8 +66,8 @@ const uint16_t PROGMEM keymaps[DYNAMIC_KEYMAP_LAYER_COUNT][MATRIX_ROWS][MATRIX_C
 
     [NAVNAS] = LAYOUT(
         /*      Center           North               East                South                West                Double*/
-        /*R1*/ KC_LEFT           , KC_7              , LSFT(KC_MINUS)    , KC_HOME           , LSFT(KC_5)        , KC_NO             ,
-        /*R2*/ KC_UP             , KC_8              , KC_NO             , KC_PGUP           , LSFT(KC_6)        , KC_NO             ,
+        /*R1*/ KC_LEFT           , KC_7              , LSFT(KC_MINUS)    , KC_HOME           , KC_MINUS           , KC_NO             ,
+        /*R2*/ KC_UP             , KC_8              , LSFT(KC_5)        , KC_PGUP           , LSFT(KC_6)        , KC_NO             ,
         /*R3*/ KC_DOWN           , KC_NO             , KC_NO             , KC_PGDN           , KC_INSERT         , KC_NO             ,
         /*R4*/ KC_RIGHT          , KC_PSCR           , KC_NO             , KC_END            , LSFT(KC_0)        , KC_NO             ,
         /*L1*/ KC_4              , LSFT(KC_4)        , KC_5              , KC_9              , KC_MINUS          , KC_NO             ,

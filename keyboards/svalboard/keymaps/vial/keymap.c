@@ -37,7 +37,7 @@ enum layer {
     NORMAL,
     NAVNAS,
     FUNC,
-    BOARD_CONFIG,
+    BOARD_CONFIG = MH_AUTO_BUTTONS_LAYER - 1,
     MBO = MH_AUTO_BUTTONS_LAYER,
 };
 

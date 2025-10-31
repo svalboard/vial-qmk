@@ -71,7 +71,7 @@ const uint16_t PROGMEM keymaps[DYNAMIC_KEYMAP_LAYER_COUNT][MATRIX_ROWS][MATRIX_C
         /*R3*/ KC_9              , LSFT(KC_9)        , KC_NO            , KC_DOWN         , KC_INSERT       , KC_NO           ,
         /*R4*/ KC_0              , LSFT(KC_0)        , KC_NO            , KC_RIGHT        , LSFT(KC_GRAVE)  , KC_NO           ,
         /*L1*/ KC_4              , LSFT(KC_4)        , KC_5             , KC_END          , LSFT(KC_5)      , KC_NO           ,
-        /*L2*/ KC_3              , LSFT(KC_3)        , KC_MINUS         , KC_PGDOWN       , LSFT(KC_EQUAL)  , KC_NO           ,
+        /*L2*/ KC_3              , LSFT(KC_3)        , KC_MINUS         , KC_PGDN       , LSFT(KC_EQUAL)  , KC_NO           ,
         /*L3*/ KC_2              , LSFT(KC_2)        , KC_DOT           , KC_PGUP         , KC_TRNS         , KC_NO           ,
         /*L4*/ KC_1              , LSFT(KC_1)        , KC_EQUAL         , KC_HOME         , KC_TRNS         , KC_NO           ,
         /*Down             Pad             Up              Nail            Knuckle         DoubleDown*/

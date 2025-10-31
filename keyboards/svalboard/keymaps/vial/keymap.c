@@ -118,9 +118,9 @@ const uint16_t PROGMEM keymaps[DYNAMIC_KEYMAP_LAYER_COUNT][MATRIX_ROWS][MATRIX_C
         /*R2*/ KC_TRNS           , KC_TRNS           , KC_TRNS           , KC_TRNS           , KC_TRNS           , KC_NO             ,
         /*R3*/ KC_TRNS           , KC_TRNS           , KC_TRNS           , KC_TRNS           , KC_TRNS           , KC_NO             ,
         /*R4*/ KC_TRNS           , KC_TRNS           , KC_TRNS           , KC_TRNS           , KC_TRNS           , KC_NO             ,
-        /*L1*/ KC_BTN1           , KC_TRNS           , KC_TRNS           , LCTL(KC_V)        , KC_NO             , KC_NO             ,
-        /*L2*/ KC_BTN3           , KC_TRNS           , KC_TRNS           , LCTL(KC_C)        , KC_NO             , KC_NO             ,
-        /*L3*/ KC_BTN2           , KC_TRNS           , KC_TRNS           , LCTL(KC_X)        , KC_TRNS           , KC_NO             ,
+        /*L1*/ KC_BTN1           , KC_TRNS           , KC_TRNS           , KC_TRNS           , KC_TRNS           , KC_NO             ,
+        /*L2*/ KC_BTN3           , KC_TRNS           , KC_TRNS           , KC_TRNS           , KC_TRNS           , KC_NO             ,
+        /*L3*/ KC_BTN2           , KC_TRNS           , KC_TRNS           , KC_TRNS           , KC_TRNS           , KC_NO             ,
         /*L4*/ KC_TRNS           , KC_TRNS           , KC_TRNS           , SV_SNIPER_3       , KC_TRNS           , KC_NO             ,
         
         /*     Down               Pad                Up                  Nail                Knuckle             DoubleDown */

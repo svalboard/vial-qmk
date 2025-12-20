@@ -41,7 +41,7 @@ struct __attribute__((__packed__)) saved_values {
     uint8_t turbo_scan;
 };
 
-#define SVAL_PROTO_VERSION 3
+#define SVAL_PROTO_VERSION 4
 
 #define SVAL_VIA_PREFIX 0xEE
 
@@ -51,6 +51,14 @@ enum sval_command_ids {
     // Layer HSVs
     sval_id_get_layer_hsv                        = 0x10,
     sval_id_set_layer_hsv                        = 0x11,
+    sval_id_get_layer_count                      = 0x12,
+    // Settings (all in one)
+    sval_id_get_settings                         = 0x20,
+    sval_id_set_settings                         = 0x21,
+    // DPI configuration
+    sval_id_get_dpi_levels                       = 0x22,
+    // Mouse hide timeout options
+    sval_id_get_mh_timers                        = 0x23,
 };
 
 // Just for ping pong, do we want anything else for it?

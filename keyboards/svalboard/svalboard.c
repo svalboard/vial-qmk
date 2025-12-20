@@ -271,6 +271,53 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
             }
             sval_set_active_layer(sval_active_layer, false);
             break;
+        case sval_id_get_layer_count:
+            data[0] = DYNAMIC_KEYMAP_LAYER_COUNT;
+            break;
+        case sval_id_get_settings:
+            data[0] = global_saved_values.left_dpi_index;
+            data[1] = global_saved_values.right_dpi_index;
+            data[2] = global_saved_values.left_scroll;
+            data[3] = global_saved_values.right_scroll;
+            data[4] = global_saved_values.axis_scroll_lock;
+            data[5] = global_saved_values.auto_mouse;
+            data[6] = global_saved_values.mh_timer_index;
+            data[7] = global_saved_values.turbo_scan;
+            data[8] = TURBO_CHOICES_LENGTH;
+            break;
+        case sval_id_set_settings:
+            global_saved_values.left_dpi_index = data[2];
+            global_saved_values.right_dpi_index = data[3];
+            global_saved_values.left_scroll = data[4];
+            global_saved_values.right_scroll = data[5];
+            global_saved_values.axis_scroll_lock = data[6];
+            global_saved_values.auto_mouse = data[7];
+            global_saved_values.mh_timer_index = data[8];
+            global_saved_values.turbo_scan = data[9];
+            write_eeprom_kb();
+#ifdef SPLIT_KEYBOARD
+            transaction_rpc_send(KEYBOARD_SYNC_A, 1, &global_saved_values.turbo_scan);
+#endif
+            // Apply DPI changes immediately
+            set_left_dpi(global_saved_values.left_dpi_index);
+            set_right_dpi(global_saved_values.right_dpi_index);
+            break;
+        case sval_id_get_dpi_levels:
+            // Return: count (1 byte) + DPI values (2 bytes each, little-endian)
+            data[0] = DPI_CHOICES_LENGTH;
+            for (uint8_t i = 0; i < DPI_CHOICES_LENGTH && i < 15; i++) {
+                data[1 + i * 2] = dpi_choices[i] & 0xFF;
+                data[2 + i * 2] = (dpi_choices[i] >> 8) & 0xFF;
+            }
+            break;
+        case sval_id_get_mh_timers:
+            // Return: count (1 byte) + timer values (2 bytes each, signed little-endian)
+            data[0] = sizeof(mh_timer_choices) / sizeof(mh_timer_choices[0]);
+            for (uint8_t i = 0; i < data[0] && i < 15; i++) {
+                data[1 + i * 2] = mh_timer_choices[i] & 0xFF;
+                data[2 + i * 2] = (mh_timer_choices[i] >> 8) & 0xFF;
+            }
+            break;
     }
 }
 

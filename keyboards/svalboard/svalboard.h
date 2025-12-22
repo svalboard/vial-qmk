@@ -41,7 +41,7 @@ struct __attribute__((__packed__)) saved_values {
     uint8_t turbo_scan;
 };
 
-#define SVAL_PROTO_VERSION 4
+#define SVAL_PROTO_VERSION 5
 
 #define SVAL_VIA_PREFIX 0xEE
 

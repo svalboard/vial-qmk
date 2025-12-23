@@ -275,6 +275,10 @@ report_mouse_t pointing_device_task_combined_user(report_mouse_t reportMouse1, r
     mouse_mode(true);
     ret_mouse = pointing_device_combine_reports(reportMouse1, reportMouse2);
 
+    if (global_saved_values.natural_scroll) {
+        ret_mouse.v = -ret_mouse.v;
+    }
+
     return pointing_device_task_user(ret_mouse);
 }
 

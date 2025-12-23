@@ -33,7 +33,8 @@ struct __attribute__((__packed__)) saved_values {
     bool right_scroll :1;
     bool axis_scroll_lock: 1;
     bool auto_mouse: 1;
-    unsigned int unused0 :4;
+    bool natural_scroll: 1;
+    unsigned int unused0 :3;
     uint8_t left_dpi_index;
     uint8_t right_dpi_index;
     uint8_t mh_timer_index;

@@ -67,6 +67,10 @@ void read_eeprom_kb(void) {
         global_saved_values.version = 6;
         global_saved_values.turbo_scan = 0;
     }
+    if (global_saved_values.version < 7) {
+        global_saved_values.version = 7;
+        global_saved_values.natural_scroll = false;
+    }
 
     // As we add versions, just append here.
     if (modified) {
@@ -284,6 +288,7 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
             data[6] = global_saved_values.mh_timer_index;
             data[7] = global_saved_values.turbo_scan;
             data[8] = TURBO_CHOICES_LENGTH;
+            data[9] = global_saved_values.natural_scroll;
             break;
         case sval_id_set_settings:
             global_saved_values.left_dpi_index = data[2];
@@ -294,6 +299,7 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
             global_saved_values.auto_mouse = data[7];
             global_saved_values.mh_timer_index = data[8];
             global_saved_values.turbo_scan = data[9];
+            global_saved_values.natural_scroll = data[10];
             write_eeprom_kb();
 #ifdef SPLIT_KEYBOARD
             transaction_rpc_send(KEYBOARD_SYNC_A, 1, &global_saved_values.turbo_scan);

@@ -105,6 +105,11 @@
 	 "shortName": "Turbo\nScan",
 	 "title": "Change the scan mode of the keyboard.",
 	 "name": "SV_TURBO_SCAN"
+      },
+      {
+	 "shortName": "Natural\nScroll",
+	 "title": "Toggle natural scroll (inverts vertical scroll direction).",
+	 "name": "SV_NATURAL_SCROLL_TOGGLE"
       }
     ],
     "layouts": {

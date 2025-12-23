@@ -471,6 +471,10 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 	    case SV_TURBO_SCAN:
 	        change_turbo_scan();
 	        return false;
+	    case SV_NATURAL_SCROLL_TOGGLE:
+	        global_saved_values.natural_scroll = !global_saved_values.natural_scroll;
+	        write_eeprom_kb();
+	        return false;
         }
     } else { // key released
         switch (keycode) {

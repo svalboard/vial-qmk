@@ -59,6 +59,8 @@ enum sval_command_ids {
     sval_id_get_dpi_levels                       = 0x22,
     // Mouse hide timeout options
     sval_id_get_mh_timers                        = 0x23,
+    // Current active layer
+    sval_id_get_current_layer                    = 0x24,
 };
 
 // Just for ping pong, do we want anything else for it?

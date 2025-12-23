@@ -318,6 +318,9 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
                 data[2 + i * 2] = (mh_timer_choices[i] >> 8) & 0xFF;
             }
             break;
+        case sval_id_get_current_layer:
+            data[0] = sval_active_layer;
+            break;
     }
 }
 

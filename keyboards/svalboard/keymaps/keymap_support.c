@@ -275,6 +275,10 @@ report_mouse_t pointing_device_task_combined_user(report_mouse_t reportMouse1, r
     mouse_mode(true);
     ret_mouse = pointing_device_combine_reports(reportMouse1, reportMouse2);
 
+    if (global_saved_values.natural_scroll) {
+        ret_mouse.v = -ret_mouse.v;
+    }
+
     return pointing_device_task_user(ret_mouse);
 }
 
@@ -466,6 +470,10 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 return false;
 	    case SV_TURBO_SCAN:
 	        change_turbo_scan();
+	        return false;
+	    case SV_NATURAL_SCROLL_TOGGLE:
+	        global_saved_values.natural_scroll = !global_saved_values.natural_scroll;
+	        write_eeprom_kb();
 	        return false;
         }
     } else { // key released

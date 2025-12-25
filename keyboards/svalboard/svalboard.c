@@ -67,6 +67,10 @@ void read_eeprom_kb(void) {
         global_saved_values.version = 6;
         global_saved_values.turbo_scan = 0;
     }
+    if (global_saved_values.version < 7) {
+        global_saved_values.version = 7;
+        global_saved_values.natural_scroll = false;
+    }
 
     // As we add versions, just append here.
     if (modified) {
@@ -99,9 +103,10 @@ void output_keyboard_info(void) {
 	    yes_or_no(global_saved_values.left_scroll), dpi_choices[global_saved_values.left_dpi_index],
 	    yes_or_no(global_saved_values.right_scroll), dpi_choices[global_saved_values.right_dpi_index]);
     send_string(output_buffer);
-    sprintf(output_buffer, "Axis Scroll Lock: %s (is Mac: %d), Mouse Layer: %s, Mouse Layer Timeout: %d, Turbo Scan: %d\n",
+    sprintf(output_buffer, "Axis Scroll Lock: %s (is Mac: %d), Natural Scroll: %s, Mouse Layer: %s, Mouse Layer Timeout: %d, Turbo Scan: %d\n",
 	    yes_or_no(global_saved_values.axis_scroll_lock),
 	    is_mac,
+	    yes_or_no(global_saved_values.natural_scroll),
 	    yes_or_no(global_saved_values.auto_mouse),
 	    mh_timer_choices[global_saved_values.mh_timer_index],
 	    global_saved_values.turbo_scan);
@@ -270,6 +275,58 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
                 write_eeprom_kb();
             }
             sval_set_active_layer(sval_active_layer, false);
+            break;
+        case sval_id_get_layer_count:
+            data[0] = DYNAMIC_KEYMAP_LAYER_COUNT;
+            break;
+        case sval_id_get_settings:
+            data[0] = global_saved_values.left_dpi_index;
+            data[1] = global_saved_values.right_dpi_index;
+            data[2] = global_saved_values.left_scroll;
+            data[3] = global_saved_values.right_scroll;
+            data[4] = global_saved_values.axis_scroll_lock;
+            data[5] = global_saved_values.auto_mouse;
+            data[6] = global_saved_values.mh_timer_index;
+            data[7] = global_saved_values.turbo_scan;
+            data[8] = TURBO_CHOICES_LENGTH;
+            data[9] = global_saved_values.natural_scroll;
+            break;
+        case sval_id_set_settings:
+            global_saved_values.left_dpi_index = data[2];
+            global_saved_values.right_dpi_index = data[3];
+            global_saved_values.left_scroll = data[4];
+            global_saved_values.right_scroll = data[5];
+            global_saved_values.axis_scroll_lock = data[6];
+            global_saved_values.auto_mouse = data[7];
+            global_saved_values.mh_timer_index = data[8];
+            global_saved_values.turbo_scan = data[9];
+            global_saved_values.natural_scroll = data[10];
+            write_eeprom_kb();
+#ifdef SPLIT_KEYBOARD
+            transaction_rpc_send(KEYBOARD_SYNC_A, 1, &global_saved_values.turbo_scan);
+#endif
+            // Apply DPI changes immediately
+            set_left_dpi(global_saved_values.left_dpi_index);
+            set_right_dpi(global_saved_values.right_dpi_index);
+            break;
+        case sval_id_get_dpi_levels:
+            // Return: count (1 byte) + DPI values (2 bytes each, little-endian)
+            data[0] = DPI_CHOICES_LENGTH;
+            for (uint8_t i = 0; i < DPI_CHOICES_LENGTH && i < 15; i++) {
+                data[1 + i * 2] = dpi_choices[i] & 0xFF;
+                data[2 + i * 2] = (dpi_choices[i] >> 8) & 0xFF;
+            }
+            break;
+        case sval_id_get_mh_timers:
+            // Return: count (1 byte) + timer values (2 bytes each, signed little-endian)
+            data[0] = sizeof(mh_timer_choices) / sizeof(mh_timer_choices[0]);
+            for (uint8_t i = 0; i < data[0] && i < 15; i++) {
+                data[1 + i * 2] = mh_timer_choices[i] & 0xFF;
+                data[2 + i * 2] = (mh_timer_choices[i] >> 8) & 0xFF;
+            }
+            break;
+        case sval_id_get_current_layer:
+            data[0] = sval_active_layer;
             break;
     }
 }

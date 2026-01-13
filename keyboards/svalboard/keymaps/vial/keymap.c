@@ -146,10 +146,10 @@ bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
 
 void keyboard_post_init_user(void) {
   // Customise these values if you need to debug the matrix
-  //debug_enable=true;
-  //debug_matrix=true;
-  //debug_keyboard=true;
-  //debug_mouse=true;
+  debug_enable=true;
+  debug_matrix=true;
+  debug_keyboard=true;
+  debug_mouse=true;
 
 #if __has_include("keymap_all.h")
   if (fresh_install) {

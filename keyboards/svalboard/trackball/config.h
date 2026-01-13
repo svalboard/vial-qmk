@@ -48,16 +48,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #ifdef USE_FFC_SPI
         #define SPI_DRIVER SPID1
         // for FFC connector
-        #define SPI_SCK_PIN GP26
+        #define SPI_SCK_PIN GP10
         // Use TX# pin from SPI set.
-        #define SPI_MOSI_PIN GP27
+        #define SPI_MOSI_PIN GP11
         // Use RX# pin from SPI set.
-        #define SPI_MISO_PIN GP24
+        #define SPI_MISO_PIN GP8
         // PMW33XX stuff
         // Use CS# pin from SPI set. Might not actually have to be the CS# pin, since
         // there's supposed to be support for multiple PMW33XX sensors, with different
         // CS pins.
-        #define PMW33XX_CS_PIN GP25
+        #define PMW33XX_CS_PIN GP9
         //#define PMW33XX_CS_PIN_RIGHT GP25
       #else
     //for Separate Pimoroni Connector

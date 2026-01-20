@@ -24,7 +24,7 @@
   "height": 10,
   // Hijack GPIO13 for missing DD
   "matrix_pins": {
-      "cols": ["GP15", "GP18","GP16", "GP17", "GP14", "GP4"],
+      "cols": ["GP15", "GP18","GP16", "GP17", "GP14", "GP5"],
       "rows": ["GP23", "GP22", "GP21", "GP20", "GP19"]
   },
   "dynamic_keymap": {

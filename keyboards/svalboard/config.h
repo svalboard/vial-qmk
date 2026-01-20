@@ -85,7 +85,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // WS2812-fu here:
 //  pretty lights
 //  https://docs.qmk.fm/#/feature_rgblight?id=configuration
-#define WS2812_DI_PIN GP5
+#define WS2812_DI_PIN GP4
 #define RGBLED_SPLIT { 1, 1 }
 #define RGBLIGHT_LAYERS_RETAIN_VAL
 #define RGBLIGHT_LAYERS DYNAMIC_KEYMAP_LAYER_COUNT

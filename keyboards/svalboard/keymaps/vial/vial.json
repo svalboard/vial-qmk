@@ -105,6 +105,16 @@
 	 "shortName": "Turbo\nScan",
 	 "title": "Change the scan mode of the keyboard.",
 	 "name": "SV_TURBO_SCAN"
+      },
+      {
+        "shortName": "Mouse 1\nExit",
+        "title": "Left click and exit mouse layer on release.",
+        "name": "SV_MS_BTN1_EXIT"
+      },
+      {
+        "shortName": "Mouse 2\nExit",
+        "title": "Right click and exit mouse layer on release.",
+        "name": "SV_MS_BTN2_EXIT"
       }
     ],
     "layouts": {

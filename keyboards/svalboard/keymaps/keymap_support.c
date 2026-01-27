@@ -467,6 +467,12 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 	    case SV_TURBO_SCAN:
 	        change_turbo_scan();
 	        return false;
+            case SV_MS_BTN1_EXIT:
+                register_code(KC_MS_BTN1);
+                return false;
+            case SV_MS_BTN2_EXIT:
+                register_code(KC_MS_BTN2);
+                return false;
         }
     } else { // key released
         switch (keycode) {
@@ -498,6 +504,14 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 return false;
             case SV_SCROLL_TOGGLE:
                 scroll_toggle ^= true;
+                return false;
+            case SV_MS_BTN1_EXIT:
+                unregister_code(KC_MS_BTN1);
+                mouse_mode(false);
+                return false;
+            case SV_MS_BTN2_EXIT:
+                unregister_code(KC_MS_BTN2);
+                mouse_mode(false);
                 return false;
         }
     }

@@ -115,6 +115,11 @@
         "shortName": "Mouse 2\nExit",
         "title": "Right click and exit mouse layer on release.",
         "name": "SV_MS_BTN2_EXIT"
+      },
+      {
+        "shortName": "App\nSwitch",
+        "title": "Cmd+Tab app switching. Cmd releases on layer change.",
+        "name": "SV_APP_SWITCH"
       }
     ],
     "layouts": {

@@ -44,6 +44,7 @@ enum my_keycodes {
     SV_TURBO_SCAN,
     SV_MS_BTN1_EXIT,
     SV_MS_BTN2_EXIT,
+    SV_APP_SWITCH,
     KC_NORMAL_HOLD = SAFE_RANGE,
     KC_FUNC_HOLD,
     SV_SAFE_RANGE, // Keycodes over this are safe on Svalboard.

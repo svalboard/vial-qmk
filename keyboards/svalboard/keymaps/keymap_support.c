@@ -91,9 +91,10 @@ int32_t m_scroll_accumulator_v = 0;
 
 bool scroll_timer_running = false;
 
-bool enable_scale_2 = false;
-bool enable_scale_3 = false;
-bool enable_scale_5 = false;
+uint8_t sniper_count = 0;
+bool sniper_toggle_2 = false;
+bool sniper_toggle_3 = false;
+bool sniper_toggle_5 = false;
 
 static bool scroll_hold    = false,
             scroll_toggle  = false;
@@ -202,7 +203,7 @@ void handle_sniper_key(bool pressed, uint8_t divisor) {
 report_mouse_t pointing_device_task_combined_user(report_mouse_t reportMouse1, report_mouse_t reportMouse2) {
     report_mouse_t ret_mouse;
 
-    if (enable_scale_2 || enable_scale_3 || enable_scale_5) {
+    if (sniper_count > 0) {
         reportMouse1.x = add_to_axis(&sniper_x, reportMouse1.x);
         reportMouse1.y = add_to_axis(&sniper_y, reportMouse1.y);
         reportMouse1.h = add_to_axis(&sniper_h, reportMouse1.h);
@@ -436,16 +437,34 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 check_layer_67();
                 return false;
             case SV_SNIPER_2:
-	            enable_scale_2 = true;
-				handle_sniper_key(true, 2);
+                sniper_count++;
+                handle_sniper_key(true, 2);
                 return false;
             case SV_SNIPER_3:
-                enable_scale_3 = true;
+                sniper_count++;
                 handle_sniper_key(true, 3);
                 return false;
             case SV_SNIPER_5:
-                enable_scale_5 = true;
+                sniper_count++;
                 handle_sniper_key(true, 5);
+                return false;
+            case SV_SNIPER_2_TG:
+                sniper_toggle_2 = !sniper_toggle_2;
+                if (sniper_toggle_2) sniper_count++;
+                else if (sniper_count > 0) sniper_count--;
+                handle_sniper_key(sniper_toggle_2, 2);
+                return false;
+            case SV_SNIPER_3_TG:
+                sniper_toggle_3 = !sniper_toggle_3;
+                if (sniper_toggle_3) sniper_count++;
+                else if (sniper_count > 0) sniper_count--;
+                handle_sniper_key(sniper_toggle_3, 3);
+                return false;
+            case SV_SNIPER_5_TG:
+                sniper_toggle_5 = !sniper_toggle_5;
+                if (sniper_toggle_5) sniper_count++;
+                else if (sniper_count > 0) sniper_count--;
+                handle_sniper_key(sniper_toggle_5, 5);
                 return false;
             case SV_SCROLL_HOLD:
                 scroll_hold = true;
@@ -482,16 +501,20 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 check_layer_67();
                 return false;
             case SV_SNIPER_2:
-                enable_scale_2 = false;
+                if (sniper_count > 0) sniper_count--;
                 handle_sniper_key(false, 2);
                 return false;
             case SV_SNIPER_3:
-                enable_scale_3 = false;
+                if (sniper_count > 0) sniper_count--;
                 handle_sniper_key(false, 3);
                 return false;
             case SV_SNIPER_5:
-                enable_scale_5 = false;
+                if (sniper_count > 0) sniper_count--;
                 handle_sniper_key(false, 5);
+                return false;
+            case SV_SNIPER_2_TG:
+            case SV_SNIPER_3_TG:
+            case SV_SNIPER_5_TG:
                 return false;
             case SV_SCROLL_HOLD:
                 scroll_hold = false;

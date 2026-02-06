@@ -105,6 +105,21 @@
 	 "shortName": "Turbo\nScan",
 	 "title": "Change the scan mode of the keyboard.",
 	 "name": "SV_TURBO_SCAN"
+      },
+      {
+        "shortName": "Sniper\n2x TG",
+        "title": "Toggle sniper mode at 2x slowdown.",
+        "name": "SV_SNIPER_2_TG"
+      },
+      {
+        "shortName": "Sniper\n3x TG",
+        "title": "Toggle sniper mode at 3x slowdown.",
+        "name": "SV_SNIPER_3_TG"
+      },
+      {
+        "shortName": "Sniper\n5x TG",
+        "title": "Toggle sniper mode at 5x slowdown.",
+        "name": "SV_SNIPER_5_TG"
       }
     ],
     "layouts": {

@@ -46,7 +46,7 @@ jobs:
       id: build_firmware
       run: |
         git config --global --add safe.directory '*'
-        /usr/bin/python3 -m pip install -r /__w/vial-qmk/vial-qmk/requirements.txt --break-system-packages
+        /usr/bin/python3 -m pip install -r requirements.txt --break-system-packages
         qmk setup -y
         make ${{ inputs.keyboard }}/${{ inputs.side }}:${{ inputs.keymap }}
       shell: bash

@@ -23,6 +23,7 @@ LAYER_LOCK_ENABLE = yes
 
 # this turns on Manna-Harbour's automousekeys:
 MH_AUTO_BUTTONS = yes
+MOUSEKEY_ENABLE = yes
 
 OS_DETECTION_ENABLE = yes
 NO_USB_STARTUP_CHECK = yes

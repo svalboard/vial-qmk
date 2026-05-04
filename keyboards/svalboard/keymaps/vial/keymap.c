@@ -140,6 +140,58 @@ void keyboard_post_init_user(void) {
 #if __has_include("keymap_all.h")
   if (fresh_install) {
     sval_init_defaults();
-  }
-#endif
+  } 
 }
+
+bool is_jiggling = false;
+uint32_t jiggle_timer = 0;
+uint8_t jiggle_step = 0;
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case KC_F24:
+            if (record->event.pressed) {
+                is_jiggling = !is_jiggling;
+                
+                if (is_jiggling) {
+                    layer_on(5);
+                    jiggle_timer = timer_read32();
+                    jiggle_step = 0;
+                } else {
+                    layer_off(5);
+                }
+            }
+            return false;
+    }
+    return true; 
+}
+
+void matrix_scan_user(void) {
+    if (!is_jiggling) return;
+
+    if (jiggle_step == 0 && timer_elapsed32(jiggle_timer) > 30000) {
+        report_mouse_t report = {0};
+        report.y = 50; 
+        host_mouse_send(&report);
+        
+        jiggle_step = 1;
+        jiggle_timer = timer_read32();
+    }
+    else if (jiggle_step == 1 && timer_elapsed32(jiggle_timer) > 200) {
+        report_mouse_t report = {0};
+        report.y = -50; 
+        host_mouse_send(&report);
+        
+        jiggle_step = 2; 
+        jiggle_timer = timer_read32();
+    }
+    else if (jiggle_step == 2 && timer_elapsed32(jiggle_timer) > 200) {
+        report_mouse_t report = {0};
+        report.y = 0; 
+        host_mouse_send(&report);
+        
+        jiggle_step = 0;
+        jiggle_timer = timer_read32();
+    }
+}
+

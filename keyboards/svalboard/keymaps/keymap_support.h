@@ -45,6 +45,12 @@ enum my_keycodes {
     SV_OUTPUT_STATUS,
     SV_TOGGLE_AUTOMOUSE,
     SV_TURBO_SCAN,
+    SV_BOOST_2,         // multiplies x/y AND h/v, like sniper divides both
+    SV_BOOST_3,
+    SV_BOOST_5,
+    SV_BOOST_2_TG,
+    SV_BOOST_3_TG,
+    SV_BOOST_5_TG,
     KC_NORMAL_HOLD = SAFE_RANGE,
     KC_FUNC_HOLD,
     SV_SAFE_RANGE, // Keycodes over this are safe on Svalboard.

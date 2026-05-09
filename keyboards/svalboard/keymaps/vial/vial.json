@@ -105,6 +105,36 @@
 	 "shortName": "Turbo\nScan",
 	 "title": "Change the scan mode of the keyboard.",
 	 "name": "SV_TURBO_SCAN"
+      },
+      {
+        "shortName": "Boost\n2x",
+        "title": "Hold to accelerate pointer and scroll 2x. Stacks with other boost keys.",
+        "name": "SV_BOOST_2"
+      },
+      {
+        "shortName": "Boost\n3x",
+        "title": "Hold to accelerate pointer and scroll 3x. Stacks with other boost keys.",
+        "name": "SV_BOOST_3"
+      },
+      {
+        "shortName": "Boost\n5x",
+        "title": "Hold to accelerate pointer and scroll 5x. Stacks with other boost keys.",
+        "name": "SV_BOOST_5"
+      },
+      {
+        "shortName": "Boost\n2xTG",
+        "title": "Toggle pointer/scroll 2x multiplier.",
+        "name": "SV_BOOST_2_TG"
+      },
+      {
+        "shortName": "Boost\n3xTG",
+        "title": "Toggle pointer/scroll 3x multiplier.",
+        "name": "SV_BOOST_3_TG"
+      },
+      {
+        "shortName": "Boost\n5xTG",
+        "title": "Toggle pointer/scroll 5x multiplier.",
+        "name": "SV_BOOST_5_TG"
       }
     ],
     "layouts": {

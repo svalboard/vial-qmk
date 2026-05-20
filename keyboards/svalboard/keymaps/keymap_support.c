@@ -98,6 +98,7 @@ bool enable_scale_5 = false;
 static bool scroll_hold    = false,
             scroll_toggle  = false;
 
+static bool app_switch_gui_held = false;
 
 #define AXIS_LOCK_BREAKAWAY_THRESHOLD 18750
 #define AXIS_LOCK_ENGAGE_THRESHOLD 6250
@@ -314,6 +315,13 @@ void check_layer_67(void) {
     }
 }
 
+void release_app_switch_gui(void) {
+    if (app_switch_gui_held) {
+        unregister_code(KC_LGUI);
+        app_switch_gui_held = false;
+    }
+}
+
 bool in_mod_tap = false;
 int8_t in_mod_tap_layer = -1;
 int8_t mouse_keys_pressed = 0;
@@ -467,6 +475,18 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 	    case SV_TURBO_SCAN:
 	        change_turbo_scan();
 	        return false;
+            case SV_MS_BTN1_EXIT:
+                register_code(KC_MS_BTN1);
+                return false;
+            case SV_MS_BTN2_EXIT:
+                register_code(KC_MS_BTN2);
+                return false;
+            case SV_APP_SWITCH:
+                register_code(KC_LGUI);
+                wait_ms(5);
+                tap_code(KC_TAB);
+                app_switch_gui_held = true;
+                return false;
         }
     } else { // key released
         switch (keycode) {
@@ -498,6 +518,16 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 return false;
             case SV_SCROLL_TOGGLE:
                 scroll_toggle ^= true;
+                return false;
+            case SV_MS_BTN1_EXIT:
+                unregister_code(KC_MS_BTN1);
+                mouse_mode(false);
+                return false;
+            case SV_MS_BTN2_EXIT:
+                unregister_code(KC_MS_BTN2);
+                mouse_mode(false);
+                return false;
+            case SV_APP_SWITCH:
                 return false;
         }
     }

@@ -28,7 +28,12 @@ layer_state_t default_layer_state_set_user(layer_state_t state) {
   return state;
 }
 
+void release_app_switch_gui(void);
+
 layer_state_t layer_state_set_user(layer_state_t state) {
+  if (get_highest_layer(state) < get_highest_layer(layer_state)) {
+    release_app_switch_gui();
+  }
   sval_set_active_layer(get_highest_layer(state), false);
   return state;
 }

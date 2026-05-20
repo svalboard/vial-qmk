@@ -483,7 +483,8 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 return false;
             case SV_APP_SWITCH:
                 register_code(KC_LGUI);
-                register_code(KC_TAB);
+                wait_ms(5);
+                tap_code(KC_TAB);
                 app_switch_gui_held = true;
                 return false;
         }
@@ -527,7 +528,6 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 mouse_mode(false);
                 return false;
             case SV_APP_SWITCH:
-                unregister_code(KC_TAB);
                 return false;
         }
     }

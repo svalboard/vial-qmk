@@ -7,8 +7,7 @@
 #define AZOTEQ_IQS5XX_TPS43
 #define AZOTEQ_IQS5XX_TIMEOUT_MS 10
 #define AZOTEQ_IQS5XX_PRESS_AND_HOLD_ENABLE true
-//This decreases the required 'wait' time to activate dragging/selecting on a touchpad from default 300ms to 20ms. Big QoL. 
-#define AZOTEQ_IQS5XX_HOLD_TIME 20
+
 //#define POINTING_DEVICE_MOTION_PIN GP18
 
 #define SPLIT_POINTING_ENABLE

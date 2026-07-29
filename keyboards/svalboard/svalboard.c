@@ -189,6 +189,8 @@ void sval_set_active_layer(uint32_t layer, bool save) {
 
 // VIAL SPECIFIC FOR SVALBOARD + KEYBARD
 #ifdef VIAL_ENABLE
+#include "keypeek_layer_notify.h"
+
 void kb_sync_listener(uint8_t in_buflen, const void* in_data, uint8_t out_buflen, void* out_data) {
   global_saved_values.turbo_scan = ((const presence_rpc_t *)in_data)->turbo_scan;
 }
@@ -235,6 +237,7 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
     // If a command code is unknown, it is simply echoed back.
     struct layer_hsv *cols;
     uint8_t layer;
+    if (keypeek_handle_command(data, length)) return;
     if (data[0] != SVAL_VIA_PREFIX) return;
     switch (data[1]) {
         case sval_id_get_protocol_version:

@@ -5,6 +5,8 @@
 
 #define VIAL_KEYBOARD_UID {0x1B, 0x18, 0x7D, 0xF2, 0x21, 0xF6, 0x29, 0x48}
 
+#define KEYPEEK_DISABLE_RAW_HID_HANDLER
+
 // Vial security combos, depending on which unit this is...
 #ifdef INIT_EE_HANDS_RIGHT
 // right thumb lock
